@@ -1,11 +1,10 @@
-const fastify = require('fastify');
+const Fastify = require('fastify');
+const fastify = Fastify({ logger: true });
 const userRoutes = require('./src/routes/user.routes');
 
 
-const app = fastify();
-app.register(userRoutes);
-
-app.listen({ port: 3000 }, (err, address) => {
+//fastify.register(userRoutes);
+fastify.listen({ port: 3000 }, (err, address) => {
   if (err) {
     console.error(err);
     process.exit(1);

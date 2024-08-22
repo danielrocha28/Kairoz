@@ -1,8 +1,15 @@
-const { registerUser, loginUser } = require('../controllers/user.controller');
+const Fastify = require('fastify');
+const fastify = Fastify({ logger: true });
+const user  = require('../controllers/user.controller');
 
-async function userRoutes(fastify, options) {
-  fastify.post('/register', registerUser);
-  fastify.post('/login', loginUser);
-}
 
-module.exports = userRoutes;
+
+fastify.post('/register/:email', async (request, reply) => {const register = user.registerUser});
+
+
+//fastify.post('/register', registerUser);
+
+//fastify.post('/login', loginUser);
+
+
+module.exports = user;
