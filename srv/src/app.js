@@ -16,7 +16,7 @@ fastify.register(fastifyCors, {
 })
 
 // Registrar rotas
-
+fastify.register(index)
 fastify.register(userRoutes)
 
 // Iniciar o servidor
