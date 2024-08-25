@@ -1,11 +1,17 @@
 {
+  "name": "Kairoz",
+  "version": "1.0.0",
+  "description": "Descrição do seu projeto",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",                  
+    "start:debug": "node --inspect server.js"
+  },
   "dependencies": {
-    "@fastify/cors": "^9.0.1",
+    "@fastify/cors": "^7.0.0",  
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
-    "eslint": "^9.9.0",
     "fastify": "^4.28.1",
-    "fastify-cors": "^6.1.0",
     "fastify-formbody": "^5.3.0",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.12.0",
@@ -14,6 +20,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "eslint": "^9.9.0"
   }
 }
