@@ -4,11 +4,11 @@
   "description": "Descrição do seu projeto",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",                  
+    "start": "node server.js",
     "start:debug": "node --inspect server.js"
   },
   "dependencies": {
-    "@fastify/cors": "^7.0.0",  
+    "@fastify/cors": "^9.0.1",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "fastify": "^4.28.1",
@@ -20,7 +20,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "nodemon": "^3.1.4",
-    "eslint": "^9.9.0"
+    "eslint": "^9.9.0",
+    "nodemon": "^3.1.4"
   }
 }
