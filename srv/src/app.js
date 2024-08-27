@@ -1,35 +1,36 @@
-const Fastify = require('fastify')
-const fastifyCors = require('@fastify/cors')
+// Importar o Fastify e o plugin @fastify/cors
+const Fastify = require('fastify');
+const fastifyCors = require('@fastify/cors');
 
-const fastify = Fastify()
+// Criar uma instância do Fastify
+const fastify = Fastify();
 
 // Importar rotas
-
-const userRoutes = require('./routes/user.routes')
-
+const userRoutes = require('./routes/user.routes');
 
 // Registrar plugins
 fastify.register(fastifyCors, {
   // Opções de configuração do CORS
   origin: '*', // Permitir todas as origens
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-})
+});
 
 // Registrar rotas
-fastify.register(index)
-fastify.register(userRoutes)
+fastify.register(userRoutes); // Registrar as rotas importadas
 
 // Iniciar o servidor
 const start = async () => {
   try {
-    await fastify.listen({ port: 3000 }) // Substitua pela porta que desejar
-    console.log(`Servidor rodando na porta 3000`)
+    await fastify.listen({ port: 3000 }); // Substitua pela porta que desejar
+    console.log(`Servidor rodando na porta 3000`);
   } catch (err) {
-    console.error(err)
-    process.exit(1)
+    console.error(err);
+    process.exit(1);
   }
-}
+};
 
-start()
+// Iniciar o servidor
+start();
 
-module.exports = fastify
+// Exportar a instância do Fastify, se necessário para testes ou outras funcionalidades
+module.exports = fastify;
