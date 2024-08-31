@@ -8,19 +8,19 @@ const loginSchema = z.object({
   password: z.string().min(6),
 });
 
-const registerUser = async (request, reply) => {
+ function registerUser(fastify,opts) {(request, reply) => {
   try {
     const validatedData = loginSchema.parse(request.body);
     const { email, password } = validatedData;
 
-    const existingUser = await User.findOne({ where: { email } });
+    const existingUser = async(User.findOne({ where: { email } }));
     if (existingUser) {
       return reply.status(400).send({ error: 'Email já está sendo utilizado' });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = async(bcrypt.hash(password, 10));
 
-    const user = await User.create({ email, password: hashedPassword });
+    const user = async(User.create({ email, password: hashedPassword }));
 
     reply.status(201).send({
       message: 'User registered successfully',
@@ -38,14 +38,15 @@ const registerUser = async (request, reply) => {
     }
   }
 };
+}
 
-const loginUser = async (request, reply) => {
-  try {
+  function loginUser(fastify,opts){ (request, reply) => {
+   try {
     const validatedData = loginSchema.parse(request.body);
     const { email, password } = validatedData;
 
-    const user = await User.findOne({ where: { email } });
-    if (user && await bcrypt.compare(password, user.password)) {
+    const user = async(User.findOne({ where: { email } }));
+    if (user && async(bcrypt.compare(password, user.password))) {
       const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
       reply.send({ token });
     } else {
@@ -59,9 +60,9 @@ const loginUser = async (request, reply) => {
       reply.status(500).send({ error: 'Internal server error', message: error.message });
     }
   }
-};
+}};
 
-module.exports = {
+ module.exports = {
   registerUser,
   loginUser,
 };
