@@ -5,7 +5,7 @@ const timerRoutes = require('./src/routes/timer.routes');
 
 
 fastify.register(userRoutes);
-fastify.register(timerRoutes)
+fastify.register(timerRoutes);
 
 fastify.listen({ port: 3000}, (err, address) => {
   if (err) {
