@@ -1,4 +1,4 @@
-const user = require('../controllers/user.controller');
+import user from '../controllers/user.controller';
 
 const userRoutes = (fastify, options, done) => {
   
