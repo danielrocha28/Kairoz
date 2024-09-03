@@ -1,12 +1,16 @@
-// Importar o Fastify e o plugin @fastify/cors
-const Fastify = require('fastify');
-const fastifyCors = require('@fastify/cors');
+// Eslint falou que const já não é mais usada troquem 
+import Fastify from 'fastify';
+import fastifyCors from '@fastify/cors';
+
 
 // Criar uma instância do Fastify
 const fastify = Fastify();
 
 // Importar rotas
-const userRoutes = require('./routes/user.routes');
+import userRoutes from './routes/user.routes';
+import task from './routes/task.routes';
+
+
 
 // Registrar plugins
 fastify.register(fastifyCors, {
@@ -17,8 +21,9 @@ fastify.register(fastifyCors, {
 
 // Registrar rotas
 fastify.register(userRoutes); // Registrar as rotas importadas
+fastify.register(task);
 
-// Iniciar o servidor
+// Iniciar o servidor mas isso deve ser feito no server
 const start = async () => {
   try {
     await fastify.listen({ port: 3000 }); // Substitua pela porta que desejar
