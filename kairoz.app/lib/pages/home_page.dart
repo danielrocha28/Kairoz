@@ -9,15 +9,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> listaDeFazeres = [];
+  List<String> tasks = [];
 
-  adicionarLista(String item) {
+  addTask(String item) {
     setState(() {
-      listaDeFazeres.add(item);
+      tasks.add(item);
     });
   }
 
-  // Função para mostrar o pop-up de adição
+  removeTask(String item) {
+    setState(() {
+      tasks.remove(item);
+    });
+  }
+
   void _showAddPopup(BuildContext context) {
     final TextEditingController _controller = TextEditingController();
 
@@ -35,16 +40,16 @@ class _HomePageState extends State<HomePage> {
           actions: [
             TextButton(
               onPressed: () {
-                adicionarLista(_controller.text);
-                Navigator.of(context).pop();
-              },
-              child: const Text("Adicionar Tarefa"),
-            ),
-            TextButton(
-              onPressed: () {
                 Navigator.of(context).pop();
               },
               child: const Text("Cancelar"),
+            ),
+            TextButton(
+              onPressed: () {
+                addTask(_controller.text);
+                Navigator.of(context).pop();
+              },
+              child: const Text("Adicionar"),
             ),
           ],
         );
@@ -52,8 +57,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Função para mostrar o pop-up de remoção
-  void _showSubPopup(BuildContext context) {
+  void _showRemovePopup(BuildContext context) {
     final TextEditingController _controller = TextEditingController();
 
     showDialog(
@@ -70,22 +74,17 @@ class _HomePageState extends State<HomePage> {
           actions: [
             TextButton(
               onPressed: () {
-                final String taskToRemove = _controller.text;
-
-                setState(() {
-                  // Remove o item da lista se existir
-                  listaDeFazeres.remove(taskToRemove);
-                });
-
-                Navigator.of(context).pop();
-              },
-              child: const Text("Remover Tarefa"),
-            ),
-            TextButton(
-              onPressed: () {
                 Navigator.of(context).pop();
               },
               child: const Text("Cancelar"),
+            ),
+            TextButton(
+              onPressed: () {
+                final String taskToRemove = _controller.text;
+                removeTask(taskToRemove);
+                Navigator.of(context).pop();
+              },
+              child: const Text("Remover"),
             ),
           ],
         );
@@ -93,14 +92,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Função para criar os botões do SpeedDial
   SpeedDialChild speedDialButton(
-      Function() aoClicar, IconData icon, String label, Color cor) {
+    Function() onTap,
+    IconData icon,
+    String label,
+    Color foregroundColor,
+  ) {
     return SpeedDialChild(
-      onTap: aoClicar,
+      onTap: onTap,
       child: Icon(icon),
       backgroundColor: const Color.fromARGB(255, 151, 63, 192),
-      foregroundColor: cor,
+      foregroundColor: foregroundColor,
       label: label,
       labelStyle: TextStyle(color: Colors.white),
       labelBackgroundColor: const Color.fromARGB(255, 151, 63, 192),
@@ -111,20 +113,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          PopupMenuButton(
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: "firstPage",
-                child: Text("First Page"),
-              ),
-              const PopupMenuItem(
-                value: "secondPage",
-                child: Text("Second Page"),
-              ),
-            ],
-          ),
-        ],
         title: const Text(
           'Kaizer',
           style: TextStyle(color: Colors.white),
@@ -134,7 +122,7 @@ class _HomePageState extends State<HomePage> {
       body: Container(
         padding: EdgeInsets.all(16.0),
         child: Column(
-          children: listaDeFazeres
+          children: tasks
               .map(
                 (item) => CheckboxListTile(
                   title: Text(item),
@@ -154,7 +142,7 @@ class _HomePageState extends State<HomePage> {
         animatedIcon: AnimatedIcons.menu_close,
         children: [
           speedDialButton(
-            () => _showSubPopup(context),
+            () => _showRemovePopup(context),
             Icons.remove,
             'Remover',
             Colors.white,
