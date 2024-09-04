@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   // Função para criar os botões do SpeedDial
-  SpeedDialChild criaBotao(
+  SpeedDialChild speedDialButton(
       Function() aoClicar, IconData icon, String label, Color cor) {
     return SpeedDialChild(
       onTap: aoClicar,
@@ -153,10 +153,18 @@ class _HomePageState extends State<HomePage> {
         overlayOpacity: 0.5,
         animatedIcon: AnimatedIcons.menu_close,
         children: [
-          criaBotao(() => _showSubPopup(context), Icons.remove, 'Remover',
-              Colors.white),
-          criaBotao(() => _showAddPopup(context), Icons.add, 'Adicionar',
-              Colors.white),
+          speedDialButton(
+            () => _showSubPopup(context),
+            Icons.remove,
+            'Remover',
+            Colors.white,
+          ),
+          speedDialButton(
+            () => _showAddPopup(context),
+            Icons.add,
+            'Adicionar',
+            Colors.white,
+          ),
         ],
       ),
     );
