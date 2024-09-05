@@ -1,12 +1,12 @@
-import user from '../controllers/user.controller';
+const user = require('../controllers/user.controller');
 
 const userRoutes = (fastify, options, done) => {
-  
+
   // Rota de teste
   fastify.get('/status', async (request, reply) => {
     return { status: 'Server is up and running' };
   });
-  
+
   // Rota para registrar o usuário
   fastify.post('/register', async (request, reply) => {
     try {

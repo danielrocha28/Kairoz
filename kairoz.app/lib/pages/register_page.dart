@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:kairoz/widgets/kairoz_input.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -14,6 +18,61 @@ class _RegisterPageState extends State<RegisterPage> {
   final _tedRepeatPassword = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  createUser(BuildContext context) async {
+    try {
+      final url = Uri.https('api-url', 'register');
+
+      final response = await http.post(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "name": _tedName.text,
+          "email": _tedEmail.text,
+          "password": _tedPassword.text
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        Navigator.pushNamed(context, '/home');
+      }
+
+      if (response.statusCode == 400) {
+        Map<String, dynamic> temp = json.decode(response.body);
+        String message = temp['error'];
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ocorreu um erro ao criar usuário. Tente novamente!'),
+        ),
+      );
+    } finally {
+      print('finalizou aqui');
+    }
+  }
+
+  validateField(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Campo obrigatório';
+    }
+    return null;
+  }
+
+  validatePassword(String? value, String? compareValue) {
+    if (value == null || value.isEmpty) {
+      return 'Campo obrigatório';
+    }
+    if (value != compareValue) {
+      return 'As senhas não são correspondentes';
+    }
+
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +115,11 @@ class _RegisterPageState extends State<RegisterPage> {
           "Cadastre-se",
           style: TextStyle(color: Colors.white),
         ),
-        onPressed: () {},
+        onPressed: () {
+          if (_formKey.currentState!.validate()) {
+            createUser(context);
+          }
+        },
       ),
     );
   }
@@ -122,10 +185,34 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  textFormFieldName(),
-                  textFormFieldEmail(),
-                  textFormFieldPassword(),
-                  textFormFieldRepeatPassword(),
+                  KairozInput(
+                    title: "Nome",
+                    controller: _tedName,
+                    hintText: "Informe seu nome",
+                    validator: (value) => validateField(value),
+                  ),
+                  KairozInput(
+                    title: "E-mail",
+                    controller: _tedEmail,
+                    hintText: "Informe o email",
+                    validator: (value) => validateField(value),
+                  ),
+                  KairozInput(
+                    title: "Senha",
+                    controller: _tedPassword,
+                    obscureText: true,
+                    hintText: "Informe a senha",
+                    validator: (value) =>
+                        validatePassword(value, _tedRepeatPassword.text),
+                  ),
+                  KairozInput(
+                    title: "Confirmar senha",
+                    hintText: "Confirme a senha",
+                    controller: _tedRepeatPassword,
+                    obscureText: true,
+                    validator: (value) =>
+                        validatePassword(value, _tedPassword.text),
+                  ),
                   containerButtonRegister(context),
                   containerRegister(context),
                 ],
@@ -133,63 +220,6 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  TextFormField textFormFieldEmail() {
-    return TextFormField(
-      controller: _tedEmail,
-      autofocus: true,
-      keyboardType: TextInputType.text,
-      style: TextStyle(color: Colors.black),
-      decoration: InputDecoration(
-        labelText: "Email",
-        hintText: "Informe o email",
-        hintStyle: TextStyle(fontSize: 14),
-      ),
-    );
-  }
-
-  TextFormField textFormFieldName() {
-    return TextFormField(
-      controller: _tedName,
-      autofocus: true,
-      keyboardType: TextInputType.text,
-      decoration: InputDecoration(
-        labelText: "Nome",
-        hintText: "Informe seu nome",
-        hintStyle: TextStyle(fontSize: 14),
-      ),
-    );
-  }
-
-  TextFormField textFormFieldPassword() {
-    return TextFormField(
-      controller: _tedPassword,
-      autofocus: true,
-      obscureText: true,
-      keyboardType: TextInputType.text,
-      style: TextStyle(color: Colors.black),
-      decoration: InputDecoration(
-        labelText: "Senha",
-        hintText: "Informe a senha",
-        hintStyle: TextStyle(fontSize: 14),
-      ),
-    );
-  }
-
-  TextFormField textFormFieldRepeatPassword() {
-    return TextFormField(
-      controller: _tedRepeatPassword,
-      autofocus: true,
-      obscureText: true,
-      keyboardType: TextInputType.text,
-      style: TextStyle(color: Colors.black),
-      decoration: InputDecoration(
-        labelText: "Confirme a senha",
-        hintText: "Senha",
-        hintStyle: TextStyle(fontSize: 14),
       ),
     );
   }
