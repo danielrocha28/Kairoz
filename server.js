@@ -1,4 +1,4 @@
-const fastify = require('./src/app')
+const fastify = require('./srv/src/app')
 
 const port = process.env.PORT || 3000
 
