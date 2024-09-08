@@ -6,8 +6,10 @@ const fastifyCors = require('@fastify/cors')
 const fastify = Fastify();
 
 // Importar rotas
-const userRoutes = require('./routes/user.routes');
-// const task = require('./routes/task.routes');
+import userRoutes from './routes/user.routes.js';
+//import task from './routes/task.routes.js';
+
+
 
 // Registrar plugins
 fastify.register(fastifyCors, {
@@ -18,7 +20,7 @@ fastify.register(fastifyCors, {
 
 // Registrar rotas
 fastify.register(userRoutes); // Registrar as rotas importadas
-// fastify.register(task);
+//fastify.register(task);
 
 // // Iniciar o servidor mas isso deve ser feito no server
 const start = async () => {
@@ -35,4 +37,4 @@ const start = async () => {
 start();
 
 // Exportar a instância do Fastify, se necessário para testes ou outras funcionalidades
-module.exports = fastify;
+export default fastify;

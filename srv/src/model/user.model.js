@@ -1,6 +1,6 @@
 // models/user.model.js
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/database.js';
 
 const User = sequelize.define('User', {
   id_usuario: {
@@ -9,7 +9,7 @@ const User = sequelize.define('User', {
     primaryKey: true,
     field: 'id_usuario', // Nome da coluna no banco de dados
   },
-  name: {
+  nome: {
     type: DataTypes.STRING,
     allowNull: false,
     field: 'nome', // Nome da coluna no banco de dados
@@ -20,7 +20,7 @@ const User = sequelize.define('User', {
     unique: true,
     field: 'email', // Nome da coluna no banco de dados
   },
-  password: {
+  senha: {
     type: DataTypes.STRING,
     allowNull: false,
     field: 'senha', // Nome da coluna no banco de dados
@@ -30,4 +30,5 @@ const User = sequelize.define('User', {
   timestamps: false, // Desabilita createdAt e updatedAt
 });
 
-module.exports = User; 
+
+export default User;

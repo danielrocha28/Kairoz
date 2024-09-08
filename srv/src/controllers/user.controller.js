@@ -1,23 +1,25 @@
-const User = require('../model/user.model');
-const { z } = require('zod');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+import User from '../model/user.model.js';
+import { z } from 'zod';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
+// Validação para o registro do usuário
 const registerSchema = z.object({
-  name: z.string().min(1, 'Nome é obrigatório'),
+  nome: z.string().min(1, 'Nome é obrigatório'),
   email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
+  senha: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
 });
 
+// Validação para o login do usuário
 const loginSchema = z.object({
   email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
+  senha: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
 });
 
 async function registerUser(request, reply) {
   try {
     const validatedData = registerSchema.parse(request.body);
-    const { name, email, password } = validatedData;
+    const { nome, email, senha } = validatedData;
 
     // Verifica se o email já está em uso
     const existingUser = await User.findOne({ where: { email } });
@@ -26,16 +28,16 @@ async function registerUser(request, reply) {
     }
 
     // Criptografa a senha
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(senha, 10);
 
     // Cria o novo usuário
-    const user = await User.create({ name, email, password: hashedPassword });
+    const user = await User.create({ nome, email, senha: hashedPassword });
 
     reply.status(201).send({
       message: 'Usuário registrado com sucesso',
       user: {
         id: user.id_usuario, // Corrige o campo para o ID correto
-        name: user.name,
+        nome: user.nome,
         email: user.email,
       },
     });
@@ -52,13 +54,13 @@ async function registerUser(request, reply) {
 async function loginUser(request, reply) {
   try {
     const validatedData = loginSchema.parse(request.body);
-    const { email, password } = validatedData;
+    const { email, senha } = validatedData;
 
     // Verifica se o usuário existe
     const user = await User.findOne({ where: { email } });
 
     // Verifica se a senha está correta e gera um token
-    if (user && await bcrypt.compare(password, user.password)) {
+    if (user && await bcrypt.compare(senha, user.senha)) {
       const token = jwt.sign({ id: user.ID_usuario }, process.env.JWT_SECRET, { expiresIn: '8h' });
       reply.send({ token });
     } else {
@@ -74,7 +76,7 @@ async function loginUser(request, reply) {
   }
 }
 
-module.exports = {
+export default {
   registerUser,
   loginUser,
 };
