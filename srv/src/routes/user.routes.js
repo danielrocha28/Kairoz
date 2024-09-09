@@ -1,4 +1,4 @@
-import user from '../controllers/user.controller';
+import user from '../controllers/user.controller.js';
 
 const userRoutes = (fastify, options, done) => {
   
@@ -29,4 +29,4 @@ const userRoutes = (fastify, options, done) => {
   done();
 };
 
-module.exports = userRoutes;
+export default userRoutes;
