@@ -1,5 +1,5 @@
 {
-  "name": "Kairoz",
+  "name": "kairoz",
   "version": "1.0.0",
   "description": "Descrição do seu projeto",
   "main": "server.js",
@@ -9,29 +9,23 @@
   },
   "dependencies": {
     "@fastify/cors": "^9.0.1",
+    "@fastify/formbody": "^7.4.0",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
-<<<<<<< HEAD
     "eslint": "^9.9.1",
     "fastify": "^4.28.1",
+    "fastify-formbody": "^5.3.0",
     "gauge": "^5.0.2",
     "glob": "^11.0.0",
-=======
-    "fastify": "^4.28.1",
-    "fastify-formbody": "^5.3.0",
->>>>>>> main
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.12.0",
     "pg-hstore": "^2.3.4",
     "rimraf": "^6.0.1",
     "sequelize": "^6.37.3",
     "zod": "^3.23.8"
-<<<<<<< HEAD
-=======
   },
   "devDependencies": {
     "eslint": "^9.9.0",
     "nodemon": "^3.1.4"
->>>>>>> main
   }
 }

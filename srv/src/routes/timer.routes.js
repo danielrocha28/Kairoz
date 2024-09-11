@@ -3,39 +3,60 @@ const fastify = Fastify({ logger: true });
 const timerController = require("../controllers/timer.controller");
 
 async function timerRouter(fastify, opts) {
-  fastify.get("/status", async (request, reply) => {
-    return "Rota funcionando!";
-  });
-
-  fastify.post("/timer/start", async (request, reply) => {
+  await fastify.post("/timer/start", async (request, reply) => {
     try {
-      await timerController.startTimer(request, reply);
+      await timerController.startTimer(request, reply); 
     } catch (error) {
-      reply.status(500).send({ error: "Erro ao processar a requisição" });
+      reply.status(500).send({
+        error: "Erro ao processar a requisição",
+        details: error.message,
+      });
     }
   });
 
-  fastify.post("/timer/pause", async (request, reply) => {
+  await fastify.put("/timer/pause", async (request, reply) => {
     try {
-      timerController.pauseTimer(request, reply);
+      await timerController.pauseTimer(request, reply); 
+    
     } catch (error) {
-      reply.status(500).send({ error: "Erro ao processar a requisição" });
+      reply.status(500).send({
+        error: "Erro ao processar a requisição",
+        details: error.message,
+      });
     }
   });
 
-  fastify.post("/timer/resume", async (request, reply) => {
+  await fastify.put("/timer/resume", async (request, reply) => {
     try {
-      timerController.resumeTimer(request, reply);
+      await timerController.resumeTimer(request, reply); 
     } catch (error) {
-      reply.status(500).send({ error: "Erro ao processar a requisição" });
+      reply.status(500).send({
+        error: "Erro ao processar a requisição",
+        details: error.message,
+      });
     }
   });
 
-  fastify.delete("/timer/delete", async (request, reply) => {
+  await fastify.put("/timer/save", async (request,reply) =>{
     try {
-      timerController.deleteTimer(request, reply);
+      await timerController.saveTimer(request,reply);
+       const { id_task } = request.body;
     } catch (error) {
-      reply.status(500).send({ error: "Erro ao processar a requisição" });
+        reply.status(500).send({
+          error: "Erro ao processar a requisição",
+          details: error.message,
+        });
+    }
+  })
+
+  await fastify.delete("/timer/delete", async (request, reply) => {
+    try {
+      await timerController.deleteTimer(request, reply);
+    } catch (error) {
+        reply.status(500).send({
+          error: "Erro ao processar a requisição",
+          details: error.message,
+        });
     }
   });
 }

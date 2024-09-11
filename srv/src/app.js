@@ -7,6 +7,7 @@ const fastify = Fastify();
 
 // Importar rotas
 const userRoutes = require('./routes/user.routes');
+const timerRoutes = require('./routes/timer.routes');
 
 // Registrar plugins
 fastify.register(fastifyCors, {
@@ -15,8 +16,21 @@ fastify.register(fastifyCors, {
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
 });
 
+//Plugin para interpretar JSON
+fastify.addContentTypeParser("application/json",{ parseAs: "string" },
+  (req, body, done) => {
+    try {
+      const json = JSON.parse(body);
+      done(null, json);
+    } catch (err) {
+      done(err, undefined);
+    }
+  }
+);
+
 // Registrar rotas
 fastify.register(userRoutes); // Registrar as rotas importadas
+fastify.register(timerRoutes);;
 
 // Iniciar o servidor
 const start = async () => {
