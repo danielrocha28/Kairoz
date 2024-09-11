@@ -1,8 +1,9 @@
 import 'dart:convert';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kairoz/widgets/kairoz_input.dart';
+import 'package:kairoz/widgets/kairoz_logo.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -20,11 +21,11 @@ class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   createUser(BuildContext context) async {
-    try {
-      final url = Uri.https('api-url', 'register');
+    final baseUrl = dotenv.env['BASE_URL'];
 
+    try {
       final response = await http.post(
-        url,
+        Uri.parse('$baseUrl/login'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "name": _tedName.text,
@@ -34,7 +35,8 @@ class _RegisterPageState extends State<RegisterPage> {
       );
 
       if (response.statusCode == 201) {
-        Navigator.pushNamed(context, '/home');
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/home', ModalRoute.withName('/'));
       }
 
       if (response.statusCode == 400) {
@@ -47,12 +49,10 @@ class _RegisterPageState extends State<RegisterPage> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Ocorreu um erro ao criar usuário. Tente novamente!'),
         ),
       );
-    } finally {
-      print('finalizou aqui');
     }
   }
 
@@ -78,40 +78,26 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 82, 22, 185),
-      body: Stack(children: [
-        Container(
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.only(top: 90),
-              child: Text(
-                'Kairoz',
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 45,
-                ),
-              ),
-            ),
-          ),
-        ),
-        form(context)
-      ]),
+      body: Stack(
+        children: [
+          const KairozLogo(),
+          form(context),
+        ],
+      ),
     );
   }
 
   Container containerButtonRegister(BuildContext context) {
     return Container(
       height: 40.0,
-      margin: EdgeInsets.only(top: 40.0),
+      margin: const EdgeInsets.only(top: 40.0),
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all(
             const Color.fromARGB(255, 82, 22, 185),
           ),
         ),
-        child: Text(
+        child: const Text(
           "Cadastre-se",
           style: TextStyle(color: Colors.white),
         ),
@@ -127,26 +113,32 @@ class _RegisterPageState extends State<RegisterPage> {
   Container containerRegister(BuildContext context) {
     return Container(
       height: 40.0,
-      margin: EdgeInsets.only(top: 20.0),
+      margin: const EdgeInsets.only(top: 20.0),
       child: Row(
         children: <Widget>[
           Expanded(
-            child: Text(
-              'Ja possui cadastro?',
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 15,
+            child: TextButton(
+              child: const Text(
+                'Ja possui cadastro?',
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 15,
+                ),
               ),
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                    context, '/login', ModalRoute.withName('/'));
+              },
             ),
           ),
           Expanded(
             child: TextButton(
-              child: Text(
+              child: const Text(
                 "Entrar",
                 style: TextStyle(
-                  color: const Color.fromARGB(255, 82, 22, 185),
+                  color: Color.fromARGB(255, 82, 22, 185),
                   fontSize: 15,
                 ),
               ),
@@ -166,11 +158,11 @@ class _RegisterPageState extends State<RegisterPage> {
       alignment: Alignment.bottomCenter,
       child: Container(
         height: heightScreen * 0.74,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: new BorderRadius.only(
-            topLeft: const Radius.circular(40.0),
-            topRight: const Radius.circular(40.0),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(40.0),
+            topRight: Radius.circular(40.0),
           ),
         ),
         child: Form(
