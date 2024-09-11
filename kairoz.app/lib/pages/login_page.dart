@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:kairoz/services/login.service.dart';
 import 'package:kairoz/widgets/kairoz_logo.dart';
 import 'package:kairoz/widgets/kairoz_outline_input.dart';
 
@@ -20,39 +18,21 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   _login(BuildContext context) async {
-    final baseUrl = dotenv.env['BASE_URL'];
+    final loginService = LoginService(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
 
-    try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/login'),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "email": _emailController.text,
-          "password": _passwordController.text
-        }),
-      );
+    final response = await loginService.execute();
 
-      validateRequestResponse(response, context);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Ocorreu um erro ao entrar. Tente novamente!'),
-        ),
-      );
-    }
-  }
-
-  validateRequestResponse(Response response, BuildContext context) {
     if (response.statusCode == 200) {
       return Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/home',
-        ModalRoute.withName('/'),
-      );
+          context, '/home', ModalRoute.withName('/'));
     }
 
     Map<String, dynamic> temp = json.decode(response.body);
-    String message = temp['error'] ?? 'Ocorreu um erro inesperado';
+    String message =
+        temp['error'] ?? 'Ocorreu um erro ao entrar. Tente novamente!';
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),

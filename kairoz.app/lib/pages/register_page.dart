@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:kairoz/services/register.service.dart';
 import 'package:kairoz/widgets/kairoz_input.dart';
 import 'package:kairoz/widgets/kairoz_logo.dart';
 
@@ -21,39 +22,24 @@ class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   createUser(BuildContext context) async {
-    final baseUrl = dotenv.env['BASE_URL'];
+    final registerService = RegisterService(
+      name: _tedName.text,
+      email: _tedEmail.text,
+      password: _tedPassword.text,
+    );
+    final response = await registerService.execute();
 
-    try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/login'),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "name": _tedName.text,
-          "email": _tedEmail.text,
-          "password": _tedPassword.text
-        }),
-      );
-
-      if (response.statusCode == 201) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/home', ModalRoute.withName('/'));
-      }
-
-      if (response.statusCode == 400) {
-        Map<String, dynamic> temp = json.decode(response.body);
-        String message = temp['error'];
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message)),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Ocorreu um erro ao criar usuário. Tente novamente!'),
-        ),
-      );
+    if (response.statusCode == 201) {
+      return Navigator.pushNamedAndRemoveUntil(
+          context, '/home', ModalRoute.withName('/'));
     }
+
+    Map<String, dynamic> temp = json.decode(response.body);
+    String message = temp['error'];
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   validateField(String? value) {
