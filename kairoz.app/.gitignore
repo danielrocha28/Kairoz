@@ -41,3 +41,22 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Additional Flutter ignores
+**/android/app/debug/*
+**/android/app/profile/*
+**/android/app/release/*
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/ephemeral/
+**/ios/.symlinks/
+**/ios/Pods/
+**/macos/Flutter/ephemeral/
+**/web/.dart_tool/
+**/web/build/
+
+# Dart specific files
+*.packages
+*.flutter-versions
+pubspec.lock
