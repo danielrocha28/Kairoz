@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kairoz/pages/home_page.dart';
+import 'package:kairoz/pages/login_page.dart';
 import 'package:kairoz/pages/register_page.dart';
 
 void main() {
@@ -14,9 +15,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Kairoz',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: {
-        '/': (context) => const RegisterPage(),
+        '/login': (context) => const LoginPage(),
+        '/register': (context) => const RegisterPage(),
         '/home': (context) => const HomePage(),
       },
       theme: ThemeData(
@@ -25,7 +27,6 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      // home: const RegisterPage(),
     );
   }
 }
