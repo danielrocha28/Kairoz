@@ -1,6 +1,8 @@
 const fastify = require("fastify")({logger: true});
+const criarCarta = require("../controllers/cards.controllers");
 
-const port = 3000;
+const cartaRoutes = (fastify,options,done) =>{
+
 
 
 fastify.get('/cartas', async (reply) => {
@@ -12,9 +14,29 @@ fastify.get('/cartas', async (reply) => {
     }
 });
 
+fastify.get('/cartas/:id', async (request, reply) => {
+   try{
+    const {id} = request.params;
+    const cartaId = await Carta.findById(id);
 
- fastify.post('/cartas', Controlar.criarCarta);
+    if(!cartaId){
+        return reply.status(404).json({ error: ' carta não encontradas' });
+    }
+    res.json({frente: cartaId.frente, verso: cartaId.verso});
 
- fastify.listen(port, () => {  console.log(`Rodando na porta ${port}`);
+}catch (error){
+   console.error(error);
+   return reply.status(404).json({ message: ' Erro ao encontrar carta' });    
+}
+});
+
+
+ fastify.post('/cartas',(request, reply) => {
+   const cartas =  criarCarta();
+   res.json(cartas);
  });
+};
+
+ module.exports = cartaRoutes;
+
  
