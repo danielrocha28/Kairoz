@@ -1,5 +1,5 @@
 const sequelize = require("./models/base");
-const Carta = require('./models/flashcard');
+const Carta = require('./models/cards.models');
 
 
 

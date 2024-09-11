@@ -1,5 +1,6 @@
 const fastify = require("fastify")({logger: true});
 const criarCarta = require("../controllers/cards.controllers");
+const Carta = require("../model/cards.models");
 
 const cartaRoutes = (fastify,options,done) =>{
 
