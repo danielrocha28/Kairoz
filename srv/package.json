@@ -1,6 +1,7 @@
 {
   "name": "Kairoz",
   "version": "1.0.0",
+  "type": "module",
   "description": "Descrição do seu projeto",
   "main": "server.js",
   "scripts": {
@@ -20,7 +21,9 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "eslint": "^9.9.0",
+    "@eslint/js": "^9.10.0",
+    "eslint": "^9.10.0",
+    "globals": "^15.9.0",
     "nodemon": "^3.1.4"
   }
 }

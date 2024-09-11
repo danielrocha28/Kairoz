@@ -1,7 +1,6 @@
-const user = require('../controllers/user.controller');
+import { registerUser, loginUser } from '../controllers/user.controller.js';
 
 const userRoutes = (fastify, options, done) => {
-
   // Rota de teste
   fastify.get('/status', async (request, reply) => {
     return { status: 'Server is up and running' };
@@ -11,7 +10,7 @@ const userRoutes = (fastify, options, done) => {
   fastify.post('/register', async (request, reply) => {
     try {
       console.log("Corpo da Requisição:", request.body);
-      await user.registerUser(request, reply);
+      await registerUser(request, reply);
     } catch (error) {
       reply.status(500).send({ error: 'Erro ao processar a requisição' });
     }
@@ -20,7 +19,7 @@ const userRoutes = (fastify, options, done) => {
   // Rota para login
   fastify.post('/login', async (request, reply) => {
     try {
-      await user.loginUser(request, reply);
+      await loginUser(request, reply);
     } catch (error) {
       reply.status(500).send({ error: 'Erro ao processar a requisição' });
     }
@@ -29,4 +28,4 @@ const userRoutes = (fastify, options, done) => {
   done();
 };
 
-module.exports = userRoutes;
+export default userRoutes;
