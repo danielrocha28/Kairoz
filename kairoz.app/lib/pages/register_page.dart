@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kairoz/widgets/kairoz_input.dart';
@@ -21,11 +21,11 @@ class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   createUser(BuildContext context) async {
-    try {
-      final url = Uri.https('e9ab-189-110-21-89.ngrok-free.app', 'register');
+    final baseUrl = dotenv.env['BASE_URL'];
 
+    try {
       final response = await http.post(
-        url,
+        Uri.parse('$baseUrl/login'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "name": _tedName.text,

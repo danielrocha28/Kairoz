@@ -1,8 +1,10 @@
 import 'dart:convert';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:kairoz/widgets/kairoz_logo.dart';
+import 'package:kairoz/widgets/kairoz_outline_input.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,11 +20,11 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
   _login(BuildContext context) async {
-    try {
-      final url = Uri.https('e9ab-189-110-21-89.ngrok-free.app', 'login');
+    final baseUrl = dotenv.env['BASE_URL'];
 
+    try {
       final response = await http.post(
-        url,
+        Uri.parse('$baseUrl/login'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "email": _emailController.text,
@@ -30,26 +32,31 @@ class _LoginPageState extends State<LoginPage> {
         }),
       );
 
-      if (response.statusCode == 200) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, '/home', ModalRoute.withName('/'));
-      }
-
-      if (response.statusCode == 400) {
-        Map<String, dynamic> temp = json.decode(response.body);
-        String message = temp['error'];
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message)),
-        );
-      }
+      validateRequestResponse(response, context);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Ocorreu um erro ao criar usuário. Tente novamente!'),
+          content: Text('Ocorreu um erro ao entrar. Tente novamente!'),
         ),
       );
     }
+  }
+
+  validateRequestResponse(Response response, BuildContext context) {
+    if (response.statusCode == 200) {
+      return Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/home',
+        ModalRoute.withName('/'),
+      );
+    }
+
+    Map<String, dynamic> temp = json.decode(response.body);
+    String message = temp['error'] ?? 'Ocorreu um erro inesperado';
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   validateEmailField(String? value) {
@@ -68,42 +75,6 @@ class _LoginPageState extends State<LoginPage> {
     return null;
   }
 
-  Container containerRegister() {
-    return Container(
-      height: 40.0,
-      margin: const EdgeInsets.only(top: 20.0),
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Não possui cadastro?',
-              style: TextStyle(color: Colors.white),
-            ),
-            TextButton(
-              child: const Text(
-                'Criar agora',
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                ),
-              ),
-              onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  '/register',
-                  ModalRoute.withName('/'),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,44 +90,16 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   const KairozLogo(),
                   const SizedBox(height: 16),
-                  TextFormField(
+                  KairozOutlineInput(
+                    labelText: 'Email',
                     controller: _emailController,
-                    decoration: const InputDecoration(
-                      labelText: 'Email',
-                      fillColor: Colors.white,
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
                     validator: (value) => validateEmailField(value),
                   ),
                   const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                    ),
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
+                  KairozOutlineInput(
+                    labelText: 'Senha',
                     obscureText: true,
+                    controller: _passwordController,
                     validator: (value) => validatePasswordField(value),
                   ),
                   const SizedBox(height: 24),
@@ -171,7 +114,39 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     child: const Text('Entrar'),
                   ),
-                  containerRegister(),
+                  Container(
+                    height: 40.0,
+                    margin: const EdgeInsets.only(top: 20.0),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Não possui cadastro?',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          TextButton(
+                            child: const Text(
+                              'Criar agora',
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                '/register',
+                                ModalRoute.withName('/'),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
