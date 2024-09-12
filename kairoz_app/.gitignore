@@ -60,4 +60,3 @@ app.*.map.json
 *.packages
 *.flutter-versions
 pubspec.lock
-.metadata
