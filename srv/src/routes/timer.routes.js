@@ -5,7 +5,7 @@ const timerController = require("../controllers/timer.controller");
 async function timerRouter(fastify, opts) {
   await fastify.post("/timer/start", async (request, reply) => {
     try {
-      await timerController.startTimer(request, reply); 
+      await timerController.startTimer(request, reply);
     } catch (error) {
       reply.status(500).send({
         error: "Erro ao processar a requisição",
@@ -16,7 +16,8 @@ async function timerRouter(fastify, opts) {
 
   await fastify.put("/timer/pause", async (request, reply) => {
     try {
-       await (timerController.paused, timerController.statusTimer(request, reply));
+      await timerController.paused();
+      await timerController.statusTimer(request, reply);
     } catch (error) {
       reply.status(500).send({
         error: "Erro ao processar a requisição",
@@ -27,8 +28,8 @@ async function timerRouter(fastify, opts) {
 
   await fastify.put("/timer/resume", async (request, reply) => {
     try {
-      
-      await (timerController.resumed, timerController.statusTimer(request, reply));
+      await timerController.resumed();
+      await timerController.statusTimer(request, reply);
     } catch (error) {
       reply.status(500).send({
         error: "Erro ao processar a requisição",
@@ -41,10 +42,10 @@ async function timerRouter(fastify, opts) {
     try {
       await timerController.deleteTimer(request, reply);
     } catch (error) {
-        reply.status(500).send({
-          error: "Erro ao processar a requisição",
-          details: error.message,
-        });
+      reply.status(500).send({
+        error: "Erro ao processar a requisição",
+        details: error.message,
+      });
     }
   });
 }

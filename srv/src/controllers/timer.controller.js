@@ -1,6 +1,6 @@
 const Timer = require("../model/timer.model");
-const Task = require('../model/task.model');
-const WebSocket = require('../../websocket.js');
+const Task = require("../model/task.model");
+const WebSocket = require("../../websocket.js");
 
 let intervalid = null;
 let endTime = 0;
@@ -8,96 +8,92 @@ let startTime = 0;
 let totalTime = 0;
 let pausedTime = 0;
 
-
 let task = null;
-let timerid = null ;
+let timerid = null;
 let pause = false;
 let started = false;
 
-  //Função para formatar o tempo em Hh:Mm:Ss = (00:00:00)
-  function formatTime(milisegundos) {
-   const hours = String(Math.floor(milisegundos/ 3600000)).padStart(2, "0");
-   const min = String(Math.floor((milisegundos % 3600000) / 60000)).padStart(2,"0");
-   const seg = String(Math.floor((milisegundos % 60000) / 1000)).padStart(2,"0");
+// Função para formatar o tempo em Hh:Mm:Ss = (00:00:00)
+function formatTime(milisegundos) {
+  const hours = String(Math.floor(milisegundos / 3600000)).padStart(2, "0");
+  const min = String(Math.floor((milisegundos % 3600000) / 60000)).padStart(2, "0");
+  const seg = String(Math.floor((milisegundos % 60000) / 1000)).padStart(2, "0");
 
-    return `${hours}:${min}:${seg}`;
-  }
+  return `${hours}:${min}:${seg}`;
+}
 
-  async function paused(pause){
-    pause = true;
-  }
-  async function resumed(pause){
-    pause = false;
-  }
+async function paused() {
+  pause = true;
+}
 
-  //Função de iniciar o temporizador
-  async function startTimer(request, reply) {
-    try {
-      started = true
-      const { id_task, title } = request.body;
-    
-      task = await Task.findAll({ where: { id_task, title } });
-      console.log("Tarefa encontrada:", task);
+async function resumed() {
+  pause = false;
+}
 
-      if (!task) {
-        return reply
-          .status(404)
-          .send("Por favor, crie uma tarefa para iniciar o temporizador.");
-      }
+// Função de iniciar o temporizador
+async function startTimer(request, reply) {
+  try {
+    started = true;
+    const { id_task, title } = request.body;
 
-      const newTimer = await Timer.create({
-        id_task,
-        start_time: 0,
-        end_time: 0,
-        total_time: 0,
-      });
+    task = await Task.findAll({ where: { id_task, title } });
+    console.log("Tarefa encontrada:", task);
 
-      timerid = newTimer.id_time;
-      const start = Date.now();
-      
-      //Aplicando a formula: (tempo decorrido = (Date.now() -> gerador) - tempo inicial)
-      intervalid = setInterval( async () => { 
-        elapsedTime = Date.now() - start; // Tempo decorrido em milissegundos 
-        totalTime = startTime + elapsedTime;// Armazenando total do tempo
-
-         await Timer.update({ start_time: totalTime },
-          { where: { id_time: timerid }});
-
-        console.log(formatTime(totalTime))
-      }, 100);// Intervalo do temporizador em 100 milisegundo
-
-     
-      elapsedTime = 0;
-
-
-      await reply.status(201).send({
-        message: "Temporizador iniciado com sucesso",
-        newTimer: {
-          id_time: timerid,
-          id_tarefa: task.id_task,
-          tarefa: task.title,
-          temporizador: formatTime(totalTime),
-        },
-      });
-
-    } catch (error) {
-      console.error(error);
+    if (!task) {
       return reply
-        .status(500)
-        .send({
-          error: "Não foi possível iniciar o temporizador",
-          message: error.message,
-        });
+        .status(404)
+        .send("Por favor, crie uma tarefa para iniciar o temporizador.");
     }
+
+    const newTimer = await Timer.create({
+      id_task,
+      start_time: 0,
+      end_time: 0,
+      total_time: 0,
+    });
+
+    timerid = newTimer.id_time;
+    const start = Date.now();
+
+    // Aplicando a fórmula: (tempo decorrido = (Date.now() -> gerador) - tempo inicial)
+    intervalid = setInterval(async () => {
+      const elapsedTime = Date.now() - start; // Tempo decorrido em milissegundos
+      totalTime = startTime + elapsedTime; // Armazenando total do tempo
+
+      await Timer.update(
+        { start_time: totalTime },
+        { where: { id_time: timerid } }
+      );
+
+      console.log(formatTime(totalTime));
+    }, 100); // Intervalo do temporizador em 100 milissegundos
+
+    await reply.status(201).send({
+      message: "Temporizador iniciado com sucesso",
+      newTimer: {
+        id_time: timerid,
+        id_tarefa: task.id_task,
+        tarefa: task.title,
+        temporizador: formatTime(totalTime),
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    return reply.status(500).send({
+      error: "Não foi possível iniciar o temporizador",
+      message: error.message,
+    });
   }
-      //Condição de anular a função de start após sua inicialização;
-      if(started && timerid != null){ 
-        startTimer() = null;
-        started = false;
-      }
-    
-  //Função de pausar/retomar o temporizador
-  async function statusTimer(request, reply) {
+}
+
+// Condição de anular a função de start após sua inicialização
+if (started && timerid !== null) {
+  startTimer = null;
+  started = false;
+}
+
+// Função de pausar/retomar o temporizador
+async function statusTimer(request, reply) {
   try {
     if (!timerid) {
       return reply.status(400).send("Temporizador ainda não iniciado.");
@@ -123,15 +119,15 @@ let started = false;
         message: "Temporizador pausado",
         totalTime: formatTime(pausedTime),
       });
-    } else{
+    } else {
       pause = false;
       // Retomar o temporizador
-        const start = Date.now() - pausedTime; // Retoma a partir do ponto pausado
-        pausedTime = 0;
+      const start = Date.now() - pausedTime; // Retoma a partir do ponto pausado
+      pausedTime = 0;
 
       intervalid = setInterval(async () => {
-        elapsedTime = Date.now() - start; // Atualiza o tempo decorrido
-        endTime = pausedTime + elapsedTime; // subtrai o tempo pausado e o tempo decorrido
+        const elapsedTime = Date.now() - start; // Atualiza o tempo decorrido
+        endTime = pausedTime + elapsedTime; // soma o tempo pausado e o tempo decorrido
 
         // Atualiza o banco de dados com o novo tempo total
         await Timer.update(
@@ -157,33 +153,33 @@ let started = false;
     });
   }
 }
-      //Função de deletar o temporizador
-      async function deleteTimer(request, reply) {
-        try {
-          
-          if(!timerid){
-            reply.status(404).send('Temporizador não existe');
-          }
 
-          if (!pause) {
-            reply.send('Necessário pausar antes de zerar');
-          }
+// Função de deletar o temporizador
+async function deleteTimer(request, reply) {
+  try {
+    if (!timerid) {
+      return reply.status(404).send("Temporizador não existe");
+    }
 
-          await Timer.destroy({ where: { id_time: timerid }})
-          return reply.status(200).send("Temporizador deletado.");
-        
-        } catch (error) {
-          console.error(error);
-          return reply.status(500).send({ error: "Ocorreu um erro ao deletar o temporizador." });
-        }
-      }
-    
+    if (!pause) {
+      return reply.send("Necessário pausar antes de zerar");
+    }
 
-  module.exports = {
-    startTimer,
-    statusTimer,
-    deleteTimer,
-    formatTime,
-    paused,
-    resumed,
+    await Timer.destroy({ where: { id_time: timerid } });
+    return reply.status(200).send("Temporizador deletado.");
+  } catch (error) {
+    console.error(error);
+    return reply
+      .status(500)
+      .send({ error: "Ocorreu um erro ao deletar o temporizador." });
   }
+}
+
+module.exports = {
+  startTimer,
+  statusTimer,
+  deleteTimer,
+  formatTime,
+  paused,
+  resumed,
+};
