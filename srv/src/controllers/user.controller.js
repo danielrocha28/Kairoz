@@ -1,95 +1,79 @@
-const User = require('../model/user.model');
-const { z } = require('zod');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+import User from '../model/user.model.js';
+import { z } from 'zod';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
+// Validation for user registration
 const registerSchema = z.object({
-  name: z.string().min(1, 'Nome é obrigatório'),
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email'),
+  password: z.string().min(6, 'Password must be at least 6 characters long'),
 });
 
+// Validation for user login
 const loginSchema = z.object({
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
+  email: z.string().email('Invalid email'),
+  password: z.string().min(6, 'Password must be at least 6 characters long'),
 });
 
-async function registerUser(request, reply) {
+// Function to register a new user
+export async function registerUser(request, reply) {
   try {
     const validatedData = registerSchema.parse(request.body);
     const { name, email, password } = validatedData;
 
-    // Verifica se o email já está em uso
+    // Check if the email is already in use
     const existingUser = await User.findOne({ where: { email } });
-
     if (existingUser) {
-      return reply.status(400).send({ error: 'Email já está sendo utilizado' });
+      return reply.status(400).send({ error: 'Email is already in use' });
     }
 
-     const hashedPassword = await bcrypt.hash(password, 10);
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const dadosDoUsuario = {
-      name: request.body.name,
-      email: request.body.email,
-      password: hashedPassword,// O await resolve a Promise
-    };
-
-    const user = await User.create(dadosDoUsuario);
+    // Create the new user
+    const user = await User.create({ name, email, password: hashedPassword });
 
     reply.status(201).send({
-      message: 'Usuário registrado com sucesso',
+      message: 'User registered successfully',
       user: {
-        id: user.id_usuario, // Corrige o campo para o ID correto
+        id: user.id_user,
         name: user.name,
         email: user.email,
       },
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      reply.status(400).send({ error: 'Falha na validação', details: error.errors });
+      reply.status(400).send({ error: 'Validation failed', details: error.errors });
     } else {
-      console.error('Erro ao registrar usuário:', error);
-      reply.status(500).send({ error: 'Erro interno do servidor', message: error.message });
+      console.error('Error registering user:', error);
+      reply.status(500).send({ error: 'Internal server error', message: error.message });
     }
   }
-};
+}
 
+// Function to log in a user
+export async function loginUser(request, reply) {
+  try {
+    const validatedData = loginSchema.parse(request.body);
+    const { email, password } = validatedData;
 
-  async function loginUser(fastify, opts) {
-          try {
-        const validatedData = loginSchema.parse(request.body);
-        const { email, password } = validatedData;
+    // Check if the user exists
+    const user = await User.findOne({ where: { email } });
 
-        // Use await directly with async function
-        const user = await User.findOne({ where: { email } });
-        if (user && await bcrypt.compare(password, user.password)) {
-          // Await bcrypt.compare
-          const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-            expiresIn: "1h",
-          });
-          reply.send({ token });
-        } else {
-          reply.status(401).send({ error: "Credenciais inválidas" });
-        }
-      } catch (error) {
-        if (error instanceof z.ZodError) {
-          reply
-            .status(400)
-            .send({ error: "Falha na validação", details: error.errors });
-        } else {
-          console.error("Erro ao fazer login:", error);
-          reply
-            .status(500)
-            .send({
-              error: "Erro interno do servidor",
-              message: error.message,
-            });
-        }
-      }
-    };
-  
-
- module.exports = {
-  registerUser,
-  loginUser,
-};
+    // Verify if the password is correct and generate a token
+    if (user && await bcrypt.compare(password, user.password)) {
+      const token = jwt.sign({ id: user.id_user }, process.env.JWT_SECRET, { expiresIn: '8h' });
+      reply.send({ token });
+    } else {
+      reply.status(401).send({ error: 'Invalid credentials' });
+    }
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      reply.status(400).send({ error: 'Validation failed', details: error.errors });
+    } else {
+      console.error('Error logging in:', error);
+      reply.status(500).send({ error: 'Internal server error', message: error.message });
+    }
+  }
+}

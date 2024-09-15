@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // Importar o Fastify e o plugin @fastify/cors
 const Fastify = require('fastify');
 const fastifyCors = require('@fastify/cors');
@@ -48,3 +49,19 @@ start();
 
 // Exportar a instância do Fastify, se necessário para testes ou outras funcionalidades
 module.exports = fastify;
+=======
+import Fastify from 'fastify';
+import fastifyCors from '@fastify/cors';
+import userRoutes from './routes/user.routes.js';
+
+const fastify = Fastify();
+
+fastify.register(fastifyCors, { 
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+});
+
+fastify.register(userRoutes);
+
+export default fastify;
+>>>>>>> 4a152a40d614e80974ab4c402cffcf18b9f86314

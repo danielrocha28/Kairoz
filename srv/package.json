@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Descrição do seu projeto",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "node server.js",
     "start:debug": "node --inspect server.js"
