@@ -1,8 +1,16 @@
 {
+<<<<<<< HEAD
   "name": "Kairoz",
   "version": "1.0.0",
   "description": "Descrição do seu projeto",
   "main": "server.js",
+=======
+  "name": "kairoz",
+  "version": "1.0.0",
+  "description": "Descrição do seu projeto",
+  "main": "server.js",
+  "type": "module",
+>>>>>>> 4a152a40d614e80974ab4c402cffcf18b9f86314
   "scripts": {
     "start": "node server.js",
     "start:debug": "node --inspect server.js"
