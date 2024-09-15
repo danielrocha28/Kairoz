@@ -7,23 +7,23 @@ const sequelize = require('../config/database');
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
-    field: 'id_usuario', // Nome da coluna no banco de dados
+    field: 'ID_usuario', // Nome da coluna no banco de dados
   },
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-    field: 'nome_usuario', // Nome da coluna no banco de dados
+    field: 'Nome_usuario', // Nome da coluna no banco de dados
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
-    field: 'email_usuario', // Nome da coluna no banco de dados
+    field: 'Email_usuario', // Nome da coluna no banco de dados
   },
   password: {
     type: DataTypes.STRING,
     allowNull: false,
-    field: 'senha_usuario', // Nome da coluna no banco de dados
+    field: 'Senha_usuario', // Nome da coluna no banco de dados
   },
 }, {
   tableName: 'usuario', // Nome da tabela no banco de dados

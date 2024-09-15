@@ -9,31 +9,31 @@ const Task = sequelize.define(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: "ID_tarefa",
+      field: "id_tarefa",
     },
 
     title: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      field: "Titulo",
+      field: "titulo",
     },
 
     task_type: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      field: "Tipo",
+      field: "tipo",
     },
 
     estimated_time: {
       type: DataTypes.STRING,
       allowNull: true,
-      field: "Tempo_estimado",
+      field: "tempo_estimado",
     },
 
     priority: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      field: "Prioridade",
+      field: "prioridade",
     },
 
     status: {
@@ -45,7 +45,7 @@ const Task = sequelize.define(
           msg: "O status deve ser: (A fazer, Em progresso ou Concluida)",
         },
       },
-      field: "Estado",
+      field: "estado",
     },
   },
   {

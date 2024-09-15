@@ -16,8 +16,7 @@ async function timerRouter(fastify, opts) {
 
   await fastify.put("/timer/pause", async (request, reply) => {
     try {
-      await timerController.pauseTimer(request, reply); 
-    
+       await (timerController.paused, timerController.statusTimer(request, reply));
     } catch (error) {
       reply.status(500).send({
         error: "Erro ao processar a requisição",
@@ -28,7 +27,8 @@ async function timerRouter(fastify, opts) {
 
   await fastify.put("/timer/resume", async (request, reply) => {
     try {
-      await timerController.resumeTimer(request, reply); 
+      
+      await (timerController.resumed, timerController.statusTimer(request, reply));
     } catch (error) {
       reply.status(500).send({
         error: "Erro ao processar a requisição",
@@ -36,18 +36,6 @@ async function timerRouter(fastify, opts) {
       });
     }
   });
-
-  await fastify.put("/timer/save", async (request,reply) =>{
-    try {
-      await timerController.saveTimer(request,reply);
-       const { id_task } = request.body;
-    } catch (error) {
-        reply.status(500).send({
-          error: "Erro ao processar a requisição",
-          details: error.message,
-        });
-    }
-  })
 
   await fastify.delete("/timer/delete", async (request, reply) => {
     try {
