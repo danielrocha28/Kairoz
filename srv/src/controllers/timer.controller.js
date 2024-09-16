@@ -1,6 +1,5 @@
-const Timer = require("../model/timer.model");
-const Task = require("../model/task.model");
-const WebSocket = require("../../websocket.js");
+import Timer from "../model/timer.model.js";
+import Task from "../model/task.model.js";
 
 let intervalid = null;
 let endTime = 0;
@@ -16,22 +15,22 @@ let started = false;
 // Função para formatar o tempo em Hh:Mm:Ss = (00:00:00)
 function formatTime(milisegundos) {
   const hours = String(Math.floor(milisegundos / 3600000)).padStart(2, "0");
-  const min = String(Math.floor((milisegundos % 3600000) / 60000)).padStart(2, "0");
-  const seg = String(Math.floor((milisegundos % 60000) / 1000)).padStart(2, "0");
+  const min = String(Math.floor((milisegundos % 3600000) / 60000)).padStart(2,"0");
+  const seg = String(Math.floor((milisegundos % 60000) / 1000)).padStart(2,"0");
 
   return `${hours}:${min}:${seg}`;
 }
 
-async function paused() {
+export async function paused() {
   pause = true;
 }
 
-async function resumed() {
+export async function resumed() {
   pause = false;
 }
 
 // Função de iniciar o temporizador
-async function startTimer(request, reply) {
+export async function startTimer(request, reply) {
   try {
     started = true;
     const { id_task, title } = request.body;
@@ -61,6 +60,7 @@ async function startTimer(request, reply) {
       totalTime = startTime + elapsedTime; // Armazenando total do tempo
 
       await Timer.update(
+        //Salvando no banco de dados
         { start_time: totalTime },
         { where: { id_time: timerid } }
       );
@@ -93,7 +93,7 @@ if (started && timerid !== null) {
 }
 
 // Função de pausar/retomar o temporizador
-async function statusTimer(request, reply) {
+export async function statusTimer(request, reply) {
   try {
     if (!timerid) {
       return reply.status(400).send("Temporizador ainda não iniciado.");
@@ -155,7 +155,7 @@ async function statusTimer(request, reply) {
 }
 
 // Função de deletar o temporizador
-async function deleteTimer(request, reply) {
+export async function deleteTimer(request, reply) {
   try {
     if (!timerid) {
       return reply.status(404).send("Temporizador não existe");
@@ -175,11 +175,4 @@ async function deleteTimer(request, reply) {
   }
 }
 
-module.exports = {
-  startTimer,
-  statusTimer,
-  deleteTimer,
-  formatTime,
-  paused,
-  resumed,
-};
+export default formatTime;

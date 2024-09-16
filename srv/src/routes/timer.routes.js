@@ -1,11 +1,11 @@
-const Fastify = require("fastify");
+import Fastify from "fastify";
+import timerController from "../controllers/timer.controller.js";
+
 const fastify = Fastify({ logger: true });
-const timerController = require("../controllers/timer.controller");
 
 async function timerRouter(fastify, opts) {
-  
-  //Rota de iniciar o temporizador
-  await fastify.post("/timer/start", async (request, reply) => {
+  // Rota de iniciar o temporizador
+  fastify.post("/timer/start", async (request, reply) => {
     try {
       await timerController.startTimer(request, reply);
     } catch (error) {
@@ -16,8 +16,8 @@ async function timerRouter(fastify, opts) {
     }
   });
 
-  //Rota de pausar o temporizador
-  await fastify.put("/timer/pause", async (request, reply) => {
+  // Rota de pausar o temporizador
+  fastify.put("/timer/pause", async (request, reply) => {
     try {
       await timerController.paused();
       await timerController.statusTimer(request, reply);
@@ -29,8 +29,8 @@ async function timerRouter(fastify, opts) {
     }
   });
 
-  //Rota de retomar o temporizador
-  await fastify.put("/timer/resume", async (request, reply) => {
+  // Rota de retomar o temporizador
+  fastify.put("/timer/resume", async (request, reply) => {
     try {
       await timerController.resumed();
       await timerController.statusTimer(request, reply);
@@ -42,8 +42,8 @@ async function timerRouter(fastify, opts) {
     }
   });
 
-  //Rota de deletar o temporizador
-  await fastify.delete("/timer/delete", async (request, reply) => {
+  // Rota de deletar o temporizador
+  fastify.delete("/timer/delete", async (request, reply) => {
     try {
       await timerController.deleteTimer(request, reply);
     } catch (error) {
@@ -55,4 +55,4 @@ async function timerRouter(fastify, opts) {
   });
 }
 
-module.exports = timerRouter;
+export default timerRouter;

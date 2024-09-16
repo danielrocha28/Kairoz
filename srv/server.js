@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-const fastify = require('./src/app')
-
-const port = process.env.PORT || 3000
-
-const start = async () => {
-  try {
-    await fastify.listen({ port })
-    console.log(`Application Running on port: ${port}`)
-  } catch (err) {
-    console.error(err)
-    process.exit(1)
-  }
-}
-
-start()
-=======
 import fastify from './src/app.js';
 import sequelize from './src/config/database.js';
 
@@ -46,4 +29,3 @@ const testDatabaseConnection = async () => {
 // Iniciar o servidor e testar a conexão com o banco de dados
 start();
 testDatabaseConnection();
->>>>>>> 4a152a40d614e80974ab4c402cffcf18b9f86314

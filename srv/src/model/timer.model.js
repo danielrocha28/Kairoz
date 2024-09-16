@@ -1,7 +1,6 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
-const Tasks = require("./task.model");
-const ws = require('../../websocket');
+import { DataTypes } from "sequelize";
+import sequelize from "../config/database.js";
+import Tasks from "./task.model.js";
 
 const Timers = sequelize.define(
   "Timers",
@@ -18,34 +17,34 @@ const Timers = sequelize.define(
       allowNull: false,
       field: "data_inicio",
     },
-    
-    status_time:{
+
+    status_time: {
       type: DataTypes.STRING,
-      Validate: {
-        isIn: [["Pausado", "Retomado"]]
+      validate: {
+        isIn: [["Pausado", "Retomado"]],
       },
       field: "estado",
     },
 
     end_time: {
       type: DataTypes.INTEGER,
-      allowNull: true, 
+      allowNull: true,
       field: "data_fim",
     },
 
     total_time: {
-      type: DataTypes.INTEGER, 
+      type: DataTypes.INTEGER,
       allowNull: false,
       field: "tempo_total",
-      defaultValue: 0, 
+      defaultValue: 0,
     },
 
     id_task: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Tasks, 
-        key: "id_task", 
+        model: Tasks,
+        key: "id_task",
       },
       field: "id_tarefa",
     },
@@ -56,20 +55,19 @@ const Timers = sequelize.define(
     timestamps: false,
     freezeTableName: true,
     hooks: {
-      //função para automatizar o salvamento do total
-      beforeUpdate: ((Timers, options) => {
-        if (Timers.start_Time && Timers.end_time) {
-           Timers.status_time = "Pausado"
+      beforeUpdate: (Timers, options) => {
+        if (Timers.start_time && Timers.end_time) {
+          Timers.status_time = "Pausado";
           const total = Timers.end_time - Timers.start_time;
           Timers.total_time = Math.floor(total / 1000);
-          }
-        }),
+        }
+      },
     },
   }
 );
 
 // Configurar associações
-Tasks.hasMany(Timers, { foreignKey: 'id_task' }),
-Timers.belongsTo(Tasks, { foreignKey: 'id_task' }),
+Tasks.hasMany(Timers, { foreignKey: "id_task" });
+Timers.belongsTo(Tasks, { foreignKey: "id_task" });
 
-module.exports = Timers;
+export default Timers;

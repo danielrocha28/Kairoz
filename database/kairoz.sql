@@ -138,9 +138,10 @@ CREATE TABLE IF NOT EXISTS flashcard (
 CREATE TABLE IF NOT EXISTS study_time (
     id_time SERIAL PRIMARY KEY,
     id_task INT NOT NULL,
-    start_time TIMESTAMP,
-    end_time TIMESTAMP,
-    total_time INTERVAL,
+    start_time BIGINT,
+    status_time CHECK()
+    end_time BIGINT,
+    total_time BIGINT,
     FOREIGN KEY (id_task) REFERENCES task(id_task)
 );
 
