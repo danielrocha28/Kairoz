@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS goal (
     id_user INT NOT NULL,
     description TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_user) REFERENCES user(id_user)
+    FOREIGN KEY (id_user) REFERENCES "user"(id_user)
 );
 
 -- Create Question Table
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS answer (
     text TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_question) REFERENCES question(id_question),
-    FOREIGN KEY (id_user) REFERENCES user(id_user)
+    FOREIGN KEY (id_user) REFERENCES "user"(id_user)
 );
 
 -- Create Recommendation Table
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS recommendation (
     summary TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     link TEXT,
-    FOREIGN KEY (id_user) REFERENCES user(id_user)
+    FOREIGN KEY (id_user) REFERENCES "user"(id_user)
 );
 
 -- Create Calendar Table
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS calendar (
     symbol VARCHAR(50),
     start_date DATE,
     end_date DATE,
-    FOREIGN KEY (id_user) REFERENCES user(id_user)
+    FOREIGN KEY (id_user) REFERENCES "user"(id_user)
 );
 
 -- Create Filter Table
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS filter (
     day INT,
     month INT,
     year INT,
-    FOREIGN KEY (id_user) REFERENCES user(id_user),
+    FOREIGN KEY (id_user) REFERENCES "user"(id_user),
     FOREIGN KEY (id_calendar) REFERENCES calendar(id_calendar)
 );
 
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS task (
     id_sprint INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     type VARCHAR(255) NOT NULL,
-    estimated_time INTEGER, -- Consider changing INTERVAL to INTEGER or other appropriate type
+    estimated_time INTEGER,
     date DATE,
     priority VARCHAR(50) NOT NULL,
     status VARCHAR(50) NOT NULL CHECK (status IN ('to_do', 'in_progress', 'done')),
@@ -138,12 +138,12 @@ CREATE TABLE IF NOT EXISTS flashcard (
 CREATE TABLE IF NOT EXISTS study_time (
     id_time SERIAL PRIMARY KEY,
     id_task INT NOT NULL,
-    start_time TIMESTAMP,
-    end_time TIMESTAMP,
-    total_time INTERVAL,
+    start_time BIGINT,
+    status_time VARCHAR(10) CHECK (status_time IN ('Paused', 'Resumed')),
+    end_time BIGINT,
+    total_time BIGINT,
     FOREIGN KEY (id_task) REFERENCES task(id_task)
 );
-
 -- Create Chart Table
 CREATE TABLE IF NOT EXISTS chart (
     id_chart SERIAL PRIMARY KEY,
@@ -163,17 +163,5 @@ CREATE TABLE IF NOT EXISTS study (
     goal TEXT,
     progress INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_user) REFERENCES user(id_user)
+    FOREIGN KEY (id_user) REFERENCES "user"(id_user)
 );
-
--- Trigger to calculate total time
-CREATE OR REPLACE FUNCTION calculate_total_time() RETURNS TRIGGER AS $$
-BEGIN
-    NEW.total_time := NEW.end_time - NEW.start_time;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_calculate_total_time
-BEFORE INSERT OR UPDATE ON study_time
-FOR EACH ROW EXECUTE FUNCTION calculate_total_time();
