@@ -165,3 +165,14 @@ CREATE TABLE IF NOT EXISTS study (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_user) REFERENCES "user"(id_user)
 );
+
+CREATE OR REPLACE FUNCTION calculate_total_time() RETURNS TRIGGER AS $$
+BEGIN
+    NEW.total_time := NEW.end_time - NEW.start_time;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_calculate_total_time
+BEFORE INSERT OR UPDATE ON study_time
+FOR EACH ROW EXECUTE FUNCTION calculate_total_time();
