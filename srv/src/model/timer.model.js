@@ -9,33 +9,33 @@ const Timers = sequelize.define(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: "id_tempo",
+      field: "id_time",
     },
 
     start_time: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: "data_inicio",
+      field: "start_time",
     },
 
     status_time: {
       type: DataTypes.STRING,
       validate: {
-        isIn: [["Pausado", "Retomado"]],
+        isIn: [["Paused", "Resumed"]],
       },
-      field: "estado",
+      field: "status_time",
     },
 
     end_time: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      field: "data_fim",
+      field: "end_time",
     },
 
     total_time: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: "tempo_total",
+      field: "total_time",
       defaultValue: 0,
     },
 
@@ -46,23 +46,13 @@ const Timers = sequelize.define(
         model: Tasks,
         key: "id_task",
       },
-      field: "id_tarefa",
+      field: "id_task",
     },
   },
   {
-    sequelize,
-    tableName: "tempo_estudo",
+    tableName: "study_time",
     timestamps: false,
     freezeTableName: true,
-    hooks: {
-      beforeUpdate: (Timers, options) => {
-        if (Timers.start_time && Timers.end_time) {
-          Timers.status_time = "Pausado";
-          const total = Timers.end_time - Timers.start_time;
-          Timers.total_time = Math.floor(total / 1000);
-        }
-      },
-    },
   }
 );
 
