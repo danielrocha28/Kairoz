@@ -1,33 +1,35 @@
-// models/user.model.js
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+import { DataTypes } from 'sequelize';
+import sequelize from '../config/database.js';
 
 const User = sequelize.define('User', {
-  id_usuario: {
+  id_user: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
-    field: 'id_usuario', // Nome da coluna no banco de dados
+    field: 'id_user',
   },
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-    field: 'nome', // Nome da coluna no banco de dados
+    field: 'name',
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
-    field: 'email', // Nome da coluna no banco de dados
+    field: 'email',
   },
   password: {
     type: DataTypes.STRING,
     allowNull: false,
-    field: 'senha', // Nome da coluna no banco de dados
+    field: 'password',
   },
 }, {
-  tableName: 'usuario', // Nome da tabela no banco de dados
-  timestamps: false, // Desabilita createdAt e updatedAt
+  tableName: 'user',
+  timestamps: false,
+  dialectOptions: {
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+  },
 });
 
-module.exports = User; 
+export default User;

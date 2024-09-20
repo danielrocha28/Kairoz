@@ -30,17 +30,17 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: const Color.fromARGB(255, 82, 22, 185),
       ),
       body: Container(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: tasks.map((task) {
             return Dismissible(
               key: Key(task.description),
               background: Container(
                 color: const Color.fromARGB(255, 76, 37, 143),
-                child: Align(
+                child: const Align(
                   alignment: Alignment.centerRight,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
                     child: Icon(
                       Icons.delete,
                       color: Colors.white,
@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: const Color.fromARGB(255, 76, 37, 143),
       foregroundColor: foregroundColor,
       label: label,
-      labelStyle: TextStyle(color: Colors.white),
+      labelStyle: const TextStyle(color: Colors.white),
       labelBackgroundColor: const Color.fromARGB(255, 76, 37, 143),
     );
   }
@@ -119,7 +119,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showSprintPopup(BuildContext context) {
-    final TextEditingController _controller = TextEditingController();
+    final TextEditingController controller = TextEditingController();
 
     showDialog(
       context: context,
@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
         return AlertDialog(
           title: const Text("Adicionar"),
           content: TextField(
-            controller: _controller,
+            controller: controller,
             decoration: const InputDecoration(
               labelText: "Sprint",
             ),
@@ -141,7 +141,7 @@ class _HomePageState extends State<HomePage> {
             ),
             TextButton(
               onPressed: () {
-                addTask(_controller.text);
+                addTask(controller.text);
                 Navigator.of(context).pop();
               },
               child: const Text("Adicionar"),
@@ -153,7 +153,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _showTaskPopup(BuildContext context) {
-    final TextEditingController _controller = TextEditingController();
+    final TextEditingController controller = TextEditingController();
 
     showDialog(
       context: context,
@@ -161,7 +161,7 @@ class _HomePageState extends State<HomePage> {
         return AlertDialog(
           title: const Text("Adicionar"),
           content: TextField(
-            controller: _controller,
+            controller: controller,
             decoration: const InputDecoration(
               labelText: "Task",
             ),
@@ -175,7 +175,7 @@ class _HomePageState extends State<HomePage> {
             ),
             TextButton(
               onPressed: () {
-                addTask(_controller.text);
+                addTask(controller.text);
                 Navigator.of(context).pop();
               },
               child: const Text("Adicionar"),

@@ -1,13 +1,12 @@
-// models/user.model.js
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
-const Tarefa = sequelize.define('Tarefa', {
-    id_tarefa: {
+const Task = sequelize.define('Task', {
+    id_task: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        field: 'id_tarefa', 
+        field: 'id_task',
     },
     id_sprint: {
         type: DataTypes.INTEGER,
@@ -16,44 +15,44 @@ const Tarefa = sequelize.define('Tarefa', {
             model: 'Sprint', // Nome da tabela Sprint
             key: 'id_sprint',
         },
-        field: 'id_sprint', //como ta no bd 
+        field: 'id_sprint', // Como está no BD
     },
-    titulo: {
+    title: {
         type: DataTypes.STRING,
         allowNull: false,
-        field: 'titulo', 
+        field: 'title',
     },
-    tipo: {
+    type: {
         type: DataTypes.STRING,
         allowNull: false,
-        field: 'tipo', 
+        field: 'type',
     },
-    tempo_estimado: {
-        type: DataTypes.STRING, 
+    estimated_time: {
+        type: DataTypes.STRING,
         allowNull: true,
-        field: 'tempo_estimado', 
+        field: 'estimated_time',
     },
-    data: {
-        type: DataTypes.DATEONLY, //apenas data 
+    date: {
+        type: DataTypes.DATEONLY, // Apenas data
         allowNull: false,
-        field: 'data', 
+        field: 'date',
     },
-    prioridade: {
+    priority: {
         type: DataTypes.STRING,
         allowNull: false,
-        field: 'prioridade', 
+        field: 'priority',
     },
-    estado: {
+    status: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-            isIn: [['A_Fazer', 'Em_Progresso', 'Concluida']], // Restringir aos valores válidos
+            isIn: [['To_Do', 'In_Progress', 'Completed']], // Restringir aos valores válidos
         },
-        field: 'estado', 
+        field: 'status',
     },
 }, {
-    tableName: 'tarefa', 
-    timestamps: false, 
+    tableName: 'task',
+    timestamps: false,
 });
 
-module.exports = Tarefa;
+export default Task;
