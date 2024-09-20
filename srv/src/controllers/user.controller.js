@@ -1,37 +1,39 @@
+// src/controllers/user.controller.js
 import User from '../model/user.model.js';
-import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { registerSchema, loginSchema } from '../validators/user.schema.js';
+import dns from 'dns';
+import { promisify } from 'util';
 
-// Validation for user registration
-const registerSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email'),
-  password: z.string().min(6, 'Password must be at least 6 characters long'),
-});
+const resolveMxAsync = promisify(dns.resolveMx);
 
-// Validation for user login
-const loginSchema = z.object({
-  email: z.string().email('Invalid email'),
-  password: z.string().min(6, 'Password must be at least 6 characters long'),
-});
+async function validateEmailDomain(email) {
+  const domain = email.split('@')[1];
+  try {
+    const mxRecords = await resolveMxAsync(domain);
+    return mxRecords && mxRecords.length > 0;
+  } catch (error) {
+    return false;
+  }
+}
 
-// Function to register a new user
 export async function registerUser(request, reply) {
   try {
     const validatedData = registerSchema.parse(request.body);
     const { name, email, password } = validatedData;
 
-    // Check if the email is already in use
+    const isValidDomain = await validateEmailDomain(email);
+    if (!isValidDomain) {
+      return reply.status(400).send({ error: 'Invalid email domain' });
+    }
+
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return reply.status(400).send({ error: 'Email is already in use' });
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create the new user
     const user = await User.create({ name, email, password: hashedPassword });
 
     reply.status(201).send({
@@ -52,16 +54,13 @@ export async function registerUser(request, reply) {
   }
 }
 
-// Function to log in a user
 export async function loginUser(request, reply) {
   try {
     const validatedData = loginSchema.parse(request.body);
     const { email, password } = validatedData;
 
-    // Check if the user exists
     const user = await User.findOne({ where: { email } });
 
-    // Verify if the password is correct and generate a token
     if (user && await bcrypt.compare(password, user.password)) {
       const token = jwt.sign({ id: user.id_user }, process.env.JWT_SECRET, { expiresIn: '8h' });
       reply.send({ token });
