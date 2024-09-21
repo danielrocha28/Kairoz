@@ -1,4 +1,7 @@
-import { registerUser, loginUser } from '../controllers/user.controller.js';
+import { registerUser, loginUser, googleCallback } from '../controllers/user.controller.js';
+import { authGoogle, useGoogle} from '../config/passport.js';  
+
+useGoogle();
 
 const userRoutes = (fastify, options, done) => {
   // Rota de teste
@@ -24,6 +27,33 @@ const userRoutes = (fastify, options, done) => {
       reply.status(500).send({ error: 'Erro ao processar a requisição' });
     }
   });
+
+  fastify.get('/google', async (request, reply) => {
+    try{
+      await googleUser(request, reply);
+    }catch (error){
+      reply.status(500).send({error: 'Erro ao processar a requisiçao'});
+  }
+  });
+
+  fastify.get('/google/auth', async (request, reply) => {  
+    try{
+    await authGoogle(request, reply);
+  }catch (error){
+    reply.status(500).send({error: 'Erro ao processar a requisiçao'});
+}
+}); 
+
+  
+
+  fastify.get('/google/callback', async (request, reply) => {
+    try{
+      await googleCallback(request, reply);
+    }catch (error){
+      reply.status(500).send({error: 'Erro ao processar a requisiçao'});
+  }
+  }); 
+
 
   done();
 };

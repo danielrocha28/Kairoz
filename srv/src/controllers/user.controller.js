@@ -79,3 +79,28 @@ export async function loginUser(request, reply) {
 }
 
 
+
+
+//esta funçao é procesada apos a autentificaçao, gera um jwt com o id e email
+export function  googleCallback(request,reply) {
+
+  //verifica se o usuario é valido, se é autentico
+  try{ if(!req.user) {
+    return resizeBy.status(401).json({error: 'Usuario invalido'});
+  }
+
+  //gera o jwt
+    const tokenGoogle = jwt.sign({
+      id: request.user.id, 
+      email: request.user.email},
+      JWT_SECRET_KEY,
+      {expiresin:'3h'}
+    );
+    
+    reply.json({tokenGoogle});//devolve o jwt gerado
+
+  }catch (error){
+console.error('Erro ao gerar o jwt do login com google');
+  }
+
+}
