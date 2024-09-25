@@ -3,15 +3,15 @@ import sequelize from "../config/database.js";
 import Timers from "./timer.model.js";
 import Tasks from "./task.model.js";
 
-const Graphics = sequelize.define(
-  "Graphics",
+const Chart = sequelize.define(
+  "Chart",
   {
     id_graphic: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
-      field: "ID_grafico",
+      field: "id_chart",
     },
     id_time: {
       type: DataTypes.INTEGER,
@@ -20,7 +20,7 @@ const Graphics = sequelize.define(
         model: Timers,
         key: "id_time",
       },
-      field: "ID_tempo",
+      field: "id_time",
     },
     id_task: {
       type: DataTypes.INTEGER,
@@ -29,21 +29,21 @@ const Graphics = sequelize.define(
         model: Tasks,
         key: "id_task",
       },
-      field: "ID_tarefa",
+      field: "id_task",
     },
   },
   {
-    tableName: "grafico", // Nome da tabela no banco de dados
+    tableName: "chart", // Nome da tabela no banco de dados
     timestamps: false, // Se não estiver usando createdAt/updatedAt
     freezeTableName: true, // Para evitar pluralização automática
   }
 );
 
 // Definindo as associações
-Graphics.hasMany(Timers, { foreignKey: "id_time" });
-Timers.belongsTo(Graphics, { foreignKey: "id_time" });
+Chart.hasMany(Timers, { foreignKey: "id_time" });
+Timers.belongsTo(Chart, { foreignKey: "id_time" });
 
-Graphics.hasMany(Tasks, { foreignKey: "id_task" });
-Tasks.belongsTo(Graphics, { foreignKey: "id_task" });
+Chart.hasMany(Tasks, { foreignKey: "id_task" });
+Tasks.belongsTo(Chart, { foreignKey: "id_task" });
 
-export default Graphics;
+export default Chart;

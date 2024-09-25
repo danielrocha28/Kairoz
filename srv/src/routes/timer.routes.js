@@ -6,7 +6,7 @@ const fastify = Fastify({ logger: true });
 async function timerRouter(fastify, opts) {
   // Rota de iniciar o temporizador
   fastify.post(
-    "https://kairoz.onrender.com/timer/start",
+    '/timer/start',
     async (request, reply) => {
       try {
         await timerController.startTimer(request, reply);
@@ -21,7 +21,7 @@ async function timerRouter(fastify, opts) {
 
   // Rota de pausar o temporizador
   fastify.put(
-    "https://kairoz.onrender.com/timer/pause",
+    '/timer/pause',
     async (request, reply) => {
       try {
         await timerController.paused();
@@ -37,7 +37,7 @@ async function timerRouter(fastify, opts) {
 
   // Rota de retomar o temporizador
   fastify.put(
-    "https://kairoz.onrender.com/timer/resume",
+    '/timer/resume',
     async (request, reply) => {
       try {
         await timerController.resumed();
@@ -53,7 +53,7 @@ async function timerRouter(fastify, opts) {
 
   // Rota de deletar o temporizador
   fastify.delete(
-    "https://kairoz.onrender.com/timer/delete",
+    '/timer/delete',
     async (request, reply) => {
       try {
         await timerController.deleteTimer(request, reply);
