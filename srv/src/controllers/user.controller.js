@@ -3,6 +3,9 @@ import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+
+
+
 // Validation for user registration
 const registerSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -78,10 +81,7 @@ export async function loginUser(request, reply) {
   }
 }
 
-
-
-
-//esta funçao é procesada apos a autentificaçao, gera um jwt com o id e email
+//esta funçao é procesada apos a autentificaçao com o google, gera um jwt com o id e email
 export function  googleCallback(request,reply) {
 
   //verifica se o usuario é valido, se é autentico
