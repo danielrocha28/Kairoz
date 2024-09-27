@@ -1,7 +1,6 @@
 import { registerUser, loginUser, googleCallback } from '../controllers/user.controller.js';
 import fastifyPassport from '@fastify/passport';
-import  passportSetup from '../config/passport.js';  
-
+import passport from 'passport';
 
 const userRoutes = (fastify, options, done) => {
 
@@ -38,17 +37,11 @@ const userRoutes = (fastify, options, done) => {
   });
   
 
-  fastify.get('/auth/google/callback', async (request, reply) => {
-      try {
-        await googleCallback(request, reply);
-      } catch (error) {
-        reply.status(500).send({ error: 'Erro ao processar a requisição' });
-      }
-    });
+  fastify.get('/auth/google/callback', {
+    preHandler: passport.authenticate('google', { failureRedirect: '/' })
+  }, googleCallback);
   
 
-
-    
 
   fastify.get('/', (request, reply) => {
     reply
