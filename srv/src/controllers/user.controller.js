@@ -8,6 +8,15 @@ import { promisify } from 'util';
 
 const resolveMxAsync = promisify(dns.resolveMx);
 
+
+
+// Validation for user registration
+const registerSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  email: z.string().email('Invalid email'),
+  password: z.string().min(6, 'Password must be at least 6 characters long'),
+});
+
 async function validateEmailDomain(email) {
   const domain = email.split('@')[1];
   try {
@@ -75,4 +84,28 @@ export async function loginUser(request, reply) {
       reply.status(500).send({ error: 'Internal server error', message: error.message });
     }
   }
+}
+
+//esta funçao é procesada apos a autentificaçao com o google, gera um jwt com o id e email
+export function  googleCallback(request,reply) {
+
+  //verifica se o usuario é valido, se é autentico
+  try{ if(!req.user) {
+    return resizeBy.status(401).json({error: 'Usuario invalido'});
+  }
+
+  //gera o jwt
+    const tokenGoogle = jwt.sign({
+      id: request.user.id, 
+      email: request.user.email},
+      JWT_SECRET_KEY,
+      {expiresin:'3h'}
+    );
+    
+    reply.json({tokenGoogle});//devolve o jwt gerado
+
+  }catch (error){
+console.error('Erro ao gerar o jwt do login com google');
+  }
+
 }

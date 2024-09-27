@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 
 // Load environment variables from the .env file
 dotenv.config();
+console.log(process.env);
 
 // Validation for required environment variables
 const requiredEnvVars = ['DB_NAME', 'DB_USER', 'DB_PASS', 'DB_HOST', 'DB_PORT', 'DB_SSL'];

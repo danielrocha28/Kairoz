@@ -2,6 +2,7 @@ import Task from '../model/task.model.js';
 import taskSchema from '../validators/task.schema.js';
 import { z } from 'zod'; 
 
+
 const handleZodError = (error, reply) => {
   if (error instanceof z.ZodError) {
     reply.code(400).send({ errors: error.errors });
