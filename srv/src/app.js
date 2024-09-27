@@ -1,9 +1,9 @@
 import Fastify from 'fastify';
-import homeRouter from "./routes/home.router.js"; 
+import homeRouter from "./routes/home.routes.js"; 
 import userRoutes from './routes/user.routes.js';
 import timerRouter from './routes/timer.routes.js';
 import fastifyCookie from '@fastify/cookie';
-import dotenv, { config } from 'dotenv';
+import dotenv from 'dotenv';
 import fastifyCors from "@fastify/cors";
 //import fastifySession from '@fastify/session';
 //import Redis from 'ioredis';
@@ -15,7 +15,7 @@ const fastify = Fastify({ pluginTimeout: 30000 });
 fastify.register(fastifyCors, {
   origin: 'https://kairoz.onrender.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-});
+},{ prefix: '/'});
 
 // Registro do plugin de cookies
 fastify.register(fastifyCookie);
