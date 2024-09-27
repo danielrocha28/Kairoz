@@ -1,29 +1,35 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/database.js'; 
+import sequelize from '../config/database.js';
 
 const Task = sequelize.define('Task', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
+    field: 'id_task'
   },
   title: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      notEmpty: true
+    }
   },
   description: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
+    allowNull: true
   },
-  parentId: {
+  parentid: {
     type: DataTypes.INTEGER,
     allowNull: true,
     references: {
-      model: 'Task',
-      key: 'id'
+      model: 'tasks',
+      key: 'id_task'
     }
   },
   repeat: {
     type: DataTypes.ENUM('daily', 'weekly', 'monthly', 'yearly', 'none'),
+    allowNull: true,
     defaultValue: 'none'
   },
   category: {
@@ -32,28 +38,33 @@ const Task = sequelize.define('Task', {
   },
   priority: {
     type: DataTypes.ENUM('low', 'medium', 'high'),
+    allowNull: true,
     defaultValue: 'medium'
   },
   status: {
     type: DataTypes.ENUM('pending', 'in-progress', 'completed'),
+    allowNull: true,
     defaultValue: 'pending'
   },
   dueDate: {
-    type: DataTypes.DATE
+    type: DataTypes.DATE,
+    allowNull: true,
+    field: 'duedate'
   },
   reminder: {
-    type: DataTypes.DATE
+    type: DataTypes.DATE,
+    allowNull: true
   },
   notes: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
+    allowNull: true
   }
 }, {
   tableName: 'tasks',
-  timestamps: true
+  timestamps: true,
+  underscored: true
 });
 
-// Define o autorelacionamento
-Task.hasMany(Task, { as: 'Subtasks', foreignKey: 'parentId' });
-Task.belongsTo(Task, { as: 'ParentTask', foreignKey: 'parentId' });
+Task.belongsTo(Task, { as: 'parent', foreignKey: 'parentid' });
 
 export default Task;

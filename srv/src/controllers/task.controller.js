@@ -1,71 +1,75 @@
-import Task from '../model/task.model.js'; 
-import taskSchema from '../validators/task.schema.js';  
-import { z } from 'zod';
+import Task from '../model/task.model.js';
+import taskSchema from '../validators/task.schema.js';
+import { z } from 'zod'; 
 
-export const createTask = async (req, res) => {
-  try {
-    const validatedData = taskSchema.parse(req.body);
-    const newTask = await Task.create(validatedData);
-    res.status(201).json(newTask);
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      res.status(400).json({ errors: error.errors });
-    } else {
-      res.status(500).json({ error: error.message });
-    }
+const handleZodError = (error, reply) => {
+  if (error instanceof z.ZodError) {
+    reply.code(400).send({ errors: error.errors });
+  } else {
+    reply.code(500).send({ error: error.message });
   }
 };
 
-export const getTasks = async (req, res) => {
+const handleServerError = (error, reply) => {
+  reply.code(500).send({ error: error.message });
+};
+
+export async function createTask(request, reply) {
+  try {
+    const validatedData = taskSchema.parse(request.body);
+    const newTask = await Task.create(validatedData);
+    reply.code(201).send(newTask);
+  } catch (error) {
+    handleZodError(error, reply);
+  }
+}
+
+export async function getTasks(request, reply) {
   try {
     const tasks = await Task.findAll();
-    res.status(200).json(tasks);
+    reply.code(200).send(tasks);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    handleServerError(error, reply);
   }
-};
+}
 
-export const getTaskById = async (req, res) => {
+export async function getTaskById(request, reply) {
   try {
-    const task = await Task.findByPk(req.params.id);
+    const task = await Task.findByPk(request.params.id_task); 
     if (task) {
-      res.status(200).json(task);
+      reply.code(200).send(task);
     } else {
-      res.status(404).json({ error: 'Task not found' });
+      reply.code(404).send({ error: `Task with id_task ${request.params.id_task} not found` });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    handleServerError(error, reply);
   }
-};
+}
 
-export const updateTask = async (req, res) => {
+export async function updateTask(request, reply) {
   try {
-    const validatedData = taskSchema.parse(req.body);
-    const [updated] = await Task.update(validatedData, { where: { id: req.params.id } });
+    const validatedData = taskSchema.parse(request.body);
+    const [updated] = await Task.update(validatedData, { where: { id_task: request.params.id_task } }); 
     if (updated) {
-      const updatedTask = await Task.findByPk(req.params.id);
-      res.status(200).json(updatedTask);
+      const updatedTask = await Task.findByPk(request.params.id_task); 
+      reply.code(200).send(updatedTask);
     } else {
-      res.status(404).json({ error: 'Task not found' });
+      reply.code(404).send({ error: `Task with id_task ${request.params.id_task} not found` });
     }
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      res.status(400).json({ errors: error.errors });
-    } else {
-      res.status(500).json({ error: error.message });
-    }
+    handleZodError(error, reply);
   }
-};
+}
 
-export const deleteTask = async (req, res) => {
+export async function deleteTask(request, reply) {
   try {
-    const deleted = await Task.destroy({ where: { id: req.params.id } });
+    const deleted = await Task.destroy({ where: { id_task: request.params.id_task } }); 
     if (deleted) {
-      res.status(204).send();
+      reply.code(204).send();  
     } else {
-      res.status(404).json({ error: 'Task not found' });
+      reply.code(404).send({ error: `Task with id_task ${request.params.id_task} not found` });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    handleServerError(error, reply);
   }
-};
+}
