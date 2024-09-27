@@ -13,15 +13,11 @@
     "bcrypt": "^5.1.1",
     "dns": "^0.2.2",
     "dotenv": "^16.4.5",
-<<<<<<< HEAD
     "eslint": "^9.9.1",
     "fastify": "^4.28.1",
     "gauge": "^5.0.2",
     "glob": "^11.0.0",
-=======
-    "fastify": "^4.28.1",
     "fastify-formbody": "^5.3.0",
->>>>>>> main
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.12.0",
     "pg-hstore": "^2.3.4",
@@ -29,12 +25,9 @@
     "sequelize": "^6.37.3",
     "util": "^0.12.5",
     "zod": "^3.23.8"
-<<<<<<< HEAD
-=======
   },
   "devDependencies": {
     "eslint": "^9.9.0",
     "nodemon": "^3.1.4"
->>>>>>> main
   }
 }
