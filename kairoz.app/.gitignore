@@ -30,6 +30,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+.metadata
 
 # Symbolication related
 app.*.symbols
@@ -41,3 +42,17 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# iOS build
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/.generated
+ios/Pods/
+/ios/Runner.xcworkspace/
+
+# Web related files
+/web/.dart_tool/
+/web/build/
+.web.cache/
+

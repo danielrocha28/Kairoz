@@ -1,7 +1,7 @@
-import WebSocket from "ws";
-import http from "http";
-import dotenv from "dotenv";
-import fastify from "./src/app";
+import WebSocket from 'ws';
+import http from 'http';
+import dotenv from 'dotenv';
+import fastify from './src/app';
 
 dotenv.config();
 

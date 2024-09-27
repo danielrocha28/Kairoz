@@ -1,5 +1,5 @@
-import Fastify from "fastify";
-import timerController from "../controllers/timer.controller.js";
+import Fastify from '@fastify/cookie';
+import timerController from '../controllers/timer.controller.js';
 
 const fastify = Fastify({ logger: true });
 
@@ -12,7 +12,7 @@ async function timerRouter(fastify, opts) {
         await timerController.startTimer(request, reply);
       } catch (error) {
         reply.status(500).send({
-          error: "Erro ao processar a requisição",
+          error: 'Erro ao processar a requisição',
           details: error.message,
         });
       }
@@ -28,7 +28,7 @@ async function timerRouter(fastify, opts) {
         await timerController.statusTimer(request, reply);
       } catch (error) {
         reply.status(500).send({
-          error: "Erro ao processar a requisição",
+          error: 'Erro ao processar a requisição',
           details: error.message,
         });
       }
@@ -44,7 +44,7 @@ async function timerRouter(fastify, opts) {
         await timerController.statusTimer(request, reply);
       } catch (error) {
         reply.status(500).send({
-          error: "Erro ao processar a requisição",
+          error: 'Erro ao processar a requisição',
           details: error.message,
         });
       }
@@ -59,7 +59,7 @@ async function timerRouter(fastify, opts) {
         await timerController.deleteTimer(request, reply);
       } catch (error) {
         reply.status(500).send({
-          error: "Erro ao processar a requisição",
+          error: 'Erro ao processar a requisição',
           details: error.message,
         });
       }

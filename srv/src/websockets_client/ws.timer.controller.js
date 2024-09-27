@@ -1,7 +1,6 @@
 import WebSocket from '../../websocket';
-import Timer from "../model/timer.model";
-import timerRouter from "../routes/timer.routes";
-import { Sequelize } from "sequelize";
+import Timer from '../model/timer.model';
+import { Sequelize } from 'sequelize';
 
 class sessions {
   constructor(request) {
@@ -13,55 +12,61 @@ class sessions {
 }
 
 // Manipule eventos de conexão
-WebSocket.on("connection", (request, ws) => {
-  console.log("Novo cliente conectado");
-
-  if (request.session && request.session.idTimer) {
-    console.log("Sessão e temporizador encontrado");
-  } else {
-    console.log("Sessão não encontrada");
-  }
+WebSocket.on('connection', (request, ws) => {
+  console.log('Novo cliente conectado');
 
   const session = new sessions(request);
 
-  ws.on("message", async (message) => {
-    switch (timerRouter) {
-      case "/timer/start":
-        await Timer.update(
-          { start_time: session.timeStarted },
-          { where: { id_time: session.idTimer } }
-        );
-        ws.send(`Você disse: ${message}`);
-        break;
+  ws.on('message', async (message) => {
+    const data = JSON.parse(message); // Supondo que você está enviando um JSON com uma ação
+    const action = data.action;
 
-      case "/timer/pause":
-        // Atualiza o banco de dados com o estado "Pausado"
-        await Timer.update(
-          { status_time: "Paused", end_time: session.timePaused },
-          { totalTime: Sequelize.literal("end_time - start_time") },
-          { where: { id_time: session.idTimer } }
-        );
-        ws.send(`Você disse: ${message}`);
-        break;
+    try {
+      switch (action) {
+        case 'start':
+          await Timer.update(
+            { start_time: session.timeStarted },
+            { where: { id_time: session.idTimer } }
+          );
+          ws.send('Temporizador iniciado com sucesso!');
+          break;
 
-      case "/timer/resume":
-        // Atualiza o banco de dados com o valor
-        await Timer.update(
-          { status_time: "Resumed", start_time: session.timeResumed },
-          { where: { id_time: session.idTimer } }
-        );
-        ws.send(`Você disse: ${message}`);
-        break;
+        case 'pause':
+          await Timer.update(
+            { status_time: 'Paused', end_time: session.timePaused },
+            { total_time: Sequelize.literal('end_time - start_time')},
+            { where: { id_time: session.idTimer } },
+          );
+          ws.send('Temporizador pausado com sucesso!');
+          break;
 
-      case "/timer/delete":
-        ws.on("close", () => {
-          console.log("Cliente desconectado");
-        });
-        break;
+        case 'resume':
+          await Timer.update(
+            { status_time: 'Resumed', start_time: session.timeResumed },
+            { where: { id_time: session.idTimer } }
+          );
+          ws.send('Temporizador retomado com sucesso!');
+          break;
+
+        case 'delete':
+          await Timer.destroy({ where: { id_time: session.idTimer } });
+          ws.send('Temporizador deletado com sucesso!');
+          break;
+
+        default:
+          ws.send(`Ação não reconhecida: ${action}`);
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar o temporizador:', error);
+      ws.send(`Erro ao processar a ação: ${error.message}`);
     }
   });
 
-  ws.on("error", (error) => {
-    console.error("Erro WebSocket:", error);
+  ws.on('close', () => {
+    console.log('Cliente desconectado');
+  });
+
+  ws.on('error', (error) => {
+    console.error('Erro WebSocket:', error);
   });
 });
