@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS study_time (
     id_time SERIAL PRIMARY KEY,
     id_task INT NOT NULL,
     start_time BIGINT,
-    status_time VARCHAR(10) CHECK(status_time IN ('Paused', 'Resumed')))
+    status_time CHECK (status_time IN ('Paused', 'Resumed')),
     end_time BIGINT,
     total_time BIGINT,
     FOREIGN KEY (id_task) REFERENCES task(id_task)
