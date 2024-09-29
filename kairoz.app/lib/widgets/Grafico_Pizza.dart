@@ -19,7 +19,7 @@ class PieChartContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400, // Define a altura do container
+      height: 400,
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(color: Colors.grey, width: 1),
@@ -28,15 +28,14 @@ class PieChartContainer extends StatelessWidget {
       child: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0), // Espaçamento interno
-            child: PieChartSample(), // Gráfico de Pizza
+            padding: const EdgeInsets.all(16.0),
+            child: PieChartSample(),
           ),
           Positioned(
             top: 16,
             right: 16,
             child: PopupMenuButton<String>(
               onSelected: (value) => MenuButton(value),
-
               itemBuilder: (BuildContext context) {
                 return [
                   PopupMenuItem<String>(
@@ -53,7 +52,7 @@ class PieChartContainer extends StatelessWidget {
                   ),
                 ];
               },
-              icon: Icon(Icons.menu), // Ícone do botão de menu
+              icon: Icon(Icons.menu),
             ),
           ),
         ],
@@ -94,10 +93,10 @@ class PieChartSample extends StatelessWidget {
           ),
         ],
         borderData: FlBorderData(
-          show: false, // Desativa a borda
+          show: false,
         ),
-        centerSpaceRadius: 0, // Espaço central
-        sectionsSpace: 0, // Espaço entre as seções
+        centerSpaceRadius: 0,
+        sectionsSpace: 0,
       ),
     );
   }
