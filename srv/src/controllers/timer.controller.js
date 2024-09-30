@@ -7,6 +7,7 @@ class ActiveTimers {
     this.startTime = 0;
     this.totalTime = 0;
     this.pausedTime = 0;
+    this.interval = null;
     this.task = null;
     this.timerid = null;
     this.pause = false;
@@ -22,7 +23,7 @@ class ActiveTimers {
 const active = new ActiveTimers();
 
 // Função para formatar o tempo em Hh:Mm:Ss = (00:00:00)
-function formatTime(active, milisegundos) {
+export function formatTime(active, milisegundos) {
   active.time.hours = String(Math.floor(milisegundos / 3600000)).padStart(2,'0');
   active.time.minutes = String(Math.floor((milisegundos % 3600000) / 60000)).padStart(2,'0');
   active.time.seconds = String(Math.floor((milisegundos % 60000) / 1000)).padStart(2, '0');
@@ -58,13 +59,20 @@ export async function startTimer(request, reply) {
       total_time: 0,
     });
 
-    request.session.idTimer = active.timerid = newTimer.id_task;
+    request.session.idTimer = active.timerid = newTimer.id_time;
     active.started = true;
     active.task = task;
+    request.session.titleTask = active.task;
+    
+    if (request.session.idTimer) {
+      console.log("Temporizador ID armazenado:", request.session.idTimer);
+    } else {
+      console.log("Nenhum temporizador ID encontrado na sessão.");
+    }
 
     const start = Date.now();
 
-    active.timerid = setInterval(async () => {
+    active.interval = setInterval(async () => {
       const elapsedTime = Date.now() - start;
       active.totalTime = active.startTime + elapsedTime;
       request.session.timeStarted = active.totalTime;
@@ -103,11 +111,10 @@ export async function statusTimer(request, reply) {
       return reply.status(400).send('Temporizador ainda não iniciado.');
     }
 
-    // Verifica se o temporizador está pausado ou em execução
-    if (!active.pause) {
+    if (active.pause) {
       active.pause = true;
 
-      clearInterval(active.timerid); // Pausa o loop
+      clearInterval(active.interval); // Pausa o loop
       // Armazena o tempo total decorrido até a pausa
       active.pausedTime = active.totalTime + active.endTime;
       active.totalTime = 0;
@@ -125,13 +132,13 @@ export async function statusTimer(request, reply) {
       const start = Date.now() - active.pausedTime; // Retoma a partir do ponto pausado
       active.pausedTime = 0;
 
-      active.timerid = setInterval(async () => {
+      active.interval = setInterval(async () => {
         const elapsedTime = Date.now() - start; // Atualiza o tempo decorrido
         active.endTime = active.pausedTime + elapsedTime;
         request.session.timeResumed = active.endTime;
 
         // Exibe o tempo formatado no console
-        console.log('Temporizador: ' + formatTime(active, active.endTime));
+        console.log(formatTime(active, active.endTime));
       }, 1000);
 
       // Retorna o status de retomada e o tempo decorrido
@@ -169,5 +176,3 @@ export async function deleteTimer(request, reply) {
       .send({ error: 'Ocorreu um erro ao deletar o temporizador.' });
   }
 }
-
-export default formatTime;

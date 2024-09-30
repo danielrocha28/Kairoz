@@ -8,6 +8,7 @@ const userRoutes = (fastify, options, done) => {
   // Rota para registrar o usuário
   fastify.post('/register', async (request, reply) => {
     try {
+      console.log('rota /register funcionando');
       console.log("Corpo da Requisição:", request.body);
       await registerUser(request, reply);
     } catch (error) {
