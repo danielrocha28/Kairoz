@@ -1,18 +1,21 @@
 import Timer from '../model/timer.model.js';
 import Task from '../model/task.model.js';
+import WebSocket from '../websockets_client/ws.timer.controller.js'; // Websocket cliente
 
+// Classe para Temporizadores ativos
 class ActiveTimers {
   constructor() {
-    this.endTime = 0;
-    this.startTime = 0;
-    this.totalTime = 0;
+    this.endTime = 0; 
+    this.startTime = 0; 
+    this.totalTime = 0; 
     this.pausedTime = 0;
     this.interval = null;
-    this.task = null;
+    this.task = null; 
     this.timerid = null;
     this.pause = false;
     this.started = false;
-    this.time = {
+    this.ws = WebSocket; // Armazenando em uma variavel para mandar mensagens para o servidor
+    this.time = { // Variavel do Temporizador
       hours: null,
       minutes: null,
       seconds: null,
@@ -24,8 +27,8 @@ const active = new ActiveTimers();
 
 // Função para formatar o tempo em Hh:Mm:Ss = (00:00:00)
 export function formatTime(active, milisegundos) {
-  active.time.hours = String(Math.floor(milisegundos / 3600000)).padStart(2,'0');
-  active.time.minutes = String(Math.floor((milisegundos % 3600000) / 60000)).padStart(2,'0');
+  active.time.hours = String(Math.floor(milisegundos / 3600000)).padStart(2, '0');
+  active.time.minutes = String(Math.floor((milisegundos % 3600000) / 60000)).padStart(2, '0');
   active.time.seconds = String(Math.floor((milisegundos % 60000) / 1000)).padStart(2, '0');
 
   return `${active.time.hours}:${active.time.minutes}:${active.time.seconds}`;
@@ -47,13 +50,12 @@ export async function startTimer(request, reply) {
     let task = await Task.findAll({ where: { id_task, title } });
 
     if (!task) {
-      return reply
-        .status(404)
-        .send('Por favor, crie uma tarefa para iniciar o temporizador.');
+      return reply.status(404).send('Por favor, crie uma tarefa para iniciar o temporizador.');
     }
 
     const newTimer = await Timer.create({
       id_task,
+      status_time: null,
       start_time: 0,
       end_time: 0,
       total_time: 0,
@@ -63,12 +65,6 @@ export async function startTimer(request, reply) {
     active.started = true;
     active.task = task;
     request.session.titleTask = active.task;
-    
-    if (request.session.idTimer) {
-      console.log("Temporizador ID armazenado:", request.session.idTimer);
-    } else {
-      console.log("Nenhum temporizador ID encontrado na sessão.");
-    }
 
     const start = Date.now();
 
@@ -77,7 +73,14 @@ export async function startTimer(request, reply) {
       active.totalTime = active.startTime + elapsedTime;
       request.session.timeStarted = active.totalTime;
 
-      console.log(formatTime(active, active.totalTime));
+      // Enviando uma mensagem para o servidor ws via JSON
+      active.ws.send(JSON.stringify({
+        action: "start",
+        idTimer: active.timerid,
+        timeStarted: active.totalTime,
+      }));
+
+      return formatTime(active, active.totalTime);
     }, 1000);
 
     await reply.status(201).send({
@@ -113,14 +116,18 @@ export async function statusTimer(request, reply) {
 
     if (active.pause) {
       active.pause = true;
-
       clearInterval(active.interval); // Pausa o loop
       // Armazena o tempo total decorrido até a pausa
       active.pausedTime = active.totalTime + active.endTime;
       active.totalTime = 0;
       active.endTime = 0;
       request.session.timePaused = active.pausedTime;
-
+      // Mensagem para o ws
+      active.ws.send(JSON.stringify({
+        action: 'pause',
+        idTimer: active.timerid,
+        pausedTime: active.pausedTime,
+      }));
       // Retorna o status de pausa e o tempo decorrido formatado
       return reply.send({
         message: 'Temporizador pausado',
@@ -137,13 +144,20 @@ export async function statusTimer(request, reply) {
         active.endTime = active.pausedTime + elapsedTime;
         request.session.timeResumed = active.endTime;
 
+        // Mensagem para o ws
+        active.ws.send(JSON.stringify({
+          action: "resume",
+          idTimer: active.timerid,
+          resumedTime: active.endTime,
+        }));
+
         // Exibe o tempo formatado no console
-        console.log(formatTime(active, active.endTime));
+        return formatTime(active, active.endTime);
       }, 1000);
 
       // Retorna o status de retomada e o tempo decorrido
       return reply.send({
-        message: 'Temporizador retomado',
+        message: "Temporizador retomado",
         totalTime: formatTime(active, active.endTime),
       });
     }
@@ -171,8 +185,8 @@ export async function deleteTimer(request, reply) {
     return reply.status(200).send('Temporizador deletado.');
   } catch (error) {
     console.error(error);
-    return reply
-      .status(500)
-      .send({ error: 'Ocorreu um erro ao deletar o temporizador.' });
+    return reply.status(500).send({ error: 'Ocorreu um erro ao deletar o temporizador.' });
   }
 }
+
+formatTime(active); // Puxando a função para tornar acessível as variaveis to time

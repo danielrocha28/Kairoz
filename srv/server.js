@@ -8,7 +8,7 @@ const port = process.env.PORT || 3000;
 const start = async () => {
   try {
     await testDatabaseConnection(); 
-    await wss();
+    await wss;
     await fastify.listen({ port, host });
     console.log(`Application running on http://${host}:${port}`);
   } catch (err) {

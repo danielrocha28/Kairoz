@@ -1,95 +1,88 @@
-import WebSocket from '../../websocket';
-import Timer from '../model/timer.model';
-import { startTimer, statusTimer } from '../controllers/timer.controller.js'; // Importa funções do timer.controller
+import ws from 'ws';
+import dotenv from 'dotenv';
+import Timer from '../model/timer.model.js';
 import { Sequelize } from 'sequelize';
 
-async function getSession(request) {
-  const cookies = request.headers.cookie;
-  const sessionId = extractSession(cookies);
+dotenv.config();
 
-  if (!sessionId) {
-    throw new Error("Sessão inválida ou não autenticada");
-  }
+// Criando uma conexão com o servidor WebSocket
+const WebSocket = new ws(process.env.WEBSOCKET_URL);
 
-  const session = await retrieveSession(sessionId);
-  console.log("Sessão recuperada!", session);
-  return session;
-}
-
-// Classe para armazenar todos os valores geridos pelo temporizador
-class Session {
-  constructor(sessionData) {
-    this.timeStarted = sessionData.timeStarted;
-    this.timePaused = sessionData.timePaused;
-    this.idTimer = sessionData.idTimer;
-    this.timeResumed = sessionData.timeResumed;
-  }
-}
-
-// Função de extração do SessionId dos cookies
-function extractSession(cookies) {
-  const match = cookies.match(/sessionId=([^;]+)/);
-  return match ? match[1] : null;
-}
-
-WebSocket.on('connection', async (request, ws) => {
-  console.log('Novo cliente conectado');
-
-  // Recupera a sessão do request
-  const sessionData = await getSession(request);
-  const session = new Session(sessionData); // Cria uma nova instância com os dados da sessão
-
-  ws.on('message', async (message) => {
-    const messageWS = JSON.parse(message);
-    const action = messageWS.action;
-
-    try {
-      switch (action) {
-        case "timer/start":
-          // Chama a função para iniciar o temporizador
-          await startTimer(request);
-          // Atualiza o banco de dados para iniciar o temporizador
-          await Timer.update({ start_time: session.timeStarted },
-            { where: { id_time: session.idTimer } });
-          ws.send(JSON.stringify({ message: "Temporizador pausado com sucesso!" }));
-          break;
-
-        case "timer/pause":
-          // Chama a função para pausar o temporizador
-          await statusTimer(request);
-          // Atualiza o banco de dados se necessário
-          await Timer.update({status_time: "Paused", end_time: session.timePaused,
-              total_time: Sequelize.literal("end_time - start_time")},
-              { where: { id_time: session.idTimer } });
-          ws.send(JSON.stringify({ message: "Temporizador pausado com sucesso!" }));
-          break;
-
-        case "timer/resume":
-          // Chama a função para retomar o temporizador
-          await statusTimer(request);
-          // Atualiza o banco de dados se necessário
-          await Timer.update(
-            { status_time: "Resumed", end_time: session.timeResumed },
-            { where: { id_time: session.idTimer } }
-          );
-          ws.send(JSON.stringify({ message: "Temporizador retomado com sucesso!" }));
-          break;
-
-        default:
-          ws.send(JSON.stringify({ error: `Ação não reconhecida: ${action}` }));
-      }
-
-      ws.on('close', (event) => {
-        console.log('Conexão WebSocket fechada:', event.reason);
-      });
-
-      ws.on('error', (error) => {
-        console.error('Erro no WebSocket:', error.message);
-      });
-
-    } catch (error) {
-      console.error('Erro ao processar a ação:', error);
-      ws.send(JSON.stringify({ error: `Erro ao processar a ação: ${error.message}` }));
-    }
-  });
+// Abrindo servidor lado cliente
+WebSocket.on('open', () => {
+  console.log('Conexão WebSocket aberta.');
 });
+
+// Mensagens enviadas pelo cliente
+WebSocket.on('message', async (message) => {
+   console.log("Mensagem recebida do WebSocket:", message);
+  try {
+
+    const messageWS = JSON.parse(message); // const que armazena as ações do cliente
+    console.log('Mensagem recebida', messageWS);
+  
+  // switch que interage com o banco de dados de acordo com as ações do cliente
+  switch (messageWS.action) {
+    case "start":
+      try {
+        await Timer.update(
+          { start_time: messageWS.timeStarted },
+          { where: { id_time: messageWS.idTimer } }
+        );
+        console.log(
+          `Timer ${messageWS.idTimer} iniciado com tempo: ${messageWS.timeStarted}`
+        );
+      } catch (error) {
+        console.error("Erro ao iniciar o timer:", error);
+      }
+      break;
+
+    case "pause":
+      try {
+        await Timer.update(
+          {
+            status_time: "Paused",
+            end_time: messageWS.pausedTime, // Corrigido para usar o campo correto
+            total_time: Sequelize.literal("end_time - start_time"),
+          },
+          { where: { id_time: messageWS.idTimer } }
+        );
+        console.log(
+          `Timer ${messageWS.idTimer} pausado. Tempo pausado: ${messageWS.pausedTime}`
+        );
+      } catch (error) {
+        console.error('Erro ao pausar o timer:', error);
+      }
+      break;
+
+    case "resume":
+      try {
+        await Timer.update(
+          { status_time: "Resumed", start_time: messageWS.resumedTime },
+          { where: { id_time: messageWS.idTimer } }
+        );
+        console.log(
+          `Timer ${messageWS.idTimer} retomado com tempo: ${messageWS.resumedTime}`
+        );
+      } catch (error) {
+        console.error('Erro ao retomar o timer:', error);
+      }
+      break;
+    default:
+      WebSocket.send(JSON.stringify({ error: 'Ação não reconhecida' }));
+  }
+  } catch (error) {
+    console.error('Erro ao processar a mensagem:', error);
+    WebSocket.send(JSON.stringify({ error: 'Erro ao processar a ação.' }));
+  }
+});
+// Caso o cliente se desconecte
+WebSocket.on('close', () => {
+  console.log('Conexão com o servidor WebSocket fechada');
+});
+// Caso houver algum erro com o server
+WebSocket.on('error', (error) => {
+  console.error('Erro na conexão WebSocket:', error);
+});
+// Exportando a instância do websocket para interagir com o cliente
+export default WebSocket;

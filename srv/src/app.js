@@ -7,13 +7,12 @@ import dotenv from 'dotenv';
 import userRoutes from './routes/user.routes.js';
 import timerRoutes from './routes/timer.routes.js';
 import taskRoutes from './routes/task.routes.js';
-import wss from '../websocket.js'
 
 const fastify = Fastify({ pluginTimeout: 30000 });
 
 // Habilitar CORS
 fastify.register(fastifyCors, {
-  origin: 'https://kairoz.onrender.com',
+  origin: '/',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 });
 
