@@ -1,12 +1,12 @@
 import fastify from './src/app.js';
 import sequelize from './src/config/database.js';
 
-const host = '0.0.0.0';  // Defina o host
-const port = process.env.PORT || 3000;  // Defina a porta
+const host = '0.0.0.0';
+const port = process.env.PORT || 3000;
 
 const start = async () => {
   try {
-    // Inicie o servidor Fastify com host e porta
+    await testDatabaseConnection(); 
     await fastify.listen({ port, host });
     console.log(`Application running on http://${host}:${port}`);
   } catch (err) {
@@ -17,7 +17,6 @@ const start = async () => {
 
 const testDatabaseConnection = async () => {
   try {
-    // Testa a conexão com o banco de dados
     await sequelize.authenticate();
     console.log('Connection to the database has been successfully established.');
   } catch (error) {
@@ -26,6 +25,4 @@ const testDatabaseConnection = async () => {
   }
 };
 
-// Iniciar o servidor e testar a conexão com o banco de dados
-start();
-testDatabaseConnection();
+start(); 

@@ -1,6 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
 
+
 const Flashcard = sequelize.define('Flashcard', {
     id_cards: {
         type: DataTypes.INTEGER,

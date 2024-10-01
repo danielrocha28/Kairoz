@@ -1,16 +1,11 @@
-import {z} from 'zod';
 import flashcard from '../model/cards.model.js'
+import cardSchema from '../validators/cards.schema.js'
 
-
-const cartaSchema = z.object({
-    front: z.string().min(1, 'Digite algo na Frente da carta'),
-    verse: z.string().min(1, 'Digite algo no verso da carta'),
-  });
 
 //cria novas cartas
   export async function createCards(req, reply) {
     try {
-      const validatedData = cartaSchema.parse(req.body);
+      const validatedData = cardSchema.parse(req.body);
       const { front, verse} = validatedData;
   
             const newCards = await flashcard.create({front,verse});
