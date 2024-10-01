@@ -1,5 +1,6 @@
 import flashcard from '../model/cards.model.js'
 import cardSchema from '../validators/cards.schema.js'
+import {z} from 'zod';
 
 
 //cria novas cartas

@@ -46,7 +46,7 @@ fastify.get('/auth/google/callback', { preValidation: fastifyPassport.authentica
 
 
 
-  fastify.get('/', (request, reply) => {
+  /*fastify.get('/', (request, reply) => {
     reply
       .header('Content-Type', 'text/html')
       .send(`
@@ -56,6 +56,7 @@ fastify.get('/auth/google/callback', { preValidation: fastifyPassport.authentica
         </a>
       `);
   });
+  */
   
 
   done();
