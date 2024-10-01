@@ -81,35 +81,5 @@ export async function loginUser(request, reply) {
   }
 }
 
-//esta funçao é procesada apos a autentificaçao com o google, gera um jwt com o id e email
 
-export function googleCallback(request, reply) {
-  // Verifica se o usuário é válido, se é autêntico
-  try {
-    console.log('Usuário:', request.user);
-
-
-    if (!request.user) {
-      return reply.status(401).send({ error: 'Usuário inválido' });
-    }
-
-    // Acessa o ID e email do usuário
-    const { id, email } = request.user;
-
-    // Gera o JWT
-    const tokenGoogle = jwt.sign(
-      { id, email },
-      JWT_SECRET_KEY,
-      { expiresIn: '3h' }
-    );
-
-    console.log('Token do Google:', tokenGoogle);
-    
-    reply.send({ tokenGoogle });
-
-  } catch (error) {
-    console.error('Erro ao gerar o JWT do login com Google:', error);
-    reply.status(500).send({ error: 'Erro interno ao gerar o token' });
-  }
-}
 

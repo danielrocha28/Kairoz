@@ -1,10 +1,10 @@
 import {z} from 'zod';
-import Cards from '../model/cards.model'
+import flashcard from '../model/cards.model.js'
 
 
 const cartaSchema = z.object({
-    frente: z.string().min(1, 'Digite algo na Frente da carta'),
-    verso: z.string().min(1, 'Digite algo no verso da carta'),
+    front: z.string().min(1, 'Digite algo na Frente da carta'),
+    verse: z.string().min(1, 'Digite algo no verso da carta'),
   });
 
 //cria novas cartas
@@ -13,8 +13,8 @@ const cartaSchema = z.object({
       const validatedData = cartaSchema.parse(req.body);
       const { front, verse} = validatedData;
   
-            const newCards = await Cards.create({front,verse});
-            reply.status(201).json(newCards);
+            const newCards = await flashcard.create({front,verse});
+            reply.status(201).send(newCards);
             
 
        }catch(error) {
@@ -22,7 +22,7 @@ const cartaSchema = z.object({
         //relata erro de validaçao com o zod
             if(error instanceof z.ZodError) {
 
-                return reply.status(400).json({
+                return reply.status(400).send({
                     error: 'Falha na validação com o zod',
                     details:error.errors
                 });
@@ -31,7 +31,7 @@ const cartaSchema = z.object({
         //relata erro interno
                 console.error('Erro ao criar carta', error);
 
-                reply.status(500).json({
+                reply.status(500).send({
                     error: 'Erro ao criar carta',
                     message: error.message
             });
@@ -43,10 +43,10 @@ const cartaSchema = z.object({
  //funçao para verificar todas as cartas criadas
  export async function allCards() {
     try {
-        const cards = await Cards.findAll(); // Encontre todas as cartas
-        reply.status(200).json(cards);
+        const cards = await flashcard.findAll(); // Encontre todas as cartas
+        reply.status(200).send(cards);
     } catch (error) {
-        reply.status(500).json({ error: 'Erro ao carregar cartas' });
+        reply.status(500).send({ error: 'Erro ao carregar cartas' });
     }
 };
 
@@ -54,37 +54,37 @@ const cartaSchema = z.object({
 export async function idCards(){
     try{
         const {id} = request.params;
-        const cartaId = await Cards.findById(id);
+        const cartaId = await flashcard.findById(id);
     
         if(!cartaId){
-            return reply.status(404).json({ error: ' carta não encontradas' });
+            return reply.status(404).send({ error: ' carta não encontradas' });
         }else{
-        res.json({front: cartaId.frente, verse: cartaId.verso});
+        request.send({front: cartaId.frente, verse: cartaId.verso});
         }
     }catch (error){
        console.error(error);
-       return reply.status(404).json({ message: ' Erro ao encontrar carta' });    
+       return reply.status(404).send({ message: ' Erro ao encontrar carta' });    
     }
 }
 
 export async function deleteCards(){
     try{
     const {id} = request.params;
-    const deletecards = await Cards.findById(id);
+    const deletecards = await flashcard.findById(id);
 
     
     if(!deletecards){
-        return reply.status(400).json({ message: 'Carta não encontrada'});
+        return reply.status(400).send({ message: 'Carta não encontrada'});
     }else{
         await deletecards.destroy();
 
-        return reply.status(200).json({ message: 'Carta deletada com sucesso' });
+        return reply.status(200).send({ message: 'Carta deletada com sucesso' });
     }
 
     }catch (error){
         console.error(error);
         
-        request.status(500).json({
+        request.status(500).send({
              message: 'Erro ao deletar a carta'});
 
     }

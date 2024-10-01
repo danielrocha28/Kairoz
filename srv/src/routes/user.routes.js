@@ -1,6 +1,5 @@
-import { registerUser, loginUser, googleCallback } from '../controllers/user.controller.js';
+import { registerUser, loginUser} from '../controllers/user.controller.js';
 import fastifyPassport from '@fastify/passport';
-import passport from 'passport';
 
 const userRoutes = (fastify, options, done) => {
 
@@ -30,17 +29,21 @@ const userRoutes = (fastify, options, done) => {
   });
 
 
-  fastify.get('/auth/google', {
-    preValidation: fastifyPassport.authenticate('google', { scope: ['profile', 'email'] }) // middleware para autenticação com Google
-  }, async (request, reply) => {
-    // Aqui você pode adicionar uma resposta ou lógica adicional, se necessário.
-  });
+  fastify.get('/auth/google', { 
+    preValidation: fastifyPassport.authenticate('google', { 
+      scope: ['profile', 'email'] 
+    }) 
+  }, (request, reply) => {}
+);
   
 
-  fastify.get('/auth/google/callback', {
-    preHandler: passport.authenticate('google', { failureRedirect: '/' })
-  }, googleCallback);
+fastify.get('/auth/google/callback', { preValidation: fastifyPassport.authenticate('google', { failureRedirect: '/' }) }, (request, reply) => {
+});
+
+
   
+  
+
 
 
   fastify.get('/', (request, reply) => {
