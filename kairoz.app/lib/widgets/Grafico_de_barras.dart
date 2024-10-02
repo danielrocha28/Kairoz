@@ -1,45 +1,25 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(title: Text('Horas Estudadas - Dias da Semana')),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: BarChartWidget(),
-        ),
-      ),
-    );
-  }
-}
-
-class BarChartWidget extends StatelessWidget {
+class GraficoDeBarras extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BarChart(
       BarChartData(
         alignment: BarChartAlignment.spaceEvenly,
-        maxY: 24, // Define a escala máxima do eixo Y
+        maxY: 24,
         barGroups: _getBarGroups(),
         borderData: FlBorderData(show: false),
-        gridData: FlGridData(show: false), // Remover linhas de fundo
+        gridData: FlGridData(show: false),
         titlesData: FlTitlesData(
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 40, // Espaço reservado para os títulos
+              reservedSize: 40,
               getTitlesWidget: (value, meta) {
-                // Formatar números como horas
                 if (value % 1 == 0 && value >= 1 && value <= 24) {
                   return Text(
-                    '${value.toInt()}h', // Exibe as horas
+                    '${value.toInt()}h',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -47,15 +27,15 @@ class BarChartWidget extends StatelessWidget {
                     ),
                   );
                 }
-                return Container(); // Retorna um container vazio para valores não exibidos
+                return Container();
               },
             ),
           ),
           topTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false), // Remover títulos no topo
+            sideTitles: SideTitles(showTitles: false),
           ),
           rightTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: false), // Remover títulos à direita
+            sideTitles: SideTitles(showTitles: false),
           ),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
