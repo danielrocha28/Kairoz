@@ -1,4 +1,4 @@
-import fastify from './src/app.js'; // Importa a instância já criada
+import fastify from './src/app.js';
 import sequelize from './src/config/database.js';
 import wss from './websocket.js';
 
@@ -28,4 +28,5 @@ const testDatabaseConnection = async () => {
     process.exit(1);
   }
 };
-start();
+
+start(); 
