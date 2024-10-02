@@ -186,3 +186,13 @@ CREATE TRIGGER trigger_update_updated_at
 BEFORE UPDATE ON tasks
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at();
+
+SELECT
+    id_task,
+    total_time
+    CONCAT(
+        LPAD((total_time / 3600000)::text, 2, '0'), ':',
+        LPAD(((total_time % 3600000) / 60000)::text, 2, '0'), ':',
+        LPAD((((total_time % 3600000) % 60000) / 1000)::text, 2, '0')
+    ) AS total_time
+FROM study_time;
