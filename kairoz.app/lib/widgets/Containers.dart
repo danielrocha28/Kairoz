@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'Telainformacoes.dart';
+import 'Tela_informacoes.dart';
 
 class Containers extends StatelessWidget {
   @override
