@@ -2,54 +2,54 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'Telainformacoes.dart';
 
-class MyCarousel extends StatelessWidget {
+class Containers extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> containers = [
       Container(
           margin: const EdgeInsets.symmetric(
-              horizontal: 5.0), // Espaço entre os containers
+              horizontal: 5.0), 
           color: const Color.fromARGB(255, 158, 54, 244),
           height: 200,
           child: GestureDetector(onTap: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Telainformacoes()));
+                MaterialPageRoute(builder: (context) => Tela_informacoes()));
           })),
       Container(
           margin: const EdgeInsets.symmetric(
-              horizontal: 5.0), // Espaço entre os containers
+              horizontal: 5.0), 
           color: const Color.fromARGB(255, 238, 54, 244),
           height: 200,
           child: GestureDetector(onTap: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Telainformacoes()));
+                MaterialPageRoute(builder: (context) => Tela_informacoes()));
           })),
       Container(
           margin: const EdgeInsets.symmetric(
-              horizontal: 5.0), // Espaço entre os containers
+              horizontal: 5.0), 
           color: const Color.fromARGB(255, 54, 73, 244),
           height: 200,
           child: GestureDetector(onTap: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Telainformacoes()));
+                MaterialPageRoute(builder: (context) => Tela_informacoes()));
           })),
       Container(
           margin: const EdgeInsets.symmetric(
-              horizontal: 5.0), // Espaço entre os containers
+              horizontal: 5.0), 
           color: const Color.fromARGB(255, 54, 222, 244),
           height: 200,
           child: GestureDetector(onTap: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Telainformacoes()));
+                MaterialPageRoute(builder: (context) => Tela_informacoes()));
           })),
       Container(
           margin: const EdgeInsets.symmetric(
-              horizontal: 5.0), // Espaço entre os containers
+              horizontal: 5.0),
           color: const Color.fromARGB(255, 54, 244, 139),
           height: 200,
           child: GestureDetector(onTap: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Telainformacoes()));
+                MaterialPageRoute(builder: (context) => Tela_informacoes()));
           })),
     ];
 
@@ -64,7 +64,7 @@ class MyCarousel extends StatelessWidget {
             return Builder(
               builder: (BuildContext context) {
                 return Container(
-                  width: 700, //largaura dos containers
+                  width: 700, 
                   child: container,
                 );
               },
