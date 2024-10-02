@@ -30,6 +30,10 @@ const Chart = sequelize.define('chart',
       },
       field: 'id_task',
     },
+    type:{
+        type: DataTypes.STRING(50),
+        allowNull: false, 
+    },
   },
   {
     tableName: 'chart', // Define table name explicitly
@@ -41,7 +45,7 @@ const Chart = sequelize.define('chart',
 Chart.hasMany(Timers, { foreignKey: 'id_time' });
 Timers.belongsTo(Chart, { foreignKey: 'id_time' });
 
-Graphics.hasMany(Tasks, { foreignKey: 'id_task' });
+Chart.hasMany(Tasks, { foreignKey: 'id_task' });
 Tasks.belongsTo(Chart, { foreignKey: 'id_task' });
 
 export default Chart;
