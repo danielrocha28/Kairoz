@@ -5,7 +5,6 @@ const userRoutes = (fastify, options, done) => {
   fastify.get('/status', async (request, reply) => {
     return { status: 'Server is up and running' };
   });
-
   // Rota para registrar o usuário
   fastify.post('/register', async (request, reply) => {
     try {
