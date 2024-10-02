@@ -10,22 +10,22 @@ import taskRoutes from './routes/task.routes.js';
 
 const fastify = Fastify({ pluginTimeout: 30000 });
 
-// Habilitar CORS
+// Enable CORS
 fastify.register(fastifyCors, {
   origin: '/',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 });
 
-// Registra o plugin de cookies primeiro
+// Register the cookie plugin first
 fastify.register(fastifyCookie, {});
 
-// Registra o plugin de sessões depois
+// Register the session plugin afterwards
 fastify.register(fastifySession, {
   secret: process.env.SECRET_SESSION,
   cookie: { secure: process.env.NODE_ENV === 'production' }, 
 });
 
-// Registro das rotas
+// Route registration
 fastify.register(userRoutes);
 fastify.register(timerRoutes);
 fastify.register(taskRoutes);

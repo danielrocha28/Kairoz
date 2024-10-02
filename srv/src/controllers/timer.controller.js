@@ -1,8 +1,8 @@
 import Timer from '../model/timer.model.js';
 import Task from '../model/task.model.js';
-import WebSocket from '../websockets_client/ws.timer.controller.js'; // Websocket cliente
+import WebSocket from '../websockets_client/ws.timer.controller.js'; // WebSocket client
 
-// Classe para Temporizadores ativos
+// Class for active timers
 class ActiveTimers {
   constructor() {
     this.endTime = 0; 
@@ -14,8 +14,8 @@ class ActiveTimers {
     this.timerid = null;
     this.pause = false;
     this.started = false;
-    this.ws = WebSocket; // Armazenando em uma variavel para mandar mensagens para o servidor
-    this.time = { // Variavel do Temporizador
+    this.ws = WebSocket; // Storing in a variable to send messages to the server
+    this.time = { // Timer variable
       hours: null,
       minutes: null,
       seconds: null,
@@ -25,11 +25,11 @@ class ActiveTimers {
 
 const active = new ActiveTimers();
 
-// Função para formatar o tempo em Hh:Mm:Ss = (00:00:00)
-export function formatTime(active, milisegundos) {
-  active.time.hours = String(Math.floor(milisegundos / 3600000)).padStart(2, '0');
-  active.time.minutes = String(Math.floor((milisegundos % 3600000) / 60000)).padStart(2, '0');
-  active.time.seconds = String(Math.floor((milisegundos % 60000) / 1000)).padStart(2, '0');
+// Function to format time in Hh:Mm:Ss = (00:00:00)
+export function formatTime(active, milliseconds) {
+  active.time.hours = String(Math.floor(milliseconds / 3600000)).padStart(2, '0');
+  active.time.minutes = String(Math.floor((milliseconds % 3600000) / 60000)).padStart(2, '0');
+  active.time.seconds = String(Math.floor((milliseconds % 60000) / 1000)).padStart(2, '0');
 
   return `${active.time.hours}:${active.time.minutes}:${active.time.seconds}`;
 }
@@ -42,7 +42,6 @@ export async function resumed() {
   active.pause = false;
 }
 
-// Função de iniciar o temporizador
 export async function startTimer(request, reply) {
   try {
     const { id_task, title } = request.body;
@@ -50,7 +49,7 @@ export async function startTimer(request, reply) {
     let task = await Task.findAll({ where: { id_task, title } });
 
     if (!task) {
-      return reply.status(404).send('Por favor, crie uma tarefa para iniciar o temporizador.');
+      return reply.status(404).send('Please create a task to start the timer.');
     }
 
     const newTimer = await Timer.create({
@@ -73,120 +72,119 @@ export async function startTimer(request, reply) {
       active.totalTime = active.startTime + elapsedTime;
       request.session.timeStarted = active.totalTime;
 
-      // Enviando uma mensagem para o servidor ws via JSON
+      // Sending a message to the WebSocket server via JSON
       active.ws.send(JSON.stringify({
-        action: "start",
-        idTimer: active.timerid,
-        timeStarted: active.totalTime,
+        action: 'start',
+        id: active.timerid,
+        function: active.totalTime,
       }));
 
       return formatTime(active, active.totalTime);
     }, 1000);
 
     await reply.status(201).send({
-      message: 'Temporizador iniciado com sucesso',
+      message: 'Timer started successfully',
       newTimer: {
         id_time: active.activeId,
-        id_tarefa: active.task.id_task,
-        tarefa: active.task.title,
-        temporizador: formatTime(active, active.totalTime),
+        id_task: active.task.id_task,
+        task: active.task.title,
+        timer: formatTime(active, active.totalTime),
       },
     });
   } catch (error) {
     console.error(error);
     return reply.status(500).send({
-      error: 'Não foi possível iniciar o temporizador',
+      error: 'Could not start the timer',
       message: error.message,
     });
   }
 }
 
-// Condição de anular a função de start após sua inicialização
+// Condition to nullify the start function after initialization
 if (active.started && active.timerid !== null) {
   startTimer = null;
   active.started = false;
 }
 
-// Função de pausar/retomar o temporizador
+// Function to pause/resume the timer
 export async function statusTimer(request, reply) {
   try {
     if (!active.timerid) {
-      return reply.status(400).send('Temporizador ainda não iniciado.');
+      return reply.status(400).send('Timer has not started yet.');
     }
 
     if (active.pause) {
       active.pause = true;
-      clearInterval(active.interval); // Pausa o loop
-      // Armazena o tempo total decorrido até a pausa
+      clearInterval(active.interval); // Pause the loop
+      // Store the total elapsed time until paused
       active.pausedTime = active.totalTime + active.endTime;
       active.totalTime = 0;
       active.endTime = 0;
       request.session.timePaused = active.pausedTime;
-      // Mensagem para o ws
+      // Message to the WebSocket
       active.ws.send(JSON.stringify({
         action: 'pause',
-        idTimer: active.timerid,
-        pausedTime: active.pausedTime,
+        id: active.timerid,
+        function: active.pausedTime,
       }));
-      // Retorna o status de pausa e o tempo decorrido formatado
+      // Return the paused status and the elapsed time formatted
       return reply.send({
-        message: 'Temporizador pausado',
+        message: 'Timer paused',
         totalTime: formatTime(active, active.pausedTime),
       });
     } else {
       active.pause = false;
-      // Retomar o temporizador
-      const start = Date.now() - active.pausedTime; // Retoma a partir do ponto pausado
+      // Resume the timer
+      const start = Date.now() - active.pausedTime; // Resume from the paused point
       active.pausedTime = 0;
 
       active.interval = setInterval(async () => {
-        const elapsedTime = Date.now() - start; // Atualiza o tempo decorrido
+        const elapsedTime = Date.now() - start; // Update the elapsed time
         active.endTime = active.pausedTime + elapsedTime;
         request.session.timeResumed = active.endTime;
 
-        // Mensagem para o ws
+        // Message to the WebSocket
         active.ws.send(JSON.stringify({
-          action: "resume",
-          idTimer: active.timerid,
-          resumedTime: active.endTime,
+          action: 'resume',
+          id: active.timerid,
+          function: active.endTime,
         }));
 
-        // Exibe o tempo formatado no console
+        // Display the formatted time in the console
         return formatTime(active, active.endTime);
       }, 1000);
 
-      // Retorna o status de retomada e o tempo decorrido
+      // Return the resumed status and the elapsed time
       return reply.send({
-        message: "Temporizador retomado",
+        message: 'Timer resumed',
         totalTime: formatTime(active, active.endTime),
       });
     }
   } catch (error) {
     console.error(error);
     return reply.status(500).send({
-      error: 'Ocorreu um erro ao pausar ou retomar o temporizador.',
+      error: 'An error occurred while pausing or resuming the timer.',
       message: error.message,
     });
   }
 }
 
-// Função de deletar o temporizador
 export async function deleteTimer(request, reply) {
   try {
     if (!active.timerid) {
-      return reply.status(404).send('Temporizador não existe');
+      return reply.status(404).send('Timer does not exist');
     }
 
     if (!active.pause) {
-      return reply.send('Necessário pausar antes de zerar');
+      return reply.send('Need to pause before resetting');
     }
 
     await Timer.destroy({ where: { id_time: active.timerid } });
-    return reply.status(200).send('Temporizador deletado.');
+    return reply.status(200).send('Timer deleted.');
   } catch (error) {
     console.error(error);
-    return reply.status(500).send({ error: 'Ocorreu um erro ao deletar o temporizador.' });
+    return reply.status(500).send({ error: 'An error occurred while deleting the timer.' });
   }
 }
 
-formatTime(active); // Puxando a função para tornar acessível as variaveis to time
+formatTime(active); // Calling the function to make time variables accessible

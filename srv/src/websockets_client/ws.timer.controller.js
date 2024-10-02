@@ -5,84 +5,65 @@ import { Sequelize } from 'sequelize';
 
 dotenv.config();
 
-// Criando uma conexão com o servidor WebSocket
+// Creating a connection with the WebSocket server
 const WebSocket = new ws(process.env.WEBSOCKET_URL);
 
-// Abrindo servidor lado cliente
+// Opening client-side server
 WebSocket.on('open', () => {
-  console.log('Conexão WebSocket aberta.');
+  console.log('WebSocket connection opened.');
 });
 
-// Mensagens enviadas pelo cliente
+// Messages sent by the client
 WebSocket.on('message', async (message) => {
-   console.log("Mensagem recebida do WebSocket:", message);
+  const messageWS = JSON.parse(message); 
   try {
-
-    const messageWS = JSON.parse(message); // const que armazena as ações do cliente
-    console.log('Mensagem recebida', messageWS);
   
-  // switch que interage com o banco de dados de acordo com as ações do cliente
-  switch (messageWS.action) {
-    case "start":
-      try {
-        await Timer.update(
-          { start_time: messageWS.timeStarted },
-          { where: { id_time: messageWS.idTimer } }
-        );
-        console.log(
-          `Timer ${messageWS.idTimer} iniciado com tempo: ${messageWS.timeStarted}`
-        );
-      } catch (error) {
-        console.error("Erro ao iniciar o timer:", error);
-      }
-      break;
+    // switch that interacts with the database based on client actions
+    switch (messageWS.action) {
+      case 'start':
+        try {
+          await Timer.update(
+            { start_time: messageWS.function },
+            { where: { id_time: messageWS.id } }
+          );
+        } catch (error) {
+          console.error('Error starting the timer:', error);
+        }
+        break;
 
-    case "pause":
-      try {
-        await Timer.update(
-          {
-            status_time: "Paused",
-            end_time: messageWS.pausedTime, // Corrigido para usar o campo correto
-            total_time: Sequelize.literal("end_time - start_time"),
-          },
-          { where: { id_time: messageWS.idTimer } }
-        );
-        console.log(
-          `Timer ${messageWS.idTimer} pausado. Tempo pausado: ${messageWS.pausedTime}`
-        );
-      } catch (error) {
-        console.error('Erro ao pausar o timer:', error);
-      }
-      break;
+      case 'pause':
+        try {
+          await Timer.update(
+            {status_time: 'Paused',
+              end_time: messageWS.function, // Corrected to use the proper field
+              total_time: Sequelize.literal(`CASE WHEN (end_time - start_time) < 0 
+                THEN - (end_time - start_time) ELSE (end_time - start_time) END`)},
+            { where: { id_time: messageWS.id } }
+          );
+          
+        } catch (error) {
+          console.error('Error pausing the timer:', error);
+        }
+        break;
 
-    case "resume":
-      try {
-        await Timer.update(
-          { status_time: "Resumed", start_time: messageWS.resumedTime },
-          { where: { id_time: messageWS.idTimer } }
-        );
-        console.log(
-          `Timer ${messageWS.idTimer} retomado com tempo: ${messageWS.resumedTime}`
-        );
-      } catch (error) {
-        console.error('Erro ao retomar o timer:', error);
-      }
-      break;
-    default:
-      WebSocket.send(JSON.stringify({ error: 'Ação não reconhecida' }));
-  }
+      case 'resume':
+        try {
+          await Timer.update({ status_time: 'Resumed',
+              start_time: Sequelize.literal(`${messageWS.function} + total_time `)},
+              { where: { id_time: messageWS.id }});
+
+        } catch (error) {
+          console.error('Error resuming the timer:', error);
+        }
+        break;
+      default:
+        WebSocket.send(JSON.stringify({ error: 'Action not recognized' }));
+    }
   } catch (error) {
-    console.error('Erro ao processar a mensagem:', error);
-    WebSocket.send(JSON.stringify({ error: 'Erro ao processar a ação.' }));
+    console.error('Error processing the message:', error);
+    WebSocket.send(JSON.stringify({ error: 'Error processing the action.' }));
   }
 });
-// Caso o cliente se desconecte
-WebSocket.on('close', () => {
-  console.log('Conexão com o servidor WebSocket fechada');
-});
-// Caso houver algum erro com o server
-WebSocket.on('error', (error) => {
-  console.error('Erro na conexão WebSocket:', error);
-});
-// Exportando a instância do websocket para interagir com o cliente
+// Exporting the WebSocket instance to interact with the client
 export default WebSocket;
+

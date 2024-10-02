@@ -1,7 +1,6 @@
 import { startTimer, statusTimer, deleteTimer, resumed, paused } from '../controllers/timer.controller.js';
 
-  async function timerRouter(fastify, opts) {
-  // Rota de iniciar o temporizador
+async function timerRouter(fastify, opts) {
   fastify.post(
     '/timer/start',
     async (request, reply) => {
@@ -9,14 +8,13 @@ import { startTimer, statusTimer, deleteTimer, resumed, paused } from '../contro
         await startTimer(request, reply);
       } catch (error) {
         reply.status(500).send({
-          error: 'Erro ao processar a requisição',
+          error: 'Error processing the request',
           details: error.message,
         });
       }
     }
   );
 
-  // Rota de pausar o temporizador
   fastify.put(
     '/timer/pause',
     async (request, reply) => {
@@ -25,14 +23,13 @@ import { startTimer, statusTimer, deleteTimer, resumed, paused } from '../contro
         await statusTimer(request, reply);
       } catch (error) {
         reply.status(500).send({
-          error: 'Erro ao processar a requisição',
+          error: 'Error processing the request',
           details: error.message,
         });
       }
     }
   );
 
-  // Rota de retomar o temporizador
   fastify.put(
     '/timer/resume',
     async (request, reply) => {
@@ -41,14 +38,13 @@ import { startTimer, statusTimer, deleteTimer, resumed, paused } from '../contro
         await statusTimer(request, reply);
       } catch (error) {
         reply.status(500).send({
-          error: 'Erro ao processar a requisição',
+          error: 'Error processing the request',
           details: error.message,
         });
       }
     }
   );
 
-  // Rota de deletar o temporizador
   fastify.delete(
     '/timer/delete',
     async (request, reply) => {
@@ -56,7 +52,7 @@ import { startTimer, statusTimer, deleteTimer, resumed, paused } from '../contro
         await deleteTimer(request, reply);
       } catch (error) {
         reply.status(500).send({
-          error: 'Erro ao processar a requisição',
+          error: 'Error processing the request',
           details: error.message,
         });
       }

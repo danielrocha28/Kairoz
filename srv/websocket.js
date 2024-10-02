@@ -1,39 +1,43 @@
-import ws from "ws";
-import dotenv from "dotenv";
+import ws from 'ws';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
 const port = process.env.WEBSOCKET_PORT || 8080;
 
-// Inicializa o servidor WebSocket
+// Initializes the WebSocket server
 const wss = new ws.Server({ port }, () => {
-  console.log(`Servidor WebSocket ouvindo na porta ${port}`);
+  console.log(`WebSocket server listening on port ${port}`);
 });
 
-// Armazena clientes conectados
+// Stores connected clients
 const clients = new Set();
 
-// Gerencia novas conexões
+// Manages new connections
 wss.on('connection', (ws) => {
-  console.log('Novo cliente conectado');
   clients.add(ws);
 
-  // Gerencia a desconexão
+  // Manages disconnection
   ws.on('close', () => {
-    console.log('Cliente desconectado');
+    console.log('Client disconnected');
     clients.delete(ws);
   });
 
-  // Gerencia erros
+  // Manages errors
   ws.on('error', (error) => {
-    console.log('Ocorreu um erro com o WebSocket', error.message);
+    console.log('An error occurred with the WebSocket', error.message);
   });
 
-  // Gerencia mensagens recebidas dos clientes
+  // Manages messages received from clients
   ws.on('message', (message) => {
-    console.log('Mensagem recebida do cliente:', message);
+    const messageClient = JSON.parse(message); // const that stores client actions
+    ws.send(JSON.stringify({
+      action: messageClient.action,
+      id: messageClient.id,
+      function: messageClient.function,
+    }));
   });
 });
 
-// Exporta a instância do servidor WebSocket
+// Exports the WebSocket server instance
 export default wss;

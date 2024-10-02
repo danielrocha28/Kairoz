@@ -56,7 +56,7 @@ const Timers = sequelize.define(
   }
 );
 
-// Configurar associações
+// Set up associations
 Tasks.hasMany(Timers, { foreignKey: 'id_task' });
 Timers.belongsTo(Tasks, { foreignKey: 'id_task' });
 
