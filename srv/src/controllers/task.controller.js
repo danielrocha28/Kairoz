@@ -10,7 +10,7 @@ const handleZodError = (error, reply) => {
   }
 };
 
-const handleServerError = (error, reply) => {
+export const handleServerError = (error, reply) => {
   reply.code(500).send({ error: error.message });
 };
 

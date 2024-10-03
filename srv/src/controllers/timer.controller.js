@@ -57,7 +57,7 @@ export async function startTimer(request, reply) {
     request.session.idTimer = active.timerid = newTimer.id_time;
     active.started = true;
     active.task = task;
-    request.session.titleTask = active.task;
+    request.session.idTask = active.task.id_task;
 
     const start = Date.now();
 
@@ -185,4 +185,18 @@ export async function deleteTimer(request, reply) {
   }
 }
 
+export async function getTimeByTask(request,reply){
+  try {
+   if (!active.timerid){
+      return reply.status(404).send('Timer does not exist');
+  } 
+  const totalTime = await Timer.findAll({ where: { id_task: active.task.id_task }, 
+    attributes: ['total_time']});
+    if (totalTime) {
+      reply.code(200).send(totalTime);
+    }
+  } catch (error) {
+    return reply.status(500).send({ error: 'Could not retrieve the total time' });
+  }
+}
 formatTime(); // Calling the function to make time variables accessible

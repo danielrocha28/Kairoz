@@ -1,4 +1,5 @@
-import { startTimer, statusTimer, deleteTimer, resumed, paused } from '../controllers/timer.controller.js';
+import fastify from 'fastify';
+import { startTimer, statusTimer, deleteTimer, resumed, paused, getTime } from '../controllers/timer.controller.js';
 
 async function timerRouter(fastify, opts) {
   fastify.post(
@@ -59,5 +60,19 @@ async function timerRouter(fastify, opts) {
     }
   );
 }
+
+fastify.get(
+    '/timer/time',
+    async (request, reply) => {
+      try {
+        await getTime(request, reply);
+      } catch (error) {
+        reply.status(500).send({
+          error: 'Error processing the request',
+          details: error.message,
+        });
+      }
+    }
+  );
 
 export default timerRouter;

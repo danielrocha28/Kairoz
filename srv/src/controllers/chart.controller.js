@@ -1,9 +1,9 @@
 import Task from '../model/task.model';
+import Timer from '../model/timer.model';
 import Chart from '../model/chart.model';
 import { getTaskById, getTasks } from './task.controller';
 import { Op } from 'sequelize';
-
-const vetor =
+import { getTime } from './timer.controller';
 
     class Chart {
         constructor(type) {
@@ -27,6 +27,10 @@ export async function pieChart(request, reply) {
       return reply.code(404).send({ message: 'No tasks found.' });
     }
 
+    const newPiechart = await Chart.create({
+        id_chart,
+    });
+
     // Count tasks with status 'completed'
     const taskCompleted = await Task.count({ where: { status: 'completed',
         id_task: task.tasks.id_task }});
@@ -40,7 +44,7 @@ export async function pieChart(request, reply) {
     chartPie.Pending += taskPending;
     chartPie.Total = chartPie.Completed + chartPie.Pending;
 
-    return reply.code(200).send(chartPie);
+    return reply.code(200).send(newPiechart, chartPie);
   } catch (error) {
     console.error('Error generating pie chart:', error);
     return reply.code(500).send({ error: 'An error occurred while generating the chart data',
@@ -50,7 +54,17 @@ export async function pieChart(request, reply) {
 
     async function chartWeek(request, reply) {
         try {
-            const task = getTasks(request, reply)
+            const task = await getTasks(request, reply);
+            const totalTime = await getTime(request, reply)
+
+            const timeTask = await Timer.findOne({ where: { total_time: totalTime.total_time }})
+
+            if (timeTask){
+                
+            }
+
+            
+
         } catch (error) {
 
         }
