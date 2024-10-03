@@ -146,11 +146,12 @@ CREATE TABLE IF NOT EXISTS flashcard (
 
 CREATE TABLE IF NOT EXISTS study_time (
     id_time SERIAL PRIMARY KEY,
-    id_task INTEGER NOT NULL,
-    start_time TIMESTAMP,
-    end_time TIMESTAMP,
-    total_time INTERVAL,
-    FOREIGN KEY (id_task) REFERENCES tasks(id_task)
+    id_task INT NOT NULL,
+    start_time BIGINT,
+    status_time VARCHAR (10) CHECK (status_time IN ('Paused', 'Resumed')),
+    end_time BIGINT,
+    total_time BIGINT,
+    FOREIGN KEY (id_task) REFERENCES task(id_task)
 );
 
 CREATE TABLE IF NOT EXISTS chart (
@@ -185,3 +186,13 @@ CREATE TRIGGER trigger_update_updated_at
 BEFORE UPDATE ON tasks
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at();
+
+SELECT
+    id_task,
+    total_time
+    CONCAT(
+        LPAD((total_time / 3600000)::text, 2, '0'), ':',
+        LPAD(((total_time % 3600000) / 60000)::text, 2, '0'), ':',
+        LPAD((((total_time % 3600000) % 60000) / 1000)::text, 2, '0')
+    ) AS total_time
+FROM study_time;
