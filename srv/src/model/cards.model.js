@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
 
 
-const Flashcard = sequelize.define('Flashcard', {
+const cards = sequelize.define('cards', {
     id_cards: {
         type: DataTypes.INTEGER,
         autoIncrement: true, // Defina como true se você quer que o ID seja gerado automaticamente
@@ -18,9 +18,9 @@ const Flashcard = sequelize.define('Flashcard', {
         allowNull: false,
     }
 }, {
-    tableName: 'Flashcard', // Nome da tabela (singular)
+    tableName: 'cards', // Nome da tabela (singular)
     timestamps: true, // Cria os campos createdAt e updatedAt
 });
 
 // Exporta o modelo
-export default Flashcard;
+export default cards;

@@ -1,4 +1,4 @@
-import flashcard from '../model/cards.model.js'
+import cards from '../model/cards.model.js'
 import cardSchema from '../validators/cards.schema.js'
 import {z} from 'zod';
 
@@ -9,7 +9,7 @@ import {z} from 'zod';
       const validatedData = cardSchema.parse(req.body);
       const { front, verse} = validatedData;
   
-            const newCards = await flashcard.create({front,verse});
+            const newCards = await cards.create({front,verse});
             reply.status(201).send(newCards);
             
 
@@ -39,7 +39,7 @@ import {z} from 'zod';
  //funçao para verificar todas as cartas criadas
  export async function allCards() {
     try {
-        const cards = await flashcard.findAll(); // Encontre todas as cartas
+        const cards = await cards.findAll(); // Encontre todas as cartas
         reply.status(200).send(cards);
     } catch (error) {
         reply.status(500).send({ error: 'Erro ao carregar cartas' });
@@ -50,7 +50,7 @@ import {z} from 'zod';
 export async function idCards(){
     try{
         const {id} = request.params;
-        const cartaId = await flashcard.findById(id);
+        const cartaId = await cards.findById(id);
     
         if(!cartaId){
             return reply.status(404).send({ error: ' carta não encontradas' });
@@ -66,7 +66,7 @@ export async function idCards(){
 export async function deleteCards(){
     try{
     const {id} = request.params;
-    const deletecards = await flashcard.findById(id);
+    const deletecards = await cards.findById(id);
 
     
     if(!deletecards){

@@ -19,9 +19,10 @@ fastify.register(fastifyCors, {
 
 fastify.register(cookie);
 
- fastify.register(fastifySession, {
-  secret: 'afrnnnrjnupnutgt45m555jsttk,du95', // Defina uma chave secreta para a sessão
-  cookie: { secure: false }, // Ajuste conforme necessário
+// Registra o plugin de sessões depois
+fastify.register(fastifySession, {
+  secret: process.env.SECRET_SESSION,
+  cookie: { secure: process.env.NODE_ENV === 'production' }, 
 });
 
 
