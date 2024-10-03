@@ -29,6 +29,6 @@ passportSetup(fastify);
 
 fastify.register(userRoutes);
 fastify.register(taskRoutes); 
-fastify.register(cardsRoutes);
+fastify.register(flashcard);
 
 export default fastify;

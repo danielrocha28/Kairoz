@@ -22,5 +22,30 @@ const cards = sequelize.define('cards', {
     timestamps: true, // Cria os campos createdAt e updatedAt
 });
 
+const decks = sequelize.define('decks',{
+    id_decks: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        field: 'id_decks'
+
+    },
+
+    name: {
+        type:DataTypes.STRING,
+        allowNull: false
+
+    },
+    description:{
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+})
+
+decks.hasMany(cards),
+cards.belongsTo(decks)
+
+
+
 // Exporta o modelo
 export default cards;
