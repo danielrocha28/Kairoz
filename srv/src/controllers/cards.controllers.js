@@ -1,16 +1,24 @@
-import cards from '../model/cards.model.js'
+import {decks, cards} from '../model/flashcard.model.js'
 import cardSchema from '../validators/cards.schema.js'
 import {z} from 'zod';
 
 
 //cria novas cartas
-  export async function createCards(req, reply) {
+  export async function createCards(request, reply) {
     try {
-      const validatedData = cardSchema.parse(req.body);
+        const {id_decks} = request.params;
+
+
+      const validatedData = cardSchema.parse(request.body);
       const { front, verse} = validatedData;
   
-            const newCards = await cards.create({front,verse});
-            reply.status(201).send(newCards);
+            const newCard = await cards.create({front,verse, id_decks: id_decks});
+            reply.status(201).send(newCard);
+
+            const deck = await decks.findByPk(id_decks);
+            if(deck){
+                await deck.addcards(newCard);
+            }
             
 
        }catch(error) {
@@ -37,31 +45,16 @@ import {z} from 'zod';
  };
 
  //funçao para verificar todas as cartas criadas
- export async function allCards() {
+ export async function getCards() {
     try {
-        const cards = await cards.findAll(); // Encontre todas as cartas
+        const cards = await cards.findAll({where: {id_decks: id_decks} }); // Encontre todas as cartas
         reply.status(200).send(cards);
     } catch (error) {
         reply.status(500).send({ error: 'Erro ao carregar cartas' });
     }
 };
 
-//funçao para verificar conteudo de carta especifica
-export async function idCards(){
-    try{
-        const {id} = request.params;
-        const cartaId = await cards.findById(id);
-    
-        if(!cartaId){
-            return reply.status(404).send({ error: ' carta não encontradas' });
-        }else{
-        request.send({front: cartaId.frente, verse: cartaId.verso});
-        }
-    }catch (error){
-       console.error(error);
-       return reply.status(404).send({ message: ' Erro ao encontrar carta' });    
-    }
-}
+
 
 export async function deleteCards(){
     try{
