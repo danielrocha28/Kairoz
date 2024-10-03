@@ -1,4 +1,3 @@
-dotenv.config();
 import Fastify from 'fastify';
 import fastifyCors from '@fastify/cors';
 import fastifyCookie from '@fastify/cookie'; 
@@ -10,6 +9,7 @@ import timerRoutes from './routes/timer.routes.js';
 import taskRoutes from './routes/task.routes.js';
 
 const fastify = Fastify({ pluginTimeout: 30000 });
+dotenv.config();
 
 // Enable CORS
 fastify.register(fastifyCors, {
