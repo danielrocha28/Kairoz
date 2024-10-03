@@ -15,11 +15,6 @@ class ActiveTimers {
     this.pause = false;
     this.started = false;
     this.ws = WebSocket; // Storing in a variable to send messages to the server
-    this.time = { // Timer variable
-      hours: null,
-      minutes: null,
-      seconds: null,
-    };
   }
 }
 
@@ -27,11 +22,10 @@ const active = new ActiveTimers();
 
 // Function to format time in Hh:Mm:Ss = (00:00:00)
 export function formatTime(active, milliseconds) {
-  active.time.hours = String(Math.floor(milliseconds / 3600000)).padStart(2, '0');
-  active.time.minutes = String(Math.floor((milliseconds % 3600000) / 60000)).padStart(2, '0');
-  active.time.seconds = String(Math.floor((milliseconds % 60000) / 1000)).padStart(2, '0');
-
-  return `${active.time.hours}:${active.time.minutes}:${active.time.seconds}`;
+  const hours = String(Math.floor(milliseconds / 3600000)).padStart(2, '0');
+  const minutes = String(Math.floor((milliseconds % 3600000) / 60000)).padStart(2, '0');
+  const seconds = String(Math.floor((milliseconds % 60000) / 1000)).padStart(2, '0');
+  return `${hours}:${minutes}:${seconds}`;
 }
 
 export async function paused() {
@@ -102,15 +96,19 @@ export async function startTimer(request, reply) {
 
 // Condition to nullify the start function after initialization
 if (active.started && active.timerid !== null) {
-  startTimer = null;
-  active.started = false;
+  reply.send('Timer already started.');
 }
+
 
 // Function to pause/resume the timer
 export async function statusTimer(request, reply) {
   try {
     if (!active.timerid) {
       return reply.status(400).send('Timer has not started yet.');
+    }
+
+    if (!active.started) {
+      return reply.status(400).send('Cannot pause a timer that hasn\'t started.');
     }
 
     if (active.pause) {
@@ -187,4 +185,4 @@ export async function deleteTimer(request, reply) {
   }
 }
 
-formatTime(active); // Calling the function to make time variables accessible
+formatTime(); // Calling the function to make time variables accessible

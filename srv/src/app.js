@@ -14,7 +14,7 @@ const fastify = Fastify({ pluginTimeout: 30000 });
 // Enable CORS
 fastify.register(fastifyCors, {
   origin: 'https://kairoz.onrender.com',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
 });
 
 // Register the cookie plugin first
