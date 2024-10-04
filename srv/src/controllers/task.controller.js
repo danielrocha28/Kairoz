@@ -1,6 +1,7 @@
 import Task from '../model/task.model.js';
 import taskSchema from '../validators/task.schema.js';
 import { z } from 'zod'; 
+import { userData } from './user.controller.js';
 
 const handleZodError = (error, reply) => {
   if (error instanceof z.ZodError) {
@@ -26,7 +27,7 @@ export async function createTask(request, reply) {
 
 export async function getTasks(request, reply) {
   try {
-    const tasks = await Task.findAll();
+    const tasks = await Task.findAll({ where:{ id_user: userData.id_user }});
     reply.code(200).send(tasks);
   } catch (error) {
     handleServerError(error, reply);
@@ -73,3 +74,4 @@ export async function deleteTask(request, reply) {
     handleServerError(error, reply);
   }
 }
+

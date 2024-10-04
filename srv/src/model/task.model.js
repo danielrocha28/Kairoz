@@ -63,7 +63,7 @@ const Task = sequelize.define(
       allowNull: true,
     },
     // Adicionando o campo user_id
-    user_id: {
+    id_user: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {

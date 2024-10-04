@@ -52,20 +52,14 @@ export async function pieChart(request, reply) {
   }
 }
 
-    async function chartWeek(request, reply) {
+    /*async function chartWeek(request, reply) {
         try {
             const task = await getTasks(request, reply);
-            const totalTime = await getTime(request, reply)
+            const totalTime = await getTime(request, reply);
 
-            const timeTask = await Timer.findOne({ where: { total_time: totalTime.total_time }})
-
-            if (timeTask){
-                
-            }
-
-            
-
+          if(task.id_task === totalTime.id_task){
+          }
         } catch (error) {
 
         }
-    }
+    }*/

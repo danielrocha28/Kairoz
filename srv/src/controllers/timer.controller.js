@@ -21,7 +21,7 @@ class ActiveTimers {
 const active = new ActiveTimers();
 
 // Function to format time in Hh:Mm:Ss = (00:00:00)
-export function formatTime(active, milliseconds) {
+export function formatTime(milliseconds) {
   const hours = String(Math.floor(milliseconds / 3600000)).padStart(2, '0');
   const minutes = String(Math.floor((milliseconds % 3600000) / 60000)).padStart(2, '0');
   const seconds = String(Math.floor((milliseconds % 60000) / 1000)).padStart(2, '0');
@@ -38,11 +38,11 @@ export async function resumed() {
 
 export async function startTimer(request, reply) {
   try {
-    const { id_task, title } = request.body;
+    const { id_task, title, category } = request.body;
 
-    let task = await Task.findAll({ where: { id_task, title } });
+    let task = await Task.findAll({ where: { id_task, title, category: 'study' } });
 
-    if (!task) {
+    if (task.length === 0) {
       return reply.status(404).send('Please create a task to start the timer.');
     }
 
@@ -57,7 +57,6 @@ export async function startTimer(request, reply) {
     request.session.idTimer = active.timerid = newTimer.id_time;
     active.started = true;
     active.task = task;
-    request.session.idTask = active.task.id_task;
 
     const start = Date.now();
 
@@ -73,7 +72,7 @@ export async function startTimer(request, reply) {
         function: active.totalTime,
       }));
 
-      return formatTime(active, active.totalTime);
+      return formatTime(active.totalTime);
     }, 1000);
 
     await reply.status(201).send({
@@ -82,7 +81,7 @@ export async function startTimer(request, reply) {
         id_time: active.activeId,
         id_task: active.task.id_task,
         task: active.task.title,
-        timer: formatTime(active, active.totalTime),
+        timer: formatTime(active.totalTime),
       },
     });
   } catch (error) {
@@ -95,10 +94,9 @@ export async function startTimer(request, reply) {
 }
 
 // Condition to nullify the start function after initialization
-if (active.started && active.timerid !== null) {
+if (active.started === true && active.timerid !== null) {
   reply.send('Timer already started.');
 }
-
 
 // Function to pause/resume the timer
 export async function statusTimer(request, reply) {
@@ -128,7 +126,7 @@ export async function statusTimer(request, reply) {
       // Return the paused status and the elapsed time formatted
       return reply.send({
         message: 'Timer paused',
-        totalTime: formatTime(active, active.pausedTime),
+        totalTime: formatTime(active.pausedTime),
       });
     } else {
       active.pause = false;
@@ -149,7 +147,7 @@ export async function statusTimer(request, reply) {
         }));
 
         // Display the formatted time in the console
-        return formatTime(active, active.endTime);
+        return formatTime(active.endTime);
       }, 1000);
 
       // Return the resumed status and the elapsed time
@@ -185,15 +183,15 @@ export async function deleteTimer(request, reply) {
   }
 }
 
-export async function getTimeByTask(request,reply){
+export async function getTime(request,reply){
   try {
    if (!active.timerid){
       return reply.status(404).send('Timer does not exist');
   } 
-  const totalTime = await Timer.findAll({ where: { id_task: active.task.id_task }, 
+  const time = await Timer.findAll({ where: { id_task: active.task.id_task }, 
     attributes: ['total_time']});
     if (totalTime) {
-      reply.code(200).send(totalTime);
+      return reply.status(200).send(formatTime(time));
     }
   } catch (error) {
     return reply.status(500).send({ error: 'Could not retrieve the total time' });

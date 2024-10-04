@@ -30,14 +30,8 @@ wss.on('connection', (ws) => {
 
   // Manages messages received from clients
   ws.on('message', (message) => {
-    const messageClient = JSON.parse(message); // const that stores client actions
-    ws.send(JSON.stringify({
-      action: messageClient.action,
-      id: messageClient.id,
-      function: messageClient.function,
-    }));
+    ws.send(`Message received by the client: ${message}`);
   });
 });
-
 // Exports the WebSocket server instance
 export default wss;
