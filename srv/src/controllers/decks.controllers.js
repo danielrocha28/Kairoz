@@ -1,9 +1,14 @@
-import decks from '../model/flashcard.model.js'
+import decks from '../model/flashcard.model.js';
+import deckSchema from '../validators/decks.schema.js'
+import {z} from 'zod';
+console.log(deckSchema);
+
+
 
 
 export async function createDecks(request, reply){
     try{
-        const validatedData = decksSchema.parse(request.body);
+        const validatedData = deckSchema.parse(request.body);
         const {name, description} = validatedData;
 
         const newDecks =  await decks.create({name, description});

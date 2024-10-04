@@ -1,6 +1,7 @@
 import {decks, cards} from '../model/flashcard.model.js'
-import cardSchema from '../validators/cards.schema.js'
+import cardSchema from '../validators/flashcard.schema.js'
 import {z} from 'zod';
+
 
 
 //cria novas cartas
