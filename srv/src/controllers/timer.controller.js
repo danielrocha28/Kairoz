@@ -15,6 +15,8 @@ class ActiveTimers {
     this.pause = false;
     this.started = false;
     this.ws = WebSocket; // Storing in a variable to send messages to the server
+    this.day = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
+    this.date = new Date();
   }
 }
 
@@ -70,6 +72,7 @@ export async function startTimer(request, reply) {
         action: 'start',
         id: active.timerid,
         function: active.totalTime,
+        day: active.day = [active.date.getDay],
       }));
 
       return formatTime(active.totalTime);
@@ -122,6 +125,7 @@ export async function statusTimer(request, reply) {
         action: 'pause',
         id: active.timerid,
         function: active.pausedTime,
+        day: active.day = [active.date.getDay],
       }));
       // Return the paused status and the elapsed time formatted
       return reply.send({
@@ -144,6 +148,7 @@ export async function statusTimer(request, reply) {
           action: 'resume',
           id: active.timerid,
           function: active.endTime,
+          day: active.day = [active.date.getDay],
         }));
 
         // Display the formatted time in the console
@@ -188,10 +193,10 @@ export async function getTime(request,reply){
    if (!active.timerid){
       return reply.status(404).send('Timer does not exist');
   } 
-  const time = await Timer.findAll({ where: { id_task: active.task.id_task }, 
+  active.pausedTime = await Timer.findAll({ where: { id_task: active.task.id_task, day_update: active.day }, 
     attributes: ['total_time']});
     if (totalTime) {
-      return reply.status(200).send(formatTime(time));
+      return reply.status(200).send(formatTime(active.pausedTime));
     }
   } catch (error) {
     return reply.status(500).send({ error: 'Could not retrieve the total time' });

@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/database';
-import Timers from './timer.model';
-import Tasks from './task.model';
+import sequelize from '../config/database.js';
+import Timers from './timer.model.js';
+import Tasks from './task.model.js';
 
 const Chart = sequelize.define('chart',
   {

@@ -38,7 +38,11 @@ const Timers = sequelize.define(
       field: 'total_time',
       defaultValue: 0,
     },
-
+    day_update:{
+      type: DataTypes.ENUM('none','0','1','2','3','4','5','6'),
+      allowNull: false,
+      defaultValue: 'none',
+    },
     id_task: {
       type: DataTypes.INTEGER,
       allowNull: false,

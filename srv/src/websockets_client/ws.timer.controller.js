@@ -23,8 +23,9 @@ WebSocket.on('message', async (message) => {
       case 'start':
         try {
           await Timer.update(
-            { start_time: messageWS.function },
+            { start_time: messageWS.function, day_update: messageWS.day  },
             { where: { id_time: messageWS.id } }
+
           );
         } catch (error) {
           console.error('Error starting the timer:', error);
@@ -34,7 +35,7 @@ WebSocket.on('message', async (message) => {
       case 'pause':
         try {
           await Timer.update(
-            {status_time: 'Paused',
+            {status_time: 'Paused', day_update: messageWS.day ,
               end_time: messageWS.function, // Corrected to use the proper field
               total_time: Sequelize.literal(`CASE WHEN (end_time - start_time) < 0 
                 THEN - (end_time - start_time) ELSE (end_time - start_time) END`)},
@@ -48,7 +49,7 @@ WebSocket.on('message', async (message) => {
 
       case 'resume':
         try {
-          await Timer.update({ status_time: 'Resumed',
+          await Timer.update({ status_time: 'Resumed', day_update: messageWS.day,
               start_time: Sequelize.literal(`${messageWS.function} + total_time `)},
               { where: { id_time: messageWS.id }});
 

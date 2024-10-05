@@ -1,15 +1,16 @@
-import Task from '../model/task.model';
-import Timer from '../model/timer.model';
-import Chart from '../model/chart.model';
-import { getTaskById, getTasks } from './task.controller';
+import Task from '../model/task.model.js';
+import Timer from '../model/timer.model.js';
+import Chart from '../model/chart.model.js';
+import { getTaskById, getTasks } from './task.controller.js';
 import { Op } from 'sequelize';
-import { getTime } from './timer.controller';
+import { getTime } from './timer.controller.js';
 
-    class Chart {
+    class newChart {
         constructor(type) {
-            this.totalTasks = getTasks.tasks
+            this.totalTasks = null;
             this.typeChart = type;
-            this.idTimer = null;
+            this.totalTime = null;
+            this.days = {dom,seg,ter,qua,qui,sex,sab};
         }
     }
 
@@ -52,14 +53,27 @@ export async function pieChart(request, reply) {
   }
 }
 
-    /*async function chartWeek(request, reply) {
+    async function chartWeek(request, reply) {
         try {
-            const task = await getTasks(request, reply);
+          const weekChart = new newChart('week');
+
+            const totalTasks = await getTasks(request, reply);
             const totalTime = await getTime(request, reply);
 
-          if(task.id_task === totalTime.id_task){
+          if(totalTasks.id_task === totalTime.id_task){
+            reply.status(200).send(`Total de tempo: ${totalTime}`);
           }
+          switch (totalTime.day_update.lenght){
+            case 'seg':
+              weekChart.days.seg = totalTime;
+            break;
+            case 'ter':
+              weekChart.days.ter = totaltime
+            } 
+
+
+
         } catch (error) {
 
         }
-    }*/
+    }
