@@ -2,29 +2,26 @@ import { registerUser, loginUser} from '../controllers/user.controller.js';
 import fastifyPassport from '@fastify/passport';
 
 const userRoutes = (fastify, options, done) => {
-
-
-  // Rota de teste
+  // Test route
   fastify.get('/status', async (request, reply) => {
     return { status: 'Server is up and running' };
   });
 
-  // Rota para registrar o usuário
+  // Route to register a user
   fastify.post('/register', async (request, reply) => {
     try {
-      console.log("Corpo da Requisição:", request.body);
       await registerUser(request, reply);
     } catch (error) {
-      reply.status(500).send({ error: 'Erro ao processar a requisição' });
+      reply.status(500).send({ error: 'Error processing the request' });
     }
   });
 
-  // Rota para login
+  // Route for login
   fastify.post('/login', async (request, reply) => {
     try {
       await loginUser(request, reply);
     } catch (error) {
-      reply.status(500).send({ error: 'Erro ao processar a requisição' });
+      reply.status(500).send({ error: 'Error processing the request' });
     }
   });
 
