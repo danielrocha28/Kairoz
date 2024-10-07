@@ -1,15 +1,15 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
-import User from './user.model.js';  // Importar o modelo User
+import User from './user.model.js';
 
 const Task = sequelize.define(
-  "Task",
+  'Task',
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
-      field: "id_task",
+      field: 'id_task',
     },
     title: {
       type: DataTypes.STRING,
@@ -26,33 +26,33 @@ const Task = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: "tasks",
-        key: "id_task",
+        model: 'tasks',
+        key: 'id_task',
       },
     },
     repeat: {
-      type: DataTypes.ENUM("daily", "weekly", "monthly", "yearly", "none"),
+      type: DataTypes.ENUM('daily', 'weekly', 'monthly', 'yearly', 'none'),
       allowNull: true,
-      defaultValue: "none",
+      defaultValue: 'none',
     },
     category: {
-      type: DataTypes.ENUM("study", "work", "health", "leisure"),
+      type: DataTypes.ENUM('study', 'work', 'health', 'leisure'),
       allowNull: false,
     },
     priority: {
-      type: DataTypes.ENUM("low", "medium", "high"),
+      type: DataTypes.ENUM('low', 'medium', 'high'),
       allowNull: true,
-      defaultValue: "medium",
+      defaultValue: 'medium',
     },
     status: {
-      type: DataTypes.ENUM("pending", "in-progress", "completed"),
+      type: DataTypes.ENUM('pending', 'in-progress', 'completed'),
       allowNull: true,
-      defaultValue: "pending",
+      defaultValue: 'pending',
     },
     dueDate: {
       type: DataTypes.DATE,
       allowNull: true,
-      field: "duedate",
+      field: 'duedate',
     },
     reminder: {
       type: DataTypes.DATE,
@@ -62,26 +62,24 @@ const Task = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    // Adicionando o campo user_id
     id_user: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "user", // Referenciando a tabela 'user'
-        key: "id_user",
+        model: User,
+        key: 'id_user',
       },
+      field: 'id_user',
     },
   },
   {
-    tableName: "tasks",
+    tableName: 'tasks',
     timestamps: true,
     underscored: true,
   }
 );
 
-// Relacionamento com o User
-Task.belongsTo(User, { foreignKey: "user_id", as: "user" });
-
-Task.belongsTo(Task, { as: "parent", foreignKey: "parentid" });
+Task.belongsTo(User, { foreignKey: 'id_user', as: 'user' });
+Task.belongsTo(Task, { as: 'parent', foreignKey: 'parentid' });
 
 export default Task;

@@ -1,18 +1,17 @@
 import Task from '../model/task.model.js';
-import Timer from '../model/timer.model.js';
 import Chart from '../model/chart.model.js';
-import { getTaskById, getTasks } from './task.controller.js';
+import { getTasks } from './task.controller.js';
 import { Op } from 'sequelize';
 import { getTime } from './timer.controller.js';
 
-    class newChart {
-        constructor(type) {
-            this.totalTasks = null;
-            this.typeChart = type;
-            this.totalTime = null;
-            this.days = {dom,seg,ter,qua,qui,sex,sab};
-        }
-    }
+class newChart {
+  constructor(type) {
+    this.totalTasks = null;
+    this.typeChart = type;
+    this.totalTime = null;
+    this.days = { dom, seg, ter, qua, qui, sex, sab };
+  }
+}
 
 export async function pieChart(request, reply) {
   try {
@@ -28,9 +27,7 @@ export async function pieChart(request, reply) {
       return reply.code(404).send({ message: 'No tasks found.' });
     }
 
-    const newPiechart = await Chart.create({
-        id_chart,
-    });
+    const newPiechart = await Chart.create();
 
     // Count tasks with status 'completed'
     const taskCompleted = await Task.count({ where: { status: 'completed',
@@ -49,31 +46,55 @@ export async function pieChart(request, reply) {
   } catch (error) {
     console.error('Error generating pie chart:', error);
     return reply.code(500).send({ error: 'An error occurred while generating the chart data',
-      message: error.message});
+      message: error.message });
   }
 }
 
-    async function chartWeek(request, reply) {
-        try {
-          const weekChart = new newChart('week');
+// Pie chart with total task time for the days of the week
+export async function chartWeek(request, reply) {
+  try {
+    const weekChart = new newChart('week');
 
-            const totalTasks = await getTasks(request, reply);
-            const totalTime = await getTime(request, reply);
-
-          if(totalTasks.id_task === totalTime.id_task){
-            reply.status(200).send(`Total de tempo: ${totalTime}`);
-          }
-          switch (totalTime.day_update.lenght){
-            case 'seg':
-              weekChart.days.seg = totalTime;
-            break;
-            case 'ter':
-              weekChart.days.ter = totaltime
-            } 
-
-
-
-        } catch (error) {
-
-        }
+    const totalTasks = await getTasks(request, reply); // Fetch all tasks
+    const timer = await getTime(request, reply); // Fetch total time
+    // Check if the task ID matches the timer ID
+    if (totalTasks.id_task === timer.id_task) {
+      await Chart.create({
+        id_task: totalTasks.id_task,
+        id_time: timer.id_time
+      });
+      
+      // Field responsible for capturing timer updates according to the day
+      switch (timer.day_update) {
+        case 'dom':
+          weekChart.days.dom = timer.total_time;
+          break;
+        case 'seg':
+          weekChart.days.seg = timer.total_time;
+          break;
+        case 'ter':
+          weekChart.days.ter = timer.total_time;
+          break;
+        case 'qua':
+          weekChart.days.qua = timer.total_time;
+          break;
+        case 'qui':
+          weekChart.days.qui = timer.total_time;
+          break;
+        case 'sex':
+          weekChart.days.sex = timer.total_time;
+          break;
+        case 'sab':
+          weekChart.days.sab = timer.total_time;
+          break;
+        default:
+          reply.status(500).send('Could not proceed');
+      }
     }
+    return weekChart.days;
+  } catch (error) {
+    console.error('Error generating chart week:', error);
+    return reply.code(500).send({ error: 'An error occurred while generating the chart data',
+      message: error.message });
+  }
+}
