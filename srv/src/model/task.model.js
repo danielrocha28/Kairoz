@@ -58,6 +58,12 @@ const Task = sequelize.define('Task', {
   notes: {
     type: DataTypes.TEXT,
     allowNull: true
+  },
+  // Adicionando o campo order para gerenciar a ordenação das tarefas
+  order: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
   }
 }, {
   tableName: 'tasks',
@@ -65,6 +71,7 @@ const Task = sequelize.define('Task', {
   underscored: true
 });
 
+// Relacionamento parent-child (uma tarefa pode ser filha de outra)
 Task.belongsTo(Task, { as: 'parent', foreignKey: 'parentid' });
 
 export default Task;

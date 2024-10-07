@@ -1,10 +1,9 @@
-import { createTask, getTasks, getTaskById, updateTask, deleteTask } from '../controllers/task.controller.js';
+import { createTask, getTasks, getTaskById, updateTask, deleteTask, updateTaskOrder } from '../controllers/task.controller.js';
 
 const taskRoutes = (fastify, options, done) => {
-  
   fastify.post('/tasks', async (request, reply) => {
     try {
-      const { title, category } = request.body; 
+      const { title, category } = request.body;
       if (!title || !category) {
         return reply.status(400).send({ error: 'Title and category are required' });
       }
@@ -63,7 +62,16 @@ const taskRoutes = (fastify, options, done) => {
     }
   });
 
+  fastify.put('/tasks/reorder', async (request, reply) => {
+    try {
+      await updateTaskOrder(request, reply);
+    } catch (error) {
+      console.error(error);
+      reply.status(500).send({ error: 'Error processing request', details: error.message });
+    }
+  });
+
   done();
 };
 
-export default taskRoutes;
+export default taskroutes;
