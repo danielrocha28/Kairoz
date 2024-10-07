@@ -9,7 +9,6 @@ import timerRoutes from './routes/timer.routes.js';
 import taskRoutes from './routes/task.routes.js';
 import flashcardRoutes from './routes/flashcard.routes.js';
 import passportSetup from './config/passport.js';
-import dotenv from 'dotenv';
 
 dotenv.config();
 

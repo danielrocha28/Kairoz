@@ -13,17 +13,18 @@ export const decks = sequelize.define('decks',{
 
     name: {
         type:DataTypes.STRING,
-        allowNull: false
+        allowNull: true,
 
     },
     description:{
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     id_cards: { // A coluna que relaciona ao deck
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
+            model: 'cards',
             key: 'id_cards' 
         }}
 
@@ -54,7 +55,7 @@ export const cards = sequelize.define('cards', {
     },
     id_decks: { // A coluna que relaciona ao deck
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         references: {
             model: decks, // Referencia o modelo Decks
             key: 'id_decks' // Chave primária em Decks
@@ -68,7 +69,7 @@ export const cards = sequelize.define('cards', {
 
 
 
-decks.hasMany(cards, { foreignKey: 'id_decks', sourceKey: 'id_decks' });
+decks.hasMany(cards, { foreignKey: 'id_decks', sourceKey: 'id_decks', as: 'cards' });
 cards.belongsTo(decks, { foreignKey: 'id_decks', targetKey: 'id_decks' });
 
 

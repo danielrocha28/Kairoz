@@ -1,81 +1,68 @@
 import decks from '../model/flashcard.model.js';
-import deckSchema from '../validators/decks.schema.js'
-import {z} from 'zod';
-console.log(deckSchema);
+import deckSchema from '../validators/decks.schema.js';
+import { z } from 'zod';
 
+console.log(deckSchema); // Log the deck schema for debugging purposes
 
-
-
-export async function createDecks(request, reply){
-    try{
-        const validatedData = deckSchema.parse(request.body);
-        const {name, description} = validatedData;
-
-        const newDecks =  await decks.create({name, description});
-        reply.status(201).send(newDecks);
-
-
-        }catch(error){
-
-            
-        //relata erro de validaçao com o zod
-        if(error instanceof z.ZodError) {
-
-            return reply.status(400).send({
-                error: 'Falha na validação com o zod',
-                details:error.errors
-            });
-
-        }else{
-    //relata erro interno
-            console.error('Erro ao criar decks', error);
-
-            reply.status(500).send({
-                error: 'Erro ao criar decks',
-                message: error.message
-        });
-
-     }
-}
-};
-
-
-
-export async function getDecks() {
+// Function to create new decks
+export async function createDecks(request, reply) {
     try {
-        const cards = await decks.findAll(); // Encontre todas as cartas
-        reply.status(200).send(cards);
+        // Validating the request body against the deck schema
+        const validatedData = deckSchema.parse(request.body);
+        const { name, description } = validatedData;
+
+        // Creating a new deck in the database
+        const newDecks = await decks.create({ name, description });
+        reply.status(201).send(newDecks); 
+        //Responding with the created deck
+
     } catch (error) {
-        reply.status(500).send({ error: 'Erro ao carregar decks' });
+        // Handling validation errors from Zod
+        if (error instanceof z.ZodError) {
+            return reply.status(400).send({
+                error: 'Validation failed with Zod',
+                details: error.errors // Sending back validation error details
+            });
+        } else {
+            // Logging internal errors and responding with a generic error message
+            console.error('Error creating decks', error);
+            reply.status(500).send({
+                error: 'Error creating decks',
+                message: error.message
+            });
+        }
     }
 };
 
-
-
-
-export async function deleteDecks(){
-    try{
-    const {id} = request.params;
-    const deletedecks = await decks.findById(id);
-
-    
-    if(!deletecards){
-        return reply.status(400).send({ message: 'Carta não encontrada'});
-    }else{
-        await deletedecks.destroy();
-
-        return reply.status(200).send({ message: 'Carta deletada com sucesso' });
+// Function to retrieve all decks
+export async function getDecks(request, reply) {
+    try {
+        const decksList = await decks.findAll(); // Find all decks in the database
+        reply.status(200).send(decksList); // Responding with the list of decks
+    } catch (error) {
+        reply.status(500).send({ error: 'Error loading decks' }); // Handling errors
     }
+};
 
-    }catch (error){
-        console.error(error);
+// Function to delete a deck by ID
+export async function deleteDecks(request, reply) {
+    try {
+        const { id } = request.params;// Extracting the deck ID from request parameters
         
-        request.status(500).send({
-             message: 'Erro ao deletar a carta'});
+        const deleteDecks = await decks.findByPk(id); // Finding the deck by ID
 
+        // If deck is not found, respond with an error message
+        if (!deleteDecks) {
+            return reply.status(400).send({ message: 'Deck not found' });
+        } else {
+            await deleteDecks.destroy(); // Deleting the deck
+            return reply.status(200).send({ message: 'Deck deleted successfully' }); // Responding with success message
+        }
+
+    } catch (error) {
+        console.error(error); // Logging the error
+        reply.status(500).send({
+            message: 'Error deleting the deck' // Handling errors
+        });
     }
 }
-
-
-        
-    
