@@ -27,7 +27,9 @@ export async function pieChart(request, reply) {
       return reply.code(404).send({ message: 'No tasks found.' });
     }
 
-    const newPiechart = await Chart.create();
+    const newPiechart = await Chart.create({
+      type: pie
+    });
 
     // Count tasks with status 'completed'
     const taskCompleted = await Task.count({ where: { status: 'completed',
@@ -55,13 +57,14 @@ export async function chartWeek(request, reply) {
   try {
     const weekChart = new newChart('week');
 
-    const totalTasks = await getTasks(request, reply); // Fetch all tasks
+    const task = await getTasks(request, reply); // Fetch all tasks
     const timer = await getTime(request, reply); // Fetch total time
     // Check if the task ID matches the timer ID
-    if (totalTasks.id_task === timer.id_task) {
+    if (task.id_task === timer.id_task) {
       await Chart.create({
-        id_task: totalTasks.id_task,
-        id_time: timer.id_time
+        id_task: task.id_task,
+        id_time: timer.id_time,
+        type: weekChart.type,
       });
       
       // Field responsible for capturing timer updates according to the day
