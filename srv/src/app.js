@@ -10,7 +10,6 @@ import taskRoutes from './routes/task.routes.js';
 import flashcardRoutes from './routes/flashcard.routes.js';
 import passportSetup from './config/passport.js';
 
-dotenv.config();
 
 const fastify = Fastify({ pluginTimeout: 30000 });
 dotenv.config();
@@ -36,7 +35,9 @@ fastify.register(homeRouter);
 fastify.register(userRoutes);
 fastify.register(timerRoutes);
 fastify.register(taskRoutes);
-passportSetup(fastify);
 fastify.register(flashcardRoutes);
+
+passportSetup(fastify);
+
 
 export default fastify;

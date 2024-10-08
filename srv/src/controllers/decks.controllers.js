@@ -1,4 +1,4 @@
-import decks from '../model/flashcard.model.js';
+import decks from '../model/decks.model.js';
 import deckSchema from '../validators/decks.schema.js';
 import { z } from 'zod';
 
