@@ -33,7 +33,7 @@ wss.on('connection', (ws) => {
     const messageClient = JSON.parse(message); 
     ws.send(JSON.stringify(messageClient));
 
-});
+  });
 });
 // Exports the WebSocket server instance
-export default wss
+export default wss;

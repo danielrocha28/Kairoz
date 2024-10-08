@@ -1,5 +1,4 @@
-import { startTimer, statusTimer, deleteTimer, paused, formatTime } from '../controllers/timer.controller.js';
-import { getTime } from '../controllers/timer.controller.js'
+import { startTimer, statusTimer, deleteTimer, paused, formatTime, getTime } from '../controllers/timer.controller.js';
 
 async function timerRouter(fastify, opts) {
   fastify.post('/timer/start', async (request, reply) => {

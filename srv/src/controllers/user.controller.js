@@ -18,11 +18,6 @@ async function validateEmailDomain(email) {
   }
 }
 
-export function userData(request,reply){
-  const loginUser = {}
-  return loginUser;
-}
-
 export async function registerUser(request, reply) {
   try {
     const validatedData = registerSchema.parse(request.body);

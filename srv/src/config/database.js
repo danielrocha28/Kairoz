@@ -8,7 +8,7 @@ dotenv.config();
 const requiredEnvVars = ['DB_NAME', 'DB_USER', 'DB_PASS', 'DB_HOST', 'DB_PORT', 'DB_SSL'];
 requiredEnvVars.forEach((envVar) => {
   if (!process.env[envVar]) {
-    throw new Error(`The environment variable ${envVar} is required but not defined.`)
+    throw new Error(`The environment variable ${envVar} is required but not defined.`);
   }
 });
 
