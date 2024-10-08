@@ -4,6 +4,7 @@ import 'package:kairoz/pages/login_page.dart';
 import 'package:kairoz/pages/register_page.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:kairoz/widgets/tela_informacoes.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");

@@ -68,7 +68,11 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const KairozLogo(),
+                  const Positioned(
+                    top: 20, // Distância do topo
+                    left: 20, // Distância da esquerda
+                    child: KairozLogo(),
+                  ),
                   const SizedBox(height: 16),
                   KairozOutlineInput(
                     labelText: 'Email',

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'Telainformacoes.dart';
+import 'package:kairoz/widgets/tela_informacoes.dart';
 
 class MyCarousel extends StatelessWidget {
+  const MyCarousel({super.key});
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> containers = [
@@ -12,8 +14,10 @@ class MyCarousel extends StatelessWidget {
           color: const Color.fromARGB(255, 158, 54, 244),
           height: 200,
           child: GestureDetector(onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Telainformacoes()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const TelaInformacoes()));
           })),
       Container(
           margin: const EdgeInsets.symmetric(
@@ -21,8 +25,10 @@ class MyCarousel extends StatelessWidget {
           color: const Color.fromARGB(255, 238, 54, 244),
           height: 200,
           child: GestureDetector(onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Telainformacoes()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const TelaInformacoes()));
           })),
       Container(
           margin: const EdgeInsets.symmetric(
@@ -30,8 +36,10 @@ class MyCarousel extends StatelessWidget {
           color: const Color.fromARGB(255, 54, 73, 244),
           height: 200,
           child: GestureDetector(onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Telainformacoes()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const TelaInformacoes()));
           })),
       Container(
           margin: const EdgeInsets.symmetric(
@@ -39,8 +47,10 @@ class MyCarousel extends StatelessWidget {
           color: const Color.fromARGB(255, 54, 222, 244),
           height: 200,
           child: GestureDetector(onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Telainformacoes()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const TelaInformacoes()));
           })),
       Container(
           margin: const EdgeInsets.symmetric(
@@ -48,8 +58,10 @@ class MyCarousel extends StatelessWidget {
           color: const Color.fromARGB(255, 54, 244, 139),
           height: 200,
           child: GestureDetector(onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Telainformacoes()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const TelaInformacoes()));
           })),
     ];
 
@@ -63,7 +75,7 @@ class MyCarousel extends StatelessWidget {
           items: containers.map((container) {
             return Builder(
               builder: (BuildContext context) {
-                return Container(
+                return SizedBox(
                   width: 700, //largaura dos containers
                   child: container,
                 );
@@ -75,4 +87,3 @@ class MyCarousel extends StatelessWidget {
     );
   }
 }
-

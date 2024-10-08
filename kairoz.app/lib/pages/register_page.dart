@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:kairoz/services/register.service.dart';
 import 'package:kairoz/widgets/kairoz_input.dart';
 import 'package:kairoz/widgets/kairoz_logo.dart';
+import 'package:kairoz/widgets/kairoz_outline_input.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -66,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
       backgroundColor: const Color.fromARGB(255, 82, 22, 185),
       body: Stack(
         children: [
-          const KairozLogo(),
+          const KairozLogo(), // Logo que vai sobrepor
           form(context),
         ],
       ),
@@ -76,16 +77,15 @@ class _RegisterPageState extends State<RegisterPage> {
   Container containerButtonRegister(BuildContext context) {
     return Container(
       height: 40.0,
-      margin: const EdgeInsets.only(top: 40.0),
+      margin: const EdgeInsets.only(top: 60.0),
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all(
-            const Color.fromARGB(255, 82, 22, 185),
+            const Color.fromARGB(255, 255, 255, 255),
           ),
         ),
         child: const Text(
           "Cadastre-se",
-          style: TextStyle(color: Colors.white),
         ),
         onPressed: () {
           if (_formKey.currentState!.validate()) {
@@ -109,7 +109,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: Colors.grey,
+                  color: Colors.white,
                   fontSize: 15,
                 ),
               ),
@@ -124,7 +124,7 @@ class _RegisterPageState extends State<RegisterPage> {
               child: const Text(
                 "Entrar",
                 style: TextStyle(
-                  color: Color.fromARGB(255, 82, 22, 185),
+                  color: Color.fromARGB(255, 255, 255, 255),
                   fontSize: 15,
                 ),
               ),
@@ -143,9 +143,9 @@ class _RegisterPageState extends State<RegisterPage> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        height: heightScreen * 0.74,
+        height: heightScreen * 0.83,
         decoration: const BoxDecoration(
-          color: Colors.white,
+          color: Color.fromARGB(255, 82, 22, 185),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(40.0),
             topRight: Radius.circular(40.0),
@@ -163,31 +163,29 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  KairozInput(
-                    title: "Nome",
+                  const SizedBox(height: 16),
+                  KairozOutlineInput(
                     controller: _tedName,
-                    hintText: "Informe seu nome",
+                    labelText: "Nome",
                     validator: (value) => validateField(value),
                   ),
-                  KairozInput(
-                    title: "E-mail",
+                  const SizedBox(height: 16),
+                  KairozOutlineInput(
                     controller: _tedEmail,
-                    hintText: "Informe o email",
+                    labelText: "E-mail",
                     validator: (value) => validateField(value),
                   ),
-                  KairozInput(
-                    title: "Senha",
+                  const SizedBox(height: 16),
+                  KairozOutlineInput(
                     controller: _tedPassword,
-                    obscureText: true,
-                    hintText: "Informe a senha",
+                    labelText: "Senha",
                     validator: (value) =>
                         validatePassword(value, _tedRepeatPassword.text),
                   ),
-                  KairozInput(
-                    title: "Confirmar senha",
-                    hintText: "Confirme a senha",
+                  const SizedBox(height: 16),
+                  KairozOutlineInput(
                     controller: _tedRepeatPassword,
-                    obscureText: true,
+                    labelText: "Confirme a senha",
                     validator: (value) =>
                         validatePassword(value, _tedPassword.text),
                   ),

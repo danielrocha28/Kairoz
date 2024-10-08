@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:kairoz/models/task_model.dart';
+import 'package:kairoz/widgets/grafico_pizza.dart';
+import 'package:kairoz/widgets/my_carousel.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,6 +31,7 @@ class _HomePageState extends State<HomePage> {
         ),
         backgroundColor: const Color.fromARGB(255, 82, 22, 185),
       ),
+      // body: PieChartContainer(),
       body: Container(
         padding: const EdgeInsets.all(16.0),
         child: ListView(

@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class Telainformacoes extends StatefulWidget {
+class TelaInformacoes extends StatefulWidget {
+  const TelaInformacoes({super.key});
+
   @override
-  _TelainformacoesState createState() => _TelainformacoesState();
+  _TelaInformacoesState createState() => _TelaInformacoesState();
 }
 
-class _TelainformacoesState extends State<Telainformacoes> {
+class _TelaInformacoesState extends State<TelaInformacoes> {
   late YoutubePlayerController _controller;
 
   @override
   void initState() {
     super.initState();
     _controller = YoutubePlayerController(
-      initialVideoId: 'oZgaqzpx90Y', // ID do vídeo (substitua pelo seu)
-      flags: YoutubePlayerFlags(
-        autoPlay: false,
+      initialVideoId: 'oZgaqzpx90Y', // ID do vídeo (substitua pelo seu) //
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
         mute: false,
       ),
     );
@@ -61,8 +63,7 @@ class _TelainformacoesState extends State<Telainformacoes> {
             child: YoutubePlayer(
               controller: _controller,
               showVideoProgressIndicator: true,
-              onReady: () {
-              },
+              onReady: () {},
             ),
           ),
         ],
