@@ -156,8 +156,8 @@ CREATE TABLE IF NOT EXISTS study_time (
 
 CREATE TABLE IF NOT EXISTS chart (
     id_chart SERIAL PRIMARY KEY,
-    id_time INTEGER NOT NULL,
-    id_task INTEGER NOT NULL,
+    id_time INTEGER,
+    id_task INTEGER,
     type VARCHAR(50) NOT NULL,
     FOREIGN KEY (id_time) REFERENCES study_time(id_time),
     FOREIGN KEY (id_task) REFERENCES tasks(id_task)

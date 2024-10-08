@@ -1,9 +1,7 @@
-import { startTimer, statusTimer, deleteTimer, resumed, paused } from '../controllers/timer.controller.js';
+import { startTimer, statusTimer, deleteTimer, paused, formatTime, getTime } from '../controllers/timer.controller.js';
 
 async function timerRouter(fastify, opts) {
-  fastify.post(
-    '/timer/start',
-    async (request, reply) => {
+  fastify.post('/timer/start', async (request, reply) => {
       try {
         await startTimer(request, reply);
       } catch (error) {
@@ -15,11 +13,9 @@ async function timerRouter(fastify, opts) {
     }
   );
 
-  fastify.put(
-    '/timer/pause',
-    async (request, reply) => {
+  fastify.put('/timer/pause', async (request, reply) => {
       try {
-        await paused();
+        await paused(true);
         await statusTimer(request, reply);
       } catch (error) {
         reply.status(500).send({
@@ -30,11 +26,9 @@ async function timerRouter(fastify, opts) {
     }
   );
 
-  fastify.put(
-    '/timer/resume',
-    async (request, reply) => {
+  fastify.put('/timer/resume', async (request, reply) => {
       try {
-        await resumed();
+        await paused(false);
         await statusTimer(request, reply);
       } catch (error) {
         reply.status(500).send({
@@ -45,9 +39,7 @@ async function timerRouter(fastify, opts) {
     }
   );
 
-  fastify.delete(
-    '/timer/delete',
-    async (request, reply) => {
+  fastify.delete('/timer/delete', async (request, reply) => {
       try {
         await deleteTimer(request, reply);
       } catch (error) {
@@ -55,6 +47,18 @@ async function timerRouter(fastify, opts) {
           error: 'Error processing the request',
           details: error.message,
         });
+      }
+    }
+  );
+
+fastify.get('/timer/:id_time', async (request, reply) => {
+      try {
+        const time = await getTime(request, reply);
+        return formatTime(time.total_time);
+      } catch (error) {
+        reply.status(500).send({
+          error: 'Error processing the request',
+          details: error.message });
       }
     }
   );
