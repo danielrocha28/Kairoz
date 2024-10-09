@@ -9,10 +9,12 @@ import timerRoutes from './routes/timer.routes.js';
 import taskRoutes from './routes/task.routes.js';
 import flashcardRoutes from './routes/flashcard.routes.js';
 import passportSetup from './config/passport.js';
+import chartRoutes from './routes/chart.routes.js';
+
+dotenv.config();
 
 
 const fastify = Fastify({ pluginTimeout: 30000 });
-dotenv.config();
 
 // Enable CORS
 fastify.register(fastifyCors, {
@@ -36,6 +38,8 @@ fastify.register(userRoutes);
 fastify.register(timerRoutes);
 fastify.register(taskRoutes);
 fastify.register(flashcardRoutes);
+fastify.register(chartRoutes);
+
 
 passportSetup(fastify);
 

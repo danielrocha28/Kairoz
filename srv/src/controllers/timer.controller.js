@@ -15,37 +15,36 @@ class ActiveTimers {
     this.pause = false;
     this.started = false;
     this.ws = WebSocket; // Storing in a variable to send messages to the server
+    this.day = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
+    this.date = new Date().getDay();
+    this.getId = null;
   }
 }
 
 const active = new ActiveTimers();
 
 // Function to format time in Hh:Mm:Ss = (00:00:00)
-export function formatTime(active, milliseconds) {
+export function formatTime(milliseconds) {
   const hours = String(Math.floor(milliseconds / 3600000)).padStart(2, '0');
   const minutes = String(Math.floor((milliseconds % 3600000) / 60000)).padStart(2, '0');
   const seconds = String(Math.floor((milliseconds % 60000) / 1000)).padStart(2, '0');
   return `${hours}:${minutes}:${seconds}`;
 }
 
-export async function paused() {
-  active.pause = true;
-}
-
-export async function resumed() {
-  active.pause = false;
+export async function paused(isPaused) {
+  active.pause = isPaused;
 }
 
 export async function startTimer(request, reply) {
   try {
-    const { id_task, title } = request.body;
+    const { id_task, title, category } = request.body;
 
-    let task = await Task.findAll({ where: { id_task, title } });
+    let task = await Task.findAll({ where: { id_task, title, category: 'study' } });
 
-    if (!task) {
+    if (task.length === 0) {
       return reply.status(404).send('Please create a task to start the timer.');
     }
-
+  
     const newTimer = await Timer.create({
       id_task,
       status_time: null,
@@ -53,113 +52,118 @@ export async function startTimer(request, reply) {
       end_time: 0,
       total_time: 0,
     });
+    const timer = await Timer.findOne({ where: { id_task } });
+
+    // Condition to nullify the start function after initialization
+    if (active.started === true && timer !== null) {
+      const error = new Error("Timer already in progress.");
+      error.status = 423;
+      throw error;
+    }
 
     request.session.idTimer = active.timerid = newTimer.id_time;
+    active.task = timer.id_task;
     active.started = true;
-    active.task = task;
-    request.session.titleTask = active.task;
 
     const start = Date.now();
 
     active.interval = setInterval(async () => {
       const elapsedTime = Date.now() - start;
       active.totalTime = active.startTime + elapsedTime;
-      request.session.timeStarted = active.totalTime;
-
+    
       // Sending a message to the WebSocket server via JSON
       active.ws.send(JSON.stringify({
-        action: 'start',
-        id: active.timerid,
-        function: active.totalTime,
+          action: 'start',
+          id: active.timerid,
+          function: active.totalTime,
+          day: active.day[active.date],
       }));
-
-      return formatTime(active, active.totalTime);
+    
+      return (formatTime(active.totalTime));
     }, 1000);
 
     await reply.status(201).send({
       message: 'Timer started successfully',
       newTimer: {
-        id_time: active.activeId,
+        id_time: active.timerid,
         id_task: active.task.id_task,
-        task: active.task.title,
-        timer: formatTime(active, active.totalTime),
+        timer: formatTime(active.totalTime),
       },
     });
   } catch (error) {
     console.error(error);
-    return reply.status(500).send({
-      error: 'Could not start the timer',
-      message: error.message,
-    });
+    return reply.status(500).send({ error: 'Could not start the timer', message: error.message,});
   }
 }
-
-// Condition to nullify the start function after initialization
-if (active.started && active.timerid !== null) {
-  reply.send('Timer already started.');
-}
-
 
 // Function to pause/resume the timer
 export async function statusTimer(request, reply) {
   try {
     if (!active.timerid) {
-      return reply.status(400).send('Timer has not started yet.');
+      active.timerid = active.getId.id_time // In case the time is lost
+
+      if (!active.getId || !active.timerid) {
+        return reply.status(400).send('Timer has not started yet.');
+      }
     }
 
-    if (!active.started) {
-      return reply.status(400).send('Cannot pause a timer that hasn\'t started.');
-    }
-
-    if (active.pause) {
+    // Logic to pause the timer
+    if (active.pause) { // pause time
       active.pause = true;
-      clearInterval(active.interval); // Pause the loop
-      // Store the total elapsed time until paused
+      clearInterval(active.interval);
+
+      // Calculate pausedTime
       active.pausedTime = active.totalTime + active.endTime;
       active.totalTime = 0;
       active.endTime = 0;
-      request.session.timePaused = active.pausedTime;
-      // Message to the WebSocket
-      active.ws.send(JSON.stringify({
-        action: 'pause',
-        id: active.timerid,
-        function: active.pausedTime,
-      }));
-      // Return the paused status and the elapsed time formatted
+
+      // Message for the WebSocket
+      active.ws.send(
+        JSON.stringify({
+          action: 'pause',
+          id: active.timerid,
+          function: active.pausedTime,
+          day: active.day[active.date],
+        })
+      );
+
+      // Return paused status and formatted total time
       return reply.send({
         message: 'Timer paused',
-        totalTime: formatTime(active, active.pausedTime),
+        totalTime: formatTime(active.pausedTime),
       });
-    } else {
+    } else { // resume time
       active.pause = false;
-      // Resume the timer
+      
       const start = Date.now() - active.pausedTime; // Resume from the paused point
       active.pausedTime = 0;
 
       active.interval = setInterval(async () => {
-        const elapsedTime = Date.now() - start; // Update the elapsed time
+        const elapsedTime = Date.now() - start; // Update elapsed time
         active.endTime = active.pausedTime + elapsedTime;
-        request.session.timeResumed = active.endTime;
 
-        // Message to the WebSocket
-        active.ws.send(JSON.stringify({
-          action: 'resume',
-          id: active.timerid,
-          function: active.endTime,
-        }));
+        // Message for the WebSocket
+        active.ws.send(
+          JSON.stringify({
+            action: 'resume',
+            id: active.timerid,
+            function: active.endTime,
+            day: active.day[active.date],
+          })
+        );
 
-        // Display the formatted time in the console
-        return formatTime(active, active.endTime);
+        // Show the formatted time in the console
+        return (formatTime(active.endTime)); // Shows formatted time in the console
       }, 1000);
 
-      // Return the resumed status and the elapsed time
+      // Return resume status and total time
       return reply.send({
         message: 'Timer resumed',
-        totalTime: formatTime(active, active.endTime),
+        totalTime: formatTime(active.endTime),
       });
     }
   } catch (error) {
-    console.error(error);
+    console.error('Error in statusTimer:', error); // Log the error with more context
     return reply.status(500).send({
       error: 'An error occurred while pausing or resuming the timer.',
       message: error.message,
@@ -185,4 +189,23 @@ export async function deleteTimer(request, reply) {
   }
 }
 
+// Call in case the server crashes or needs to retrieve total time
+export async function getTime(request, reply) {
+  try {
+    if (active.getId === null) {
+      const { id_time } = request.params || active.timerid;
+      active.getId = await Timer.findOne({ where: { id_time, status_time: 'Paused' }}) 
+    } else {
+      active.pausedTime = active.getId.total_time;
+    }
+
+    if (!active.getId.id_time) {
+      return reply.status(404).send('Timer does not exist');
+    }
+    return active.getId;
+  } catch (error) {
+    console.error('Error retrieving total time:', error); // Log the error
+    return reply.status(500).send({ error: 'Could not retrieve the total time' });
+  }
+}
 formatTime(); // Calling the function to make time variables accessible

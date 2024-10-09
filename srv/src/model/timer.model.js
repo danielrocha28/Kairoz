@@ -19,10 +19,7 @@ const Timers = sequelize.define(
     },
 
     status_time: {
-      type: DataTypes.STRING,
-      validate: {
-        isIn: [['Paused', 'Resumed']],
-      },
+      type: DataTypes.ENUM('Paused', 'Resumed'),
       field: 'status_time',
     },
 
@@ -38,7 +35,12 @@ const Timers = sequelize.define(
       field: 'total_time',
       defaultValue: 0,
     },
-
+    day_update:{
+      type: DataTypes.ENUM('none','0','1','2','3','4','5','6'),
+      allowNull: false,
+      defaultValue: 'none',
+      field: 'day_update'
+    },
     id_task: {
       type: DataTypes.INTEGER,
       allowNull: false,

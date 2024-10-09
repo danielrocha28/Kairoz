@@ -1,6 +1,13 @@
+<<<<<<< HEAD
 import Task from '../model/task.model.js'; 
 import taskSchema from '../validators/task.schema.js';  
 import { z } from 'zod';
+=======
+import Task from '../model/task.model.js';
+import taskSchema from '../validators/task.schema.js';
+import { z } from 'zod'; 
+import { loginUser } from './user.controller.js';
+>>>>>>> f644181b4904a45ef4189d7e1c465395040cba40
 
 const handleZodError = (error, reply) => {
   if (error instanceof z.ZodError) {
@@ -10,7 +17,7 @@ const handleZodError = (error, reply) => {
   }
 };
 
-const handleServerError = (error, reply) => {
+export const handleServerError = (error, reply) => {
   reply.code(500).send({ error: error.message });
 };
 
@@ -26,7 +33,8 @@ export async function createTask(request, reply) {
 
 export async function getTasks(request, reply) {
   try {
-    const tasks = await Task.findAll();
+    const userData = loginUser(request,reply);
+    const tasks = await Task.findAll({ where:{ id_user: userData.id_user }});
     reply.code(200).send(tasks);
   } catch (error) {
     handleServerError(error, reply);
@@ -73,3 +81,4 @@ export async function deleteTask(request, reply) {
     handleServerError(error, reply);
   }
 }
+
