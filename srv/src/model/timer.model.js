@@ -36,7 +36,7 @@ const Timers = sequelize.define(
       defaultValue: 0,
     },
     day_update:{
-      type: DataTypes.ENUM('none','0','1','2','3','4','5','6'),
+      type: DataTypes.ENUM('none','dom','seg','ter','qua','qui','sex','sab'),
       allowNull: false,
       defaultValue: 'none',
       field: 'day_update'

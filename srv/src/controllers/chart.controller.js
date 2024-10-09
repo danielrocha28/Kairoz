@@ -28,7 +28,7 @@ export async function pieChart(request, reply) {
     }
 
     const newPiechart = await Chart.create({
-      type: pie
+      type: 'pie',
     });
 
     // Count tasks with status 'completed'
