@@ -18,7 +18,7 @@ export async function createDecks(request, reply) {
                 details: error.errors 
             });
         } else {
-            // Logging internal errors and responding with a generic error message
+            
             console.error('Error creating decks', error);
             reply.status(500).send({
                 error: 'Error creating decks',
@@ -30,32 +30,31 @@ export async function createDecks(request, reply) {
 
 export async function allDecks(request, reply) {
     try {
-        const decksList = await decks.findAll(); // Find all decks in the database
-        reply.status(200).send(decksList); // Responding with the list of decks
+        const decksList = await decks.findAll(); 
+        reply.status(200).send(decksList); 
     } catch (error) {
-        reply.status(500).send({ error: 'Error loading decks' }); // Handling errors
+        reply.status(500).send({ error: 'Error loading decks' }); 
     }
 };
 
-// Function to delete a deck by ID
 export async function deleteDecks(request, reply) {
     try {
         const { id } = request.params;// Extracting the deck ID from request parameters
         
-        const deleteDecks = await decks.findByPk(id); // Finding the deck by ID
+        const deleteDecks = await decks.findByPk(id); 
 
         // If deck is not found, respond with an error message
         if (!deleteDecks) {
             return reply.status(400).send({ message: 'Deck not found' });
         } else {
             await deleteDecks.destroy(); // Deleting the deck
-            return reply.status(200).send({ message: 'Deck deleted successfully' }); // Responding with success message
+            return reply.status(200).send({ message: 'Deck deleted successfully' }); 
         }
 
     } catch (error) {
-        console.error(error); // Logging the error
+        console.error(error); 
         reply.status(500).send({
-            message: 'Error deleting the deck' // Handling errors
+            message: 'Error deleting the deck' 
         });
     }
 }
