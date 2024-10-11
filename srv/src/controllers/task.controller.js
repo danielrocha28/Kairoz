@@ -1,13 +1,7 @@
-<<<<<<< HEAD
-import Task from '../model/task.model.js'; 
-import taskSchema from '../validators/task.schema.js';  
-import { z } from 'zod';
-=======
 import Task from '../model/task.model.js';
 import taskSchema from '../validators/task.schema.js';
 import { z } from 'zod'; 
 import { loginUser } from './user.controller.js';
->>>>>>> f644181b4904a45ef4189d7e1c465395040cba40
 
 const handleZodError = (error, reply) => {
   if (error instanceof z.ZodError) {
