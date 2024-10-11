@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 export async function createCards(request, reply) {
     try {
-        const { id_decks } = request.params; // Extracting the deck ID from request parameters
+        const { id_decks } = request.params; 
 
         const validatedData = cardSchema.parse(request.body);
         const { front, verse } = validatedData;
@@ -20,11 +20,10 @@ export async function createCards(request, reply) {
         );
 
     } catch (error) {
-        // Handling validation errors from Zod
         if (error instanceof z.ZodError) {
             return reply.status(400).send({
                 error: 'Validation failed with Zod',
-                details: error.errors // Sending back validation error details
+                details: error.errors 
             });
         } else {
             console.error('Error creating card', error);
