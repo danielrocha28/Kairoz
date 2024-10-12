@@ -16,6 +16,9 @@ dependencies:
   fl_chart: ^0.69.0
   carousel_slider: ^5.0.0
   youtube_player_flutter: ^9.1.0
+  postgres: ^3.4.0
+  google_fonts: ^6.2.1
+  syncfusion_flutter_calendar: ^27.1.52
 
 dev_dependencies:
   flutter_test:
