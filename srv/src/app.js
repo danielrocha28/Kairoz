@@ -8,6 +8,7 @@ import userRoutes from './routes/user.routes.js';
 import timerRoutes from './routes/timer.routes.js';
 import taskRoutes from './routes/task.routes.js';
 import chartRoutes from './routes/chart.routes.js';
+import alarmRoutes from './routes/alarm.routes.js';
 
 const fastify = Fastify({ pluginTimeout: 30000 });
 dotenv.config();
@@ -33,5 +34,6 @@ fastify.register(userRoutes);
 fastify.register(timerRoutes);
 fastify.register(taskRoutes);
 fastify.register(chartRoutes);
+fastify.register(alarmRoutes)
 
 export default fastify;

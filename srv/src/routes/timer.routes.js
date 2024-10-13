@@ -51,8 +51,12 @@ async function timerRouter(fastify, opts) {
     }
   );
 
-fastify.get('/timer/:id_time', async (request, reply) => {
+fastify.get('/timer/:id', async (request, reply) => {
       try {
+        const timerId = parseInt(request.params.id, 10);
+        if (isNaN(timerId)) {
+          return reply.status(400).send({ error: 'Invalid timer ID' });
+        }
         const time = await getTime(request, reply);
         return formatTime(time.total_time);
       } catch (error) {
