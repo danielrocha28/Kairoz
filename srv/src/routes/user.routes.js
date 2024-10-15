@@ -25,7 +25,6 @@ const userRoutes = (fastify, options, done) => {
     }
   });
 
-
   fastify.get('/auth/google', { 
     preValidation: fastifyPassport.authenticate('google', { 
       scope: ['profile', 'email'] 
