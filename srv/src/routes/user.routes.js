@@ -32,12 +32,9 @@ const userRoutes = (fastify, options, done) => {
     }) 
   }, (request, reply) => {}
 );
-  
 
 fastify.get('/auth/google/callback', { preValidation: fastifyPassport.authenticate('google', { failureRedirect: '/' }) }, (request, reply) => {
 });
-
-
 
   fastify.get('/google', (request, reply) => {
     reply
@@ -50,8 +47,6 @@ fastify.get('/auth/google/callback', { preValidation: fastifyPassport.authentica
       `);
   });
   
-  
-
   done();
 };
 
