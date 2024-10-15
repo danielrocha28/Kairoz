@@ -2,6 +2,7 @@ import Alarm from '../model/alarm.model.js';
 import { loginUser } from './user.controller.js';
 import alarmSchema from '../validators/alarm.schema.js';
 import User from '../model/user.model.js';
+import { alarmNotification } from '../notifications/alarm.notifications.js';
 
 class alarmId {
   constructor(){
@@ -62,12 +63,7 @@ export async function usingAlarm(request, reply){
          const time = alarmCount(alarm.alarm_day);
 
         if (alarm.alarm_time === time){
-            const response = {
-                recipientId: loginUser.id,
-                title: time,
-                body: alarm.message,
-            }
-            return response;
+            await alarmNotification(loginUser.id, time, alarm.message)
         }
 
     } catch (error) {
@@ -78,7 +74,7 @@ export async function usingAlarm(request, reply){
 
 export async function updateAlarm(request, reply){
     try {
-      const validatedData = alarmSchema(request.body);
+      const validatedData = alarmSchema.parse(request.body);
       const [updated] = await Alarm.update(validatedData, {
         where: { id_alarm: request.params.id_alarm },
       });

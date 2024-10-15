@@ -5,30 +5,26 @@ async function alarmRoutes(fastify, options){
 
     fastify.post('/alarms', async (request, reply) => {
         try{
-            const { newAlarm, response} = await createAlarm(request, reply);
-            if (response) {
-            await alarmNotification(response.recipientId, response.title, response.body);
+            const alarm = await createAlarm(request, reply);
+            if(alarm){
+            reply.send(alarm);
             }
-        
-        reply.send(newAlarm);
-    
         } catch (error) {
             console.error(error);
             reply.status(500).send({ error: 'Error processing request', details: error.message });
         }
     });
 
-    fastify.put('/alarms/:id', async (request, reply) => {
+    fastify.put('/alarms/:id_alarm', async (request, reply) => {
         try {
-            const alarmId = parseInt(request.params.id, 10);
+            const alarmId = parseInt(request.params.id_alarm, 10);
             if (isNaN(alarmId)) {
               return reply.status(400).send({ error: 'Invalid alarm ID' });
             }
             const alarm = await updateAlarm(request,reply);
 
             if (alarm.executed === true){
-                const message = await usingAlarm(request,reply);
-                await alarmNotification(message.recipientId, message.title, message.body);
+                await usingAlarm(request,reply);
             }
         } catch (error) {
             console.error(error);
@@ -36,9 +32,9 @@ async function alarmRoutes(fastify, options){
         }
     });
 
-    fastify.delete('/alarms/:id', async (request,reply) => {
+    fastify.delete('/alarms/:id_alarm', async (request,reply) => {
         try {
-            const alarmId = parseInt(request.params.id, 10);
+            const alarmId = parseInt(request.params.id_alarm, 10);
             if (isNaN(alarmId)) {
               return reply.status(400).send({ error: 'Invalid alarm ID' });
             }
