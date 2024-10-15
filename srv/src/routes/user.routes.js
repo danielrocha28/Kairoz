@@ -25,7 +25,6 @@ const userRoutes = (fastify, options, done) => {
     }
   });
 
-
   fastify.get('/auth/google', { 
     preValidation: fastifyPassport.authenticate('google', { 
       scope: ['profile', 'email'] 
@@ -33,28 +32,8 @@ const userRoutes = (fastify, options, done) => {
   }, (request, reply) => {}
 );
   
-
 fastify.get('/auth/google/callback', { preValidation: fastifyPassport.authenticate('google', { failureRedirect: '/' }) }, (request, reply) => {
 });
-
-
-  
-  
-
-
-
-  fastify.get('/google', (request, reply) => {
-    reply
-      .header('Content-Type', 'text/html')
-      .send(`
-        <h1>Login com Google</h1>
-        <a href="/auth/google">
-          <button style="padding: 10px; font-size: 16px;">Login com Google</button>
-        </a>
-      `);
-  });
-  
-  
 
   done();
 };

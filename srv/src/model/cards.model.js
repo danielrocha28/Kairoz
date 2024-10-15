@@ -21,8 +21,9 @@ export const cards = sequelize.define('cards', {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-            model: decks, // Referencia o modelo Decks
-            key: 'id_decks' // Chave primária em Decks
+            model: decks, // References the Decks model
+            key: 'id_decks' // Primary key in Decks
+
         }}
 }, {
     tableName: 'cards', 
