@@ -3,7 +3,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kairoz/services/register.service.dart';
-import 'package:kairoz/widgets/kairoz_input.dart';
 import 'package:kairoz/widgets/kairoz_logo.dart';
 import 'package:kairoz/widgets/kairoz_outline_input.dart';
 
@@ -178,6 +177,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 16),
                   KairozOutlineInput(
                     controller: _tedPassword,
+                    obscureText: true,
                     labelText: "Senha",
                     validator: (value) =>
                         validatePassword(value, _tedRepeatPassword.text),
@@ -185,6 +185,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 16),
                   KairozOutlineInput(
                     controller: _tedRepeatPassword,
+                    obscureText: true,
                     labelText: "Confirme a senha",
                     validator: (value) =>
                         validatePassword(value, _tedPassword.text),
