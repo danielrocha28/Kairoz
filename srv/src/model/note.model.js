@@ -1,19 +1,19 @@
 import {DataTypes} from 'sequelize';
-import sequelize from '../config/database';
+import sequelize from '../config/database.js';
 
 const note = sequelize.define('note', {
     id_note: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        field: 'id_user',
+        field: 'id_note',
     },
     title:{
         type: DataTypes.STRING,
         allowNull: false,
         field: 'title',
     },
-    content:{
+    description:{
         type: DataTypes.STRING,
         allowNull: true,
         field: 'description',

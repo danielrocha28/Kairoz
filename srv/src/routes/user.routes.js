@@ -38,10 +38,6 @@ fastify.get('/auth/google/callback', { preValidation: fastifyPassport.authentica
 });
 
 
-  
-  
-
-
 
   fastify.get('/google', (request, reply) => {
     reply
