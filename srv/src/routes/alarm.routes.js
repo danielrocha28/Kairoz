@@ -1,5 +1,4 @@
 import { createAlarm, usingAlarm, updateAlarm, deleteAlarm } from '../controllers/alarm.controller.js';
-import { alarmNotification } from '../notifications/alarm.notifications.js';
 
 async function alarmRoutes(fastify, options){
 
@@ -22,7 +21,7 @@ async function alarmRoutes(fastify, options){
               return reply.status(400).send({ error: 'Invalid alarm ID' });
             }
             const alarm = await updateAlarm(request,reply);
-
+            // se for estiver ativado começa a contagem
             if (alarm.executed === true){
                 await usingAlarm(request,reply);
             }

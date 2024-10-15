@@ -11,7 +11,7 @@ class alarmId {
 }
 
 const getAlarm = new alarmId;
-
+// função para pegar a data atual e iniciar a  contagem se for igual o definido
 function alarmCount(alarm_day) {
     const date = new Date();
     const day = date.getDay();
@@ -27,11 +27,11 @@ function alarmCount(alarm_day) {
 export async function createAlarm(request, reply){
    try {
     const validatedData = alarmSchema.parse(request.body); 
-    //const user = await User.findOne({ where: { id_user: loginUser.id }})
+    const user = await User.findOne({ where: { id_user: loginUser.id }})
 
-    /*if (!user){
+    if (!user){
         return reply.status(404).send('Usuário não encontrado.');
-    }*/
+    }
 
     const newAlarm = await Alarm.create(validatedData);
     getAlarm.id = newAlarm.id_alarm;
@@ -50,7 +50,7 @@ export async function createAlarm(request, reply){
         return reply.status(500).send({ error: 'erro ao criar o alarme.', message: error.message,});
    }
 }
-
+// função se caso o alarme estiver ativado
 export async function usingAlarm(request, reply){
     try {
        const alarm = await Alarm.findOne({ where: 
@@ -61,7 +61,7 @@ export async function usingAlarm(request, reply){
         }
 
          const time = alarmCount(alarm.alarm_day);
-
+        // se a hora for igual a atual manda uma notificação
         if (alarm.alarm_time === time){
             await alarmNotification(loginUser.id, time, alarm.message)
         }
