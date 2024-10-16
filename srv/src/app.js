@@ -7,16 +7,21 @@ import homeRouter from './routes/home.routes.js';
 import userRoutes from './routes/user.routes.js';
 import timerRoutes from './routes/timer.routes.js';
 import taskRoutes from './routes/task.routes.js';
+import flashcardRoutes from './routes/flashcard.routes.js';
+import passportSetup from './config/passport.js';
 import chartRoutes from './routes/chart.routes.js';
 
-const fastify = Fastify({ pluginTimeout: 30000 });
 dotenv.config();
+
+
+const fastify = Fastify({ pluginTimeout: 30000 });
 
 // Enable CORS
 fastify.register(fastifyCors, {
   origin: 'https://kairoz.onrender.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 });
+
 
 // Register the cookie plugin first
 fastify.register(fastifyCookie, {});
@@ -32,6 +37,11 @@ fastify.register(homeRouter);
 fastify.register(userRoutes);
 fastify.register(timerRoutes);
 fastify.register(taskRoutes);
+fastify.register(flashcardRoutes);
 fastify.register(chartRoutes);
+
+
+passportSetup(fastify);
+
 
 export default fastify;

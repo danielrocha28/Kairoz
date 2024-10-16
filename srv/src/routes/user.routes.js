@@ -1,4 +1,5 @@
-import { registerUser, loginUser } from '../controllers/user.controller.js';
+import { registerUser, loginUser} from '../controllers/user.controller.js';
+import fastifyPassport from '@fastify/passport';
 
 const userRoutes = (fastify, options, done) => {
   // Test route
@@ -23,6 +24,16 @@ const userRoutes = (fastify, options, done) => {
       reply.status(500).send({ error: 'Error processing the request' });
     }
   });
+
+  fastify.get('/auth/google', { 
+    preValidation: fastifyPassport.authenticate('google', { 
+      scope: ['profile', 'email'] 
+    }) 
+  }, (request, reply) => {}
+);
+  
+fastify.get('/auth/google/callback', { preValidation: fastifyPassport.authenticate('google', { failureRedirect: '/' }) }, (request, reply) => {
+});
 
   done();
 };

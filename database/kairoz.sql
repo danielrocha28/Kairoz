@@ -133,6 +133,7 @@ CREATE TABLE IF NOT EXISTS tag_note (
 
 CREATE TABLE IF NOT EXISTS flashcard (
     id_flashcard SERIAL PRIMARY KEY,
+    id_cards SERIAL PRIMARY KEY,
     id_note INTEGER NOT NULL,
     question TEXT NOT NULL,
     option1 TEXT NOT NULL,
