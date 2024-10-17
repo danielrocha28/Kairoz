@@ -1,5 +1,6 @@
 import globals from 'globals';
 import pluginJs from '@eslint/js';
+import pluginImport from 'eslint-plugin-import';
 
 export default {
   languageOptions: {
@@ -15,19 +16,9 @@ export default {
       sourceType: 'module'
     },
   },
-  extends: [
-    // Extending the recommended ESLint configurations
-    pluginJs.configs.recommended,
-    // Ensuring correct order of imports and handling import errors
-    'plugin:import/recommended'
-  ],
-  env: {
-    // Enabling environment support for Node.js
-    node: true,
-    // Enabling environment support for browser
-    browser: true,
-  },
   rules: {
+    // Extending rules from recommended plugin:import settings
+    ...pluginImport.configs.recommended.rules,
     // Warn on console usage
     'no-console': 'warn',
     // Enforce strict equality checks (=== and !==)
@@ -44,5 +35,11 @@ export default {
     'quotes': ['error', 'single'],
     // Enforce the use of semicolons at the end of statements
     'semi': ['error', 'always']
-  }
+  },
+  env: {
+    // Enabling environment support for Node.js
+    node: true,
+    // Enabling environment support for browser
+    browser: true,
+  },
 };
