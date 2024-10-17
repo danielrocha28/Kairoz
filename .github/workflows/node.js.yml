@@ -27,9 +27,22 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: ./srv/package-lock.json
+        cache-key: ${{ runner.os }}-node-${{ matrix.node-version }}-{{ hashFiles('srv/package-lock.json') }}
 
     - name: Install and Test
       working-directory: ./srv
       run: |
         npm ci  # Install dependencies
         npm test  # Run tests
+
+    - name: Run ESLint
+      working-directory: ./srv
+      run: |
+        npm run lint
+
+    - name: Archive Test Results
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: ./srv/test-results
