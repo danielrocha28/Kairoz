@@ -17,6 +17,10 @@ export default [
         sourceType: 'module'
       },
     },
+    plugins: {
+      import: pluginImport,  // add the plugin import how obj
+      js: pluginJs,          
+    },
     rules: {
       // Define rules directly
       'no-console': 'warn',
