@@ -15,7 +15,7 @@ dotenv.config();
 
 // Enable CORS
 fastify.register(fastifyCors, {
-  origin: 'https://kairoz.onrender.com',
+  origin: 'https://kairoz-8tcx.onrender.com',
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 });
 

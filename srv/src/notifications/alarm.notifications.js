@@ -5,9 +5,8 @@ dotenv.config();
 
 const novu = new Novu(process.env.NOVU_KEY) || 'http://localhost:3000';
 
-export async function alarmNotification(recipientId, title, body){
-try {
-
+export async function alarmNotification(recipientId, title, body) {
+  try {
     const notification = await novu.notification.create({
       to: {
         subscriberId: recipientId,
@@ -18,11 +17,14 @@ try {
       },
       type: 'push',
     });
-    console.log('Notificação enviada:', notification);
+
+    console.log('Notification sent:', notification);
     return reply.status(201).send(notification);
-    
-} catch (error) {
+  } catch (error) {
     console.error(error);
-    return reply.status(500).send({ error: 'erro.', message: error.message,});
-}
+    return reply.status(500).send({
+      error: 'error.',
+      message: error.message,
+    });
+  }
 }
