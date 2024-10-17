@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "start:debug": "node --inspect server.js"
+    "start:debug": "node --inspect server.js",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "dependencies": {
     "@fastify/cookie": "^10.0.1",
