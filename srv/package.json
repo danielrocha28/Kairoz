@@ -24,6 +24,7 @@
     "fastify-formbody": "^5.3.0",
     "gauge": "^5.0.2",
     "glob": "^11.0.0",
+    "globals": "^15.11.0",
     "ioredis": "^5.4.1",
     "jsonwebtoken": "^9.0.2",
     "passport": "^0.7.0",
