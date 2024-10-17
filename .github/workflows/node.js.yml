@@ -26,8 +26,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: ./srv/package-lock.json
-        cache-key: ${{ runner.os }}-node-${{ matrix.node-version }}-{{ hashFiles('srv/package-lock.json') }}
+        cache-key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('srv/package-lock.json') }}
 
     - name: Install and Test
       working-directory: ./srv
