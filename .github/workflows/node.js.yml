@@ -16,11 +16,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Show current directory
+      run: pwd
+
+    - name: List files
+      run: ls -la
+
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+
+    - name: Show ./srv directory content
+      run: ls -la ./srv
 
     - name: Install, Build, and Test
       working-directory: ./srv
