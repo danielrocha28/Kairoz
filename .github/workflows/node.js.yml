@@ -36,7 +36,7 @@ jobs:
     - name: Run ESLint
       working-directory: ./srv
       run: |
-        eslint --config ./eslint.config.mjs .  # Corrected the path
+        npm run lint  # Use npm to run the linting script
 
     - name: Archive Test Results
       if: failure()
