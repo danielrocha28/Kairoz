@@ -3,8 +3,12 @@ name: Node.js CI
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'srv/**'  # Triggers the workflow only when files inside ./srv are changed
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'srv/**'  # Triggers the workflow only when files inside ./srv are changed
 
 jobs:
   build:
@@ -27,5 +31,5 @@ jobs:
     - name: Install and Test
       working-directory: ./srv
       run: |
-        npm ci
-        npm test
+        npm ci  # Install dependencies
+        npm test  # Run tests
