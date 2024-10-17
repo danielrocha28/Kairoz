@@ -17,24 +17,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Show current directory
-      run: pwd
-
-    - name: List files
-      run: ls -la
-
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: ./srv/package-lock.json
 
-    - name: Show ./srv directory content
-      run: ls -la ./srv
-
-    - name: Install, Build, and Test
+    - name: Install and Test
       working-directory: ./srv
       run: |
         npm ci
-        npm run build --if-present
         npm test
