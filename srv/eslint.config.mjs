@@ -8,18 +8,18 @@ export default [
       globals: {
         // Including Node.js and browser global variables
         ...globals.node,
-        ...globals.browser
+        ...globals.browser,
       },
       parserOptions: {
         // ECMAScript 2022 syntax support
         ecmaVersion: 2022,
         // Setting source type to 'module' for ES Modules
-        sourceType: 'module'
+        sourceType: 'module',
       },
     },
     plugins: {
-      import: pluginImport,  // add the plugin import how obj
-      js: pluginJs,          
+      // Definindo plugins como objetos
+      import: pluginImport,
     },
     rules: {
       // Define rules directly
@@ -28,12 +28,12 @@ export default [
       'no-return-await': 'error',
       'prefer-promise-reject-errors': 'error',
       'require-await': 'error',
-      'no-unused-vars': ['warn', { 'args': 'none', 'ignoreRestSiblings': true }],
+      'no-unused-vars': ['warn', { args: 'none', ignoreRestSiblings: true }],
       'quotes': ['error', 'single'],
-      'semi': ['error', 'always']
-    }
+      'semi': ['error', 'always'],
+    },
   },
-  // Include recommended rules from the plugins directly
+  // Usar o pluginJs e pluginImport diretamente no array
   pluginJs.configs.recommended,
-  pluginImport.configs.recommended
+  pluginImport.configs.recommended,
 ];
