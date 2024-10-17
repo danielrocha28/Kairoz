@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "eslint": "^9.9.0",
+    "eslint-plugin-import": "^2.31.0",
     "nodemon": "^3.1.4"
   }
 }
