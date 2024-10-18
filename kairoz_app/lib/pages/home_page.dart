@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:kairoz/models/task_model.dart';
+import 'package:kairoz/widgets/appbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,13 +23,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Kairoz',
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: const Color.fromARGB(255, 82, 22, 185),
-      ),
+      appBar: const MyAppBar(title: "Kairoz"),
       body: Container(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
