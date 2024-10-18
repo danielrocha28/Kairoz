@@ -177,6 +177,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 16),
                   KairozOutlineInput(
                     controller: _tedPassword,
+                    suffixIcon: const Icon(Icons.visibility),
                     obscureText: true,
                     labelText: "Senha",
                     validator: (value) =>
@@ -185,6 +186,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 16),
                   KairozOutlineInput(
                     controller: _tedRepeatPassword,
+                    suffixIcon: const Icon(Icons.visibility),
                     obscureText: true,
                     labelText: "Confirme a senha",
                     validator: (value) =>

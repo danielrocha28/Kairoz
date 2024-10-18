@@ -5,6 +5,7 @@ class KairozOutlineInput extends StatelessWidget {
   final String labelText;
   final bool obscureText;
   final FormFieldValidator<String>? validator;
+  final Icon? suffixIcon;
 
   const KairozOutlineInput({
     super.key,
@@ -12,6 +13,7 @@ class KairozOutlineInput extends StatelessWidget {
     required this.labelText,
     this.validator,
     this.obscureText = false,
+    this.suffixIcon,
   });
 
   @override
