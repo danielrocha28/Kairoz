@@ -2,6 +2,7 @@ import ws from 'ws';
 import dotenv from 'dotenv';
 import Timer from '../model/timer.model.js';
 import { Sequelize } from 'sequelize';
+import logger from '../config/logger.js'; 
 
 dotenv.config();
 
@@ -10,7 +11,7 @@ const WebSocket = new ws(process.env.WEBSOCKET_URL);
 
 // Opening the client-side connection
 WebSocket.on('open', () => {
-  console.log('WebSocket connection opened.');
+  logger.info('WebSocket connection opened.');
 });
 
 // Messages sent by the client
@@ -28,7 +29,7 @@ WebSocket.on('message', async (message) => {
             { where: { id_time: messageWS.id } }
           );
         } catch (error) {
-          console.error('Error starting the timer:', error);
+          logger.error('Error starting the timer:', error);
         }
         break;
 
@@ -38,10 +39,10 @@ WebSocket.on('message', async (message) => {
             { status_time: 'Paused',
               day_update: messageWS.day,
               end_time: messageWS.function, 
-              total_time: Sequelize.literal(`CASE WHEN (end_time - start_time) < 0 THEN - (end_time - start_time) ELSE (end_time - start_time) END`)},
+              total_time: Sequelize.literal('CASE WHEN (end_time - start_time) < 0 THEN - (end_time - start_time) ELSE (end_time - start_time) END')},
             { where: { id_time: messageWS.id } });
         } catch (error) {
-          console.error('Error pausing the timer:', error);
+          logger.error('Error pausing the timer:', error);
         }
         break;
 
@@ -54,7 +55,7 @@ WebSocket.on('message', async (message) => {
             { where: { id_time: messageWS.id } }
           );
         } catch (error) {
-          console.error('Error resuming the timer:', error);
+          logger.error('Error resuming the timer:', error);
         }
         break;
 
@@ -62,7 +63,7 @@ WebSocket.on('message', async (message) => {
         WebSocket.send(JSON.stringify({ error: 'Action not recognized' }));
     }
   } catch (error) {
-    console.error('Error processing the message:', error);
+    logger.error('Error processing the message:', error);
     WebSocket.send(JSON.stringify({ error: 'Error processing the action.' }));
   }
 });

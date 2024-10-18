@@ -2,6 +2,7 @@ import { cards as Cards} from '../model/cards.model.js';
 import decks from '../model/decks.model.js';
 import cardSchema from '../validators/cards.schema.js';
 import { z } from 'zod';
+import logger from '../config/logger.js'; 
 
 export async function createCards(request, reply) {
     try {
@@ -26,7 +27,7 @@ export async function createCards(request, reply) {
                 details: error.errors 
             });
         } else {
-            console.error('Error creating card', error);
+            logger.error('Error creating card', error);
             reply.status(500).send({
                 error: 'Error creating card',
                 message: error.message
@@ -40,8 +41,8 @@ export async function allCards(request, reply) {
         const cards = await Cards.findAll(); 
         reply.status(200).send(cards); 
     } catch (error) {
-        console.error(error);
-        console.error(error.message); 
+        logger.error(error);
+        logger.error(error.message); 
         reply.status(500).send({ error: 'Error loading cards' }); 
     }
 };
@@ -57,8 +58,8 @@ export async function getCards(request, reply) {
         
         reply.status(200).send(cards); 
     } catch (error) {
-        console.error(error);
-        console.error(error.message);
+        logger.error(error);
+        logger.error(error.message);
         reply.status(500).send({ error: 'Error loading the card' }); 
     }
 };
@@ -76,7 +77,7 @@ export async function deleteCards(request, reply) {
         }
 
     } catch (error) {
-        console.error(error); 
+        logger.error(error); 
         reply.status(500).send({
             message: 'Error deleting the card' 
         });

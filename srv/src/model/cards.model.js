@@ -1,6 +1,6 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
-import decks from './decks.model.js'
+import decks from './decks.model.js';
 
 export const cards = sequelize.define('cards', {
     id_cards: {

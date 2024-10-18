@@ -34,6 +34,6 @@ export const decks = sequelize.define('decks',{
     timestamps: true, 
     createdAt: 'created_at', 
     updatedAt: 'updated_at'
-})
+});
 
 export default decks;
