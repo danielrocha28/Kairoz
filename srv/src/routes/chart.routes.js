@@ -1,11 +1,13 @@
 import { pieChart, chartWeek } from '../controllers/chart.controller.js';
+import logger from '../config/logger.js'; 
 
-async function chartRoutes(fastify, options){
+
+   function chartRoutes(fastify, options){
     fastify.get('/chart-pie', async (request,reply) => {
         try {
          await pieChart(request,reply);
         } catch (error) {
-         console.error(error);
+         logger.error(error);
          reply.status(500).send({ error: 'Error processing request', details: error.message });
         }
     });
@@ -14,7 +16,7 @@ async function chartRoutes(fastify, options){
         try {
          await chartWeek(request,reply);
         } catch (error) {
-         console.error(error);
+         logger.error(error);
          reply.status(500).send({ error: 'Error processing request', details: error.message });
         }
     });

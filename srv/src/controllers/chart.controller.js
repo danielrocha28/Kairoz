@@ -3,16 +3,25 @@ import Chart from '../model/chart.model.js';
 import { getTasks } from './task.controller.js';
 import { Op } from 'sequelize';
 import { getTime } from './timer.controller.js';
+import logger from '../config/logger.js'; 
 
-class newChart {
+class NewChart {
   constructor(type) {
     this.totalTasks = null;
     this.typeChart = type;
     this.totalTime = null;
-    this.days = { dom, seg, ter, qua, qui, sex, sab };
+    this.days = {
+      dom: 'Sunday',
+      seg: 'Monday',
+      ter: 'Tuesday',
+      qua: 'Wednesday',
+      qui: 'Thursday',
+      sex: 'Friday',
+      sab: 'Saturday'
+    };
   }
 }
-
+  
 export async function pieChart(request, reply) {
   try {
     const chartPie = {
@@ -27,35 +36,44 @@ export async function pieChart(request, reply) {
       return reply.code(404).send({ message: 'No tasks found.' });
     }
 
+    // Corrigido: 'pie' como uma string
     const newPiechart = await Chart.create({
-      type: pie
+      type: 'pie', // Corrigido para 'pie'
     });
 
     // Count tasks with status 'completed'
-    const taskCompleted = await Task.count({ where: { status: 'completed',
-        id_task: task.tasks.id_task }});
+    const taskCompleted = await Task.count({
+      where: { status: 'completed', id_task: task.tasks.id_task }
+    });
 
     // Count tasks with status 'pending' or 'in-progress'
-    const taskPending = await Task.count({ where: { status: { [Op.or]: ['pending', 'in-progress'] },
-        id_task: task.tasks.id_task }});
+    const taskPending = await Task.count({
+      where: { 
+        status: { [Op.or]: ['pending', 'in-progress'] },
+        id_task: task.tasks.id_task 
+      }
+    });
 
     // Updating the pie chart values
     chartPie.Completed += taskCompleted;
     chartPie.Pending += taskPending;
     chartPie.Total = chartPie.Completed + chartPie.Pending;
 
-    return reply.code(200).send(newPiechart, chartPie);
+    // Retorne a resposta corretamente
+    return reply.code(200).send({ newPiechart, chartPie }); // Corrigido para enviar um objeto
   } catch (error) {
-    console.error('Error generating pie chart:', error);
-    return reply.code(500).send({ error: 'An error occurred while generating the chart data',
-      message: error.message });
+    logger.error('Error generating pie chart:', error);
+    return reply.code(500).send({ 
+      error: 'An error occurred while generating the chart data',
+      message: error.message 
+    });
   }
 }
 
 // Pie chart with total task time for the days of the week
 export async function chartWeek(request, reply) {
   try {
-    const weekChart = new newChart('week');
+    const weekChart = new NewChart('week');
 
     const task = await getTasks(request, reply); // Fetch all tasks
     const timer = await getTime(request, reply); // Fetch total time
@@ -64,7 +82,7 @@ export async function chartWeek(request, reply) {
       await Chart.create({
         id_task: task.id_task,
         id_time: timer.id_time,
-        type: weekChart.type,
+        type: weekChart.typeChart, // Corrigido para usar `typeChart`
       });
       
       // Field responsible for capturing timer updates according to the day
@@ -91,13 +109,15 @@ export async function chartWeek(request, reply) {
           weekChart.days.sab = timer.total_time;
           break;
         default:
-          reply.status(500).send('Could not proceed');
+          return reply.status(500).send('Could not proceed');
       }
     }
-    return weekChart.days;
+    return reply.status(200).send(weekChart.days); // Return the object `days`
   } catch (error) {
-    console.error('Error generating chart week:', error);
-    return reply.code(500).send({ error: 'An error occurred while generating the chart data',
-      message: error.message });
+    logger.error('Error generating chart week:', error);
+    return reply.code(500).send({ 
+      error: 'An error occurred while generating the chart data',
+      message: error.message 
+    });
   }
 }

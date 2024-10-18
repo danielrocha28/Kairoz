@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken';
 import { registerSchema, loginSchema } from '../validators/user.schema.js';
 import dns from 'dns';
 import { promisify } from 'util';
+import logger from '../config/logger.js';
+import { z } from 'zod';
 
 const resolveMxAsync = promisify(dns.resolveMx);
 
@@ -14,11 +16,12 @@ async function validateEmailDomain(email) {
     const mxRecords = await resolveMxAsync(domain);
     return mxRecords && mxRecords.length > 0;
   } catch (error) {
+    logger.error(`Failed to resolve MX records for domain: ${domain}. Error: ${error.message}`);
     return false;
   }
 }
 
-export async function registerUser(request, reply) {
+export async function registerUser(request  , reply) {
   try {
     const validatedData = registerSchema.parse(request.body);
     const { name, email, password } = validatedData;
@@ -48,7 +51,7 @@ export async function registerUser(request, reply) {
     if (error instanceof z.ZodError) {
       reply.status(400).send({ error: 'Validation failed', details: error.errors });
     } else {
-      console.error('Error registering user:', error);
+      logger.error('Error registering user:', error);
       reply.status(500).send({ error: 'Internal server error', message: error.message });
     }
   }
@@ -80,7 +83,7 @@ export async function loginUser(request, reply) {
     if (error instanceof z.ZodError) {
       reply.status(400).send({ error: 'Validation failed', details: error.errors });
     } else {
-      console.error('Error logging in:', error);
+      logger.error('Error logging in:', error);
       reply.status(500).send({ error: 'Internal server error', message: error.message });
     }
   }

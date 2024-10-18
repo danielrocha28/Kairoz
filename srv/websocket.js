@@ -1,5 +1,6 @@
 import ws from 'ws';
 import dotenv from 'dotenv';
+import logger from './src/config/logger.js'; 
 
 dotenv.config();
 
@@ -7,7 +8,7 @@ const port = process.env.WEBSOCKET_PORT || 8000;
 
 // Initializes the WebSocket server
 const wss = new ws.Server({ port }, () => {
-  console.log(`WebSocket server listening on port ${port}`);
+  logger.info(`WebSocket server listening on port ${port}`);
 });
 
 // Stores connected clients
@@ -19,13 +20,13 @@ wss.on('connection', (ws) => {
 
   // Manages disconnection
   ws.on('close', () => {
-    console.log('Client disconnected');
+    logger.info('Client disconnected');
     clients.delete(ws);
   });
 
   // Manages errors
   ws.on('error', (error) => {
-    console.log('An error occurred with the WebSocket', error.message);
+    logger.info('An error occurred with the WebSocket', error.message);
   });
 
   // Manages messages received from clients
