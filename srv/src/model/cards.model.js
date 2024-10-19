@@ -34,4 +34,4 @@ export const cards = sequelize.define('cards', {
 decks.hasMany(cards, { foreignKey: 'id_decks', sourceKey: 'id_decks', as: 'cards' });
 cards.belongsTo(decks, { foreignKey: 'id_decks', targetKey: 'id_decks' });
 
-export default decks;
+export default cards;

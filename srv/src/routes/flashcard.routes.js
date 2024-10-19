@@ -1,4 +1,3 @@
-import fastify from 'fastify';
 import { createCards, getCards, allCards, deleteCards } from '../controllers/cards.controllers.js';
 import { createDecks, allDecks, deleteDecks } from '../controllers/decks.controllers.js';
 
