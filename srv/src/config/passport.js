@@ -11,7 +11,6 @@ dotenv.config();
 export const passportSetup = (fastify) => {
  
   fastify.register(fastifyPassport.initialize());
-  // fastify.register(fastifyPassport.session());
 
 
   // Configure Google OAuth strategy
@@ -38,21 +37,6 @@ export const passportSetup = (fastify) => {
     }
   }));
 
-
-  /*
-  fastifyPassport.serializeUser((user, done) => {
-    done(null, user.id); // Aqui você está serializando o ID do usuário
-  });
-  
-  fastifyPassport.deserializeUser(async (id, done) => {
-    try {
-      const user = await User.findByPk(id); // Encontre o usuário pelo ID
-      done(null, user); // Retorne o usuário encontrado
-    } catch (err) {
-      done(err);
-    }
-  });  
-   */
 }; 
 
 export default passportSetup;
