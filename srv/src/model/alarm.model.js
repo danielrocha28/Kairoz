@@ -15,13 +15,13 @@ const Alarm = sequelize.define('Alarm', {
         field: 'alarm_time',
     },
     alarm_day:{
-        type: DataTypes.ARRAY(DataTypes.ENUM('dom','seg','ter','qua','qui','sex','sab','none')),
+        type: DataTypes.ARRAY(DataTypes.ENUM('dom','seg','ter','qua','qui','sex','sab')),
         defaultValue: ['none'],
         field: 'alarm_day',
     },
     message: {
         type: DataTypes.STRING(200),
-        defaultValue: '',
+        defaultValue: null,
         field: 'message',
     },
     executed: {

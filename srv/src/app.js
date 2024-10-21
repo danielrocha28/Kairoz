@@ -19,7 +19,7 @@ const fastify = Fastify({ pluginTimeout: 30000 });
 
 // Enable CORS
 fastify.register(fastifyCors, {
-  origin: 'https://kairoz-8tcx.onrender.com',
+  origin: process.env.URL_DOMAIN,
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 });
 

@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const port = process.env.WEBSOCKET_PORT || 8000;
+const port = process.env.WEBSOCKET_PORT || 8080;
 
 // Initializes the WebSocket server
 const wss = new ws.Server({ port }, () => {

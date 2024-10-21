@@ -3,6 +3,7 @@ import { loginUser } from './user.controller.js';
 import alarmSchema from '../validators/alarm.schema.js';
 import User from '../model/user.model.js';
 import { alarmNotification } from '../notifications/alarm.notifications.js';
+import cron from 'node-cron';
 
 class AlarmId {
   constructor() {
@@ -13,28 +14,31 @@ class AlarmId {
 const getAlarm = new AlarmId();
 
 // Function to get the current date and start counting if it matches the defined one
-function alarmCount(alarm_day) {
+function alarmCount(setDay) {
   const date = new Date();
   const day = date.getDay();
   const options = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
 
-  if (options[day] === alarm_day) {
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    return (`${hours}:${minutes}`);
+  if (options[day] === setDay) {
+    const hours = String(date.getHours()).padStart(2, '0'); 
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${hours}:${minutes}:${seconds}`;
   }
 }
 
 export async function createAlarm(request, reply) {
   try {
     const validatedData = alarmSchema.parse(request.body);
-    const user = await User.findOne({ where: { id_user: loginUser.id } });
+    // Transforming into an array to send to the database
+    const dayArray = validatedData.alarm_day.split(',').map(day => day.trim());
+    validatedData.alarm_day = dayArray;
+    const user = await User.findOne({ where: { email: loginUser.email } });
 
     if (!user) {
       return reply.status(404).send('User not found.');
     }
-
-    const newAlarm = await Alarm.create(validatedData);
+    const newAlarm = await Alarm.create(validatedData, validatedData.id_user = user.id_user);
     getAlarm.id = newAlarm.id_alarm;
     const statusAlarm = await Alarm.findOne({ where: { executed: true, id_alarm: newAlarm.id_alarm } });
 
@@ -54,17 +58,24 @@ export async function createAlarm(request, reply) {
 // Function if the alarm is activated
 export async function usingAlarm(request, reply) {
   try {
-    const alarm = await Alarm.findOne({ where: { id_alarm: request.params.id_alarm || getAlarm.id } });
+    const alarm = await Alarm.findOne({
+      where: { executed: true, id_alarm: request.params.id_alarm || getAlarm.id },
+    });
 
     if (!alarm) {
       return reply.status(404).send('Alarm not found');
     }
-
-    const time = alarmCount(alarm.alarm_day);
-    // If the time matches the current time, send a notification
-    if (alarm.alarm_time === time) {
-      await alarmNotification(loginUser.id, time, alarm.message);
-    }
+    // Transforming into a string when retrieved from the database
+    const dayString = alarm.alarm_day.join(',');
+    alarm.alarm_day = dayString;
+    // Using cron to make requests every minute in real time 
+    cron.schedule('* * * * *', async () => {
+      const time = alarmCount(alarm.alarm_day);
+      // If the time matches the current time, send a notification
+      if (alarm.alarm_time === time) {
+        await alarmNotification(alarm.id_user, time, alarm.message);
+      }
+    });
 
   } catch (error) {
     console.error(error);
@@ -75,6 +86,12 @@ export async function usingAlarm(request, reply) {
 export async function updateAlarm(request, reply) {
   try {
     const validatedData = alarmSchema.parse(request.body);
+
+    // Checks if alarm_day is a string and transforms into an array
+    if (typeof validatedData.alarm_day === 'string') {
+      validatedData.alarm_day = validatedData.alarm_day.split(',').map(day => day.trim());
+    };
+
     const [updated] = await Alarm.update(validatedData, {
       where: { id_alarm: request.params.id_alarm },
     });
@@ -83,7 +100,7 @@ export async function updateAlarm(request, reply) {
       const updatedAlarm = await Alarm.findByPk(request.params.id_alarm);
       return updatedAlarm;
     } else {
-      reply.status(404).send({ error: `Alarm with id_alarm ${request.params.id_alarm} not found` });
+      return reply.status(404).send({ error: `Alarm with id_alarm ${request.params.id_alarm} not found` });
     }
   } catch (error) {
     console.error(error);
