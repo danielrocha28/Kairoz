@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
     } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-      return 'Por favor, insira um email válido';
+      return 'Email inválido';
     }
     return null;
   }
@@ -51,6 +51,9 @@ class _LoginPageState extends State<LoginPage> {
   validatePasswordField(String? value) {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
+    }
+    if (value.length < 6) {
+      return 'Senha inválida';
     }
     return null;
   }

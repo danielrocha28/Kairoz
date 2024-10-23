@@ -42,9 +42,21 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  emailValidateField(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Campo obrigatório';
+    } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+      return 'Por favor, insira um email válido';
+    }
+    return null;
+  }
+
   validateField(String? value) {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
+    }
+    if (!RegExp(r'^(?=.*[a-zA-Z])[0-9a-zA-Z]+$').hasMatch(value)) {
+      return 'O nome não pode possuir apenas números';
     }
     return null;
   }
@@ -53,6 +65,11 @@ class _RegisterPageState extends State<RegisterPage> {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
     }
+
+    if (value.length < 6) {
+      return 'A senha deve ter pelo menos 6 dígitos';
+    }
+
     if (value != compareValue) {
       return 'As senhas não são correspondentes';
     }
@@ -172,7 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   KairozOutlineInput(
                     controller: _tedEmail,
                     labelText: "E-mail",
-                    validator: (value) => validateField(value),
+                    validator: (value) => emailValidateField(value),
                   ),
                   const SizedBox(height: 16),
                   KairozOutlineInput(
