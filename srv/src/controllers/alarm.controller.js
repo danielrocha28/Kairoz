@@ -4,6 +4,7 @@ import alarmSchema from '../validators/alarm.schema.js';
 import User from '../model/user.model.js';
 import { alarmNotification } from '../notifications/alarm.notifications.js';
 import cron from 'node-cron';
+import logger from '../config/logger.js';
 
 class AlarmId {
   constructor() {
@@ -11,19 +12,27 @@ class AlarmId {
   }
 }
 
-const getAlarm = new AlarmId();
+const getAlarm = new AlarmId;
 
 // Function to get the current date and start counting if it matches the defined one
-function alarmCount(setDay) {
+function alarmCount(setDay, setTime) {
   const date = new Date();
   const day = date.getDay();
   const options = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
 
   if (options[day] === setDay) {
-    const hours = String(date.getHours()).padStart(2, '0'); 
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    return `${hours}:${minutes}:${seconds}`;
+     // Using cron to make requests every minute in real time 
+    cron.schedule('* * * * *', () => {
+      const hours = String(date.getHours()).padStart(2, '0'); 
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const seconds = String(date.getSeconds()).padStart(2, '0');
+      const time = `${hours}:${minutes}:${seconds}`;
+
+        // If the time matches the current time, send a notification
+        if (setTime === time) {
+          return time;
+        }
+      });
   }
 }
 
@@ -44,13 +53,11 @@ export async function createAlarm(request, reply) {
 
     if (statusAlarm) {
       await usingAlarm(request, reply);
-      return reply.status(200).send(newAlarm);
-    } else {
-      return reply.status(200).send(newAlarm);
     }
+    return reply.status(200).send(newAlarm);
 
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return reply.status(500).send({ error: 'Error creating the alarm.', message: error.message });
   }
 }
@@ -68,17 +75,14 @@ export async function usingAlarm(request, reply) {
     // Transforming into a string when retrieved from the database
     const dayString = alarm.alarm_day.join(',');
     alarm.alarm_day = dayString;
-    // Using cron to make requests every minute in real time 
-    cron.schedule('* * * * *', async () => {
-      const time = alarmCount(alarm.alarm_day);
-      // If the time matches the current time, send a notification
-      if (alarm.alarm_time === time) {
+    const { time } = alarmCount(alarm.alarm_day, alarm.alarm_time);
+
+    if (time){
         await alarmNotification(alarm.id_user, time, alarm.message);
-      }
-    });
+    }
 
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return reply.status(500).send({ error: 'Error manipulating the alarm.', message: error.message });
   }
 }
@@ -103,7 +107,7 @@ export async function updateAlarm(request, reply) {
       return reply.status(404).send({ error: `Alarm with id_alarm ${request.params.id_alarm} not found` });
     }
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return reply.status(500).send({ error: 'Error manipulating the alarm.', message: error.message });
   }
 }
@@ -122,7 +126,7 @@ export async function deleteAlarm(request, reply) {
       return reply.status(200).send('Alarm deleted');
     }
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return reply.status(500).send({ error: 'Error deleting the alarm.', message: error.message });
   }
 }

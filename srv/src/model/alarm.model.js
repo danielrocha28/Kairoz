@@ -41,6 +41,6 @@ const Alarm = sequelize.define('Alarm', {
     },{
     tableName: 'alarm',
     timestamps: false,
-})
+});
 
 export default Alarm;

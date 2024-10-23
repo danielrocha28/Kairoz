@@ -1,14 +1,15 @@
 import { createAlarm, usingAlarm, updateAlarm, deleteAlarm } from '../controllers/alarm.controller.js';
 import { loginUser } from '../controllers/user.controller.js';
 import { newSubscriber } from '../notifications/alarm.notifications.js';
+import logger from '../config/logger.js';
 
-async function alarmRoutes(fastify, options) {
+function alarmRoutes(fastify, options) {
 
     fastify.post('/alarms', async (request, reply) => {
         try {
             await createAlarm(request, reply);
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             reply.status(500).send({ error: 'Error processing request', details: error.message });
         }
     });
@@ -26,7 +27,7 @@ async function alarmRoutes(fastify, options) {
             }
             reply.status(200).send(alarm);
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             reply.status(500).send({ error: 'Error processing request', details: error.message });
         }
     });
@@ -39,7 +40,7 @@ async function alarmRoutes(fastify, options) {
             }
             await deleteAlarm(request, reply);
         } catch (error) {
-            console.error(error);
+            logger.error(error);
             reply.status(500).send({ error: 'Error processing request', details: error.message });
         }
     });
@@ -47,11 +48,11 @@ async function alarmRoutes(fastify, options) {
     // Route to register the email of the registered user
     fastify.post('/alarms/register-permission', async (request, reply) => {
         try {
-            await newSubscriber(request.body.email);
+            await newSubscriber(loginUser.email);
             reply.send({ success: true, message: 'User registered for notifications.' });
         } catch (error) {
-            console.error(error);
-            reply.status(500).send({ error: "Error registering user", message: error.message });
+            logger.error(error);
+            reply.status(500).send({ error: 'Error registering user', message: error.message });
         }
     });
 }
