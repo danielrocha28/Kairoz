@@ -8,8 +8,9 @@ import userRoutes from './routes/user.routes.js';
 import timerRoutes from './routes/timer.routes.js';
 import taskRoutes from './routes/task.routes.js';
 import flashcardRoutes from './routes/flashcard.routes.js';
-import passportSetup from './config/passport.js';
+import { passportSetup } from './config/passport.js';
 import chartRoutes from './routes/chart.routes.js';
+import alarmRoutes from './routes/alarm.routes.js';
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ const fastify = Fastify({ pluginTimeout: 30000 });
 
 // Enable CORS
 fastify.register(fastifyCors, {
-  origin: 'https://kairoz.onrender.com',
+  origin: process.env.URL_DOMAIN,
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 });
 
@@ -39,6 +40,7 @@ fastify.register(timerRoutes);
 fastify.register(taskRoutes);
 fastify.register(flashcardRoutes);
 fastify.register(chartRoutes);
+fastify.register(alarmRoutes);
 
 
 passportSetup(fastify);

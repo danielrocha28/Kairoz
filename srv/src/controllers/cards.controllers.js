@@ -1,6 +1,6 @@
-import { cards as Cards} from '../model/cards.model.js';
-import decks from '../model/decks.model.js';
-import cardSchema from '../validators/cards.schema.js';
+import Cards from '../model/cards.model.js';
+import Decks from '../model/decks.model.js';
+import { cardSchema } from '../validators/cards.schema.js';
 import { z } from 'zod';
 import logger from '../config/logger.js'; 
 
@@ -15,7 +15,7 @@ export async function createCards(request, reply) {
         reply.status(201).send(newCard); 
 
         // Update the deck to include the new card
-        await decks.update(
+        await Decks.update(
             { $push: { cards: newCard.id_cards } }, // Add the new card ID to the deck's card list
             { where: { id_decks: id_decks } } // Condition to find the correct deck
         );

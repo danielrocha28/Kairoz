@@ -2,7 +2,7 @@ import Task from '../model/task.model.js';
 import Chart from '../model/chart.model.js';
 import { getTasks } from './task.controller.js';
 import { Op } from 'sequelize';
-import { getTime } from './timer.controller.js';
+import { getTime, formatTime } from './timer.controller.js';
 import logger from '../config/logger.js'; 
 
 class NewChart {
@@ -94,25 +94,25 @@ export async function chartWeek(request, reply) {
       // Field responsible for capturing timer updates according to the day
       switch (weekly.timer.day_update) {
         case 'dom':
-          weekly.chart.dom = weekly.timer.total_time;
+          weekly.chart.dom = formatTime(weekly.timer.total_time);
           break;
         case 'seg':
-          weekly.chart.seg = weekly.timer.total_time;
+          weekly.chart.seg = formatTime(weekly.timer.total_time);
           break;
         case 'ter':
-          weekly.chart.ter = weekly.timer.total_time;
+          weekly.chart.ter = formatTime(weekly.timer.total_time);
           break;
         case 'qua':
-          weekly.chart.qua = weekly.timer.total_time;
+          weekly.chart.qua = formatTime(weekly.timer.total_time);
           break;
         case 'qui':
-          weekly.chart.qui = weekly.timer.total_time;
+          weekly.chart.qui = formatTime(weekly.timer.total_time);
           break;
         case 'sex':
-          weekly.chart.sex = weekly.timer.total_time;
+          weekly.chart.sex = formatTime(weekly.timer.total_time);
           break;
         case 'sab':
-          weekly.chart.sab = weekly.timer.total_time;
+          weekly.chart.sab = formatTime(weekly.timer.total_time);
           break;
         default:
           return reply.status(500).send('Could not proceed');
