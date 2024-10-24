@@ -2,7 +2,6 @@ import Alarm from '../model/alarm.model.js';
 import { loginUser } from './user.controller.js';
 import alarmSchema from '../validators/alarm.schema.js';
 import User from '../model/user.model.js';
-import { alarmNotification } from '../notifications/alarm.notifications.js';
 import cron from 'node-cron';
 import logger from '../config/logger.js';
 
@@ -21,8 +20,9 @@ function alarmCount(setDay, setTime) {
   const options = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
 
   if (options[day] === setDay) {
+    const Hours = setDay.substring(0, 2);
      // Using cron to make requests every minute in real time 
-    cron.schedule('* * * * *', () => {
+    cron.schedule(`* ${Hours} * * ${day}`, () => {
       const hours = String(date.getHours()).padStart(2, '0'); 
       const minutes = String(date.getMinutes()).padStart(2, '0');
       const seconds = String(date.getSeconds()).padStart(2, '0');
@@ -78,7 +78,9 @@ export async function usingAlarm(request, reply) {
     const { time } = alarmCount(alarm.alarm_day, alarm.alarm_time);
 
     if (time){
-        await alarmNotification(alarm.id_user, time, alarm.message);
+      // message that will be sent to the user
+      const triggered = { message: alarm.message, time: time };
+      reply.status(200).send(triggered);
     }
 
   } catch (error) {
@@ -109,6 +111,20 @@ export async function updateAlarm(request, reply) {
   } catch (error) {
     logger.error(error);
     return reply.status(500).send({ error: 'Error manipulating the alarm.', message: error.message });
+  }
+}
+
+export async function getAlarmsAll(request, reply){
+  try {
+    const alarm = await Alarm.findAll({ where: { id_user: loginUser.id }});
+
+    if (!alarm){
+      return reply.status(404).send('Alarms not found');
+    }
+    reply.status(200).send(alarm);
+  } catch (error) {
+      logger.error(error);
+      return reply.status(500).send({ error: 'Error manipulating the alarm.', message: error.message });
   }
 }
 

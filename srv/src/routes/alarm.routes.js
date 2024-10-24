@@ -1,6 +1,4 @@
-import { createAlarm, usingAlarm, updateAlarm, deleteAlarm } from '../controllers/alarm.controller.js';
-import { loginUser } from '../controllers/user.controller.js';
-import { newSubscriber } from '../notifications/alarm.notifications.js';
+import { createAlarm, usingAlarm, updateAlarm, deleteAlarm, getAlarmsAll } from '../controllers/alarm.controller.js';
 import logger from '../config/logger.js';
 
 function alarmRoutes(fastify, options) {
@@ -44,15 +42,13 @@ function alarmRoutes(fastify, options) {
             reply.status(500).send({ error: 'Error processing request', details: error.message });
         }
     });
-    
-    // Route to register the email of the registered user
-    fastify.post('/alarms/register-permission', async (request, reply) => {
+
+    fastify.get('/alarms', async (request, reply) => {
         try {
-            await newSubscriber(loginUser.email);
-            reply.send({ success: true, message: 'User registered for notifications.' });
+            await getAlarmsAll(request,reply);
         } catch (error) {
             logger.error(error);
-            reply.status(500).send({ error: 'Error registering user', message: error.message });
+            reply.status(500).send({ error: 'Error processing request', details: error.message });
         }
     });
 }
