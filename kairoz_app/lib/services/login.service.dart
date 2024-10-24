@@ -25,7 +25,8 @@ class LoginService {
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"email": email, "password": password}),
       );
-    } catch (_) {
+    } catch (_
+    ) {
       return http.Response(
         '{"error": "Ocorreu um erro ao entrar. Tente novamente!"}',
         400,
