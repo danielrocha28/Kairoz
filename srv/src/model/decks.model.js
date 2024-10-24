@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
 
 
-export const decks = sequelize.define('decks',{
+const Decks = sequelize.define('decks',{
     id_decks: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -36,4 +36,4 @@ export const decks = sequelize.define('decks',{
     updatedAt: 'updated_at'
 });
 
-export default decks;
+export default Decks;

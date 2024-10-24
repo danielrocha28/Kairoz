@@ -28,7 +28,7 @@ export async function createTask(request, reply) {
 export async function getTasks(request, reply) {
   try {
     const userData = loginUser(request,reply);
-    const tasks = await Task.findAll({ where:{ id_user: userData.id_user }});
+    const tasks = await Task.findAll({ where:{ id_user: userData.id }});
     reply.code(200).send(tasks);
   } catch (error) {
     handleServerError(error, reply);

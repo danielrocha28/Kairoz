@@ -1,8 +1,8 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
-import decks from './decks.model.js';
+import Decks from './decks.model.js';
 
-export const cards = sequelize.define('cards', {
+const Cards = sequelize.define('cards', {
     id_cards: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -21,7 +21,7 @@ export const cards = sequelize.define('cards', {
         type: DataTypes.INTEGER,
         allowNull: true,
         references: {
-            model: decks, // References the Decks model
+            model: Decks, // References the Decks model
             key: 'id_decks' // Primary key in Decks
 
         }}
@@ -32,7 +32,7 @@ export const cards = sequelize.define('cards', {
     updatedAt: 'updated_at'
 });
 
-decks.hasMany(cards, { foreignKey: 'id_decks', sourceKey: 'id_decks', as: 'cards' });
-cards.belongsTo(decks, { foreignKey: 'id_decks', targetKey: 'id_decks' });
+Decks.hasMany(Cards, { foreignKey: 'id_decks', sourceKey: 'id_decks', as: 'cards' });
+Cards.belongsTo(Decks, { foreignKey: 'id_decks', targetKey: 'id_decks' });
 
-export default decks;
+export default Cards;

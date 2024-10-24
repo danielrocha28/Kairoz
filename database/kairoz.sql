@@ -175,6 +175,19 @@ CREATE TABLE IF NOT EXISTS study (
     FOREIGN KEY (id_user) REFERENCES "user"(id_user)
 );
 
+CREATE TYPE alarm_day_enum AS 
+ENUM ('dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab','none');
+
+CREATE TABLE IF NOT EXISTS alarm (
+  id_alarm SERIAL PRIMARY KEY,
+  alarm_time TIME NOT NULL,
+  alarm_day alarm_day_enum[] DEFAULT ARRAY['none'::alarm_day_enum],
+  message VARCHAR(200),
+  executed BOOLEAN DEFAULT FALSE,
+  id_user INT NOT NULL,
+  FOREIGN KEY (id_user) REFERENCES "user"(id_user)
+);
+
 CREATE OR REPLACE FUNCTION update_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN

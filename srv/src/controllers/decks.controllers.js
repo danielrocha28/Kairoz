@@ -1,4 +1,4 @@
-import decks from '../model/decks.model.js';
+import Decks from '../model/decks.model.js';
 import deckSchema from '../validators/decks.schema.js';
 import { z } from 'zod';
 import logger from '../config/logger.js'; 
@@ -12,7 +12,7 @@ export async function createDecks(request, reply) {
         const validatedData = deckSchema.parse(request.body);
         const { name, description } = validatedData;
 
-        const newDecks = await decks.create({ name, description });
+        const newDecks = await Decks.create({ name, description });
         reply.status(201).send(newDecks); 
 
     } catch (error) {
@@ -34,7 +34,7 @@ export async function createDecks(request, reply) {
 
 export async function allDecks(request, reply) {
     try {
-      const decksList = await decks.findAll(); 
+      const decksList = await Decks.findAll(); 
       reply.status(200).send(decksList); 
     } catch (error) {
       logger.error('Error loading decks:', error); // Loga a mensagem de erro
@@ -46,7 +46,7 @@ export async function deleteDecks(request, reply) {
     try {
         const { id } = request.params;// Extracting the deck ID from request parameters
         
-        const deleteDecks = await decks.findByPk(id); 
+        const deleteDecks = await Decks.findByPk(id); 
 
         // If deck is not found, respond with an error message
         if (!deleteDecks) {

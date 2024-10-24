@@ -3,7 +3,6 @@ import Task from '../model/task.model.js';
 import WebSocket from '../websockets_client/ws.timer.controller.js'; // WebSocket client
 import logger from '../config/logger.js';
 
-
 // Class for active timers
 class ActiveTimers {
   constructor() {
@@ -130,7 +129,7 @@ export function statusTimer(request, reply) {
       );
 
       // Return paused status and formatted total time
-      return reply.send({
+      return reply.status(200).send({
         message: 'Timer paused',
         totalTime: formatTime(active.pausedTime),
       });
@@ -159,7 +158,7 @@ export function statusTimer(request, reply) {
       }, 1000);
 
       // Return resume status and total time
-      return reply.send({
+      return reply.status(200).send({
         message: 'Timer resumed',
         totalTime: formatTime(active.endTime),
       });

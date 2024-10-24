@@ -2,33 +2,20 @@ import Task from '../model/task.model.js';
 import Chart from '../model/chart.model.js';
 import { getTasks } from './task.controller.js';
 import { Op } from 'sequelize';
-import { getTime } from './timer.controller.js';
+import { getTime, formatTime } from './timer.controller.js';
 import logger from '../config/logger.js'; 
 
 class NewChart {
   constructor(type) {
-    this.totalTasks = null;
+    this.tasks = null;
     this.typeChart = type;
-    this.totalTime = null;
-    this.days = {
-      dom: 'Sunday',
-      seg: 'Monday',
-      ter: 'Tuesday',
-      qua: 'Wednesday',
-      qui: 'Thursday',
-      sex: 'Friday',
-      sab: 'Saturday'
-    };
+    this.timer = null;
+    this.chart = null;
   }
 }
   
 export async function pieChart(request, reply) {
   try {
-    const chartPie = {
-      Completed: 0,
-      Pending: 0,
-      Total: 0
-    };
 
     const task = await getTasks(request, reply);
 
@@ -36,10 +23,15 @@ export async function pieChart(request, reply) {
       return reply.code(404).send({ message: 'No tasks found.' });
     }
 
-    // Corrigido: 'pie' como uma string
-    const newPiechart = await Chart.create({
-      type: 'pie', // Corrigido para 'pie'
-    });
+    const Pie = new NewChart('pie');
+
+      Pie.chart = {
+        Completed: 0,
+        Pending: 0,
+        total: 0,
+      };
+
+    await Chart.create({ type: Pie.typeChart, });
 
     // Count tasks with status 'completed'
     const taskCompleted = await Task.count({
@@ -55,12 +47,11 @@ export async function pieChart(request, reply) {
     });
 
     // Updating the pie chart values
-    chartPie.Completed += taskCompleted;
-    chartPie.Pending += taskPending;
-    chartPie.Total = chartPie.Completed + chartPie.Pending;
+    Pie.chart.Completed += taskCompleted;
+    Pie.chart.Pending += taskPending;
+    Pie.chart.Total = Pie.chart.Completed + Pie.chart.Pending;
 
-    // Retorne a resposta corretamente
-    return reply.code(200).send({ newPiechart, chartPie }); // Corrigido para enviar um objeto
+    return reply.code(200).send(Pie.chart);
   } catch (error) {
     logger.error('Error generating pie chart:', error);
     return reply.code(500).send({ 
@@ -70,49 +61,64 @@ export async function pieChart(request, reply) {
   }
 }
 
-// Pie chart with total task time for the days of the week
+// Column chart with total task time for the days of the week
 export async function chartWeek(request, reply) {
   try {
-    const weekChart = new NewChart('week');
+    const weekly = new NewChart('week');
 
-    const task = await getTasks(request, reply); // Fetch all tasks
-    const timer = await getTime(request, reply); // Fetch total time
+    weekly.tasks = await getTasks(request, reply); // Fetch all tasks
+    weekly.timer = await getTime(request, reply); // Fetch total time
+
+    if (!weekly.tasks || !weekly.timer) {
+      return reply.status(404).send('Tasks or Timer not found.');
+    }
+
+    weekly.chart = {
+      dom: null,
+      seg: null,
+      ter: null,
+      qua: null,
+      qui: null,
+      sex: null,
+      sab: null,
+    };
+
     // Check if the task ID matches the timer ID
-    if (task.id_task === timer.id_task) {
+    if (weekly.tasks.id_task === weekly.timer.id_task) {
       await Chart.create({
-        id_task: task.id_task,
-        id_time: timer.id_time,
-        type: weekChart.typeChart, // Corrigido para usar `typeChart`
+        id_task: weekly.tasks.id_task,
+        id_time: weekly.timer.id_time,
+        type: weekly.typeChart, 
       });
       
       // Field responsible for capturing timer updates according to the day
-      switch (timer.day_update) {
+      switch (weekly.timer.day_update) {
         case 'dom':
-          weekChart.days.dom = timer.total_time;
+          weekly.chart.dom = formatTime(weekly.timer.total_time);
           break;
         case 'seg':
-          weekChart.days.seg = timer.total_time;
+          weekly.chart.seg = formatTime(weekly.timer.total_time);
           break;
         case 'ter':
-          weekChart.days.ter = timer.total_time;
+          weekly.chart.ter = formatTime(weekly.timer.total_time);
           break;
         case 'qua':
-          weekChart.days.qua = timer.total_time;
+          weekly.chart.qua = formatTime(weekly.timer.total_time);
           break;
         case 'qui':
-          weekChart.days.qui = timer.total_time;
+          weekly.chart.qui = formatTime(weekly.timer.total_time);
           break;
         case 'sex':
-          weekChart.days.sex = timer.total_time;
+          weekly.chart.sex = formatTime(weekly.timer.total_time);
           break;
         case 'sab':
-          weekChart.days.sab = timer.total_time;
+          weekly.chart.sab = formatTime(weekly.timer.total_time);
           break;
         default:
           return reply.status(500).send('Could not proceed');
       }
     }
-    return reply.status(200).send(weekChart.days); // Return the object `days`
+    return reply.status(200).send(weekly.chart);
   } catch (error) {
     logger.error('Error generating chart week:', error);
     return reply.code(500).send({ 
