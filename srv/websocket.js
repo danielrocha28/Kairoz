@@ -1,4 +1,4 @@
-import ws from 'ws';
+import WebSocket from 'ws'; 
 import dotenv from 'dotenv';
 import logger from './src/config/logger.js'; 
 
@@ -6,35 +6,38 @@ dotenv.config();
 
 const port = process.env.WEBSOCKET_PORT || 8080;
 
-// Initializes the WebSocket server
-const wss = new ws.Server({ port }, () => {
+const wss = new WebSocket.Server({ port }, () => {
   logger.info(`WebSocket server listening on port ${port}`);
 });
 
-// Stores connected clients
 const clients = new Set();
 
-// Manages new connections
 wss.on('connection', (ws) => {
   clients.add(ws);
+  logger.info('New client connected');
 
-  // Manages disconnection
   ws.on('close', () => {
     logger.info('Client disconnected');
     clients.delete(ws);
   });
 
-  // Manages errors
   ws.on('error', (error) => {
-    logger.info('An error occurred with the WebSocket', error.message);
+    logger.error('An error occurred with the WebSocket:', error.message);
   });
 
-  // Manages messages received from clients
   ws.on('message', (message) => {
-    const messageClient = JSON.parse(message); 
-    ws.send(JSON.stringify(messageClient));
+    try {
+      const messageClient = JSON.parse(message);
+      logger.info('Received message from client:', messageClient);
 
+      // Send the same message to client 
+      ws.send(JSON.stringify(messageClient));
+    } catch (error) {
+      logger.error('Error parsing message from client:', error.message);
+      ws.send(JSON.stringify({ error: 'Invalid message format' })); // Envia um erro ao cliente
+    }
   });
 });
-// Exports the WebSocket server instance
+
+// Exporta a instância do servidor WebSocket
 export default wss;

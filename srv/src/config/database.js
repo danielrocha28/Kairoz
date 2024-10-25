@@ -35,7 +35,7 @@ const sequelize = new Sequelize(
         rejectUnauthorized: !isProduction, // Reject unauthorized certificates in production
       } : false,
     },
-    logging: isProduction ? false : logger.info, // Log SQL queries only in development
+    logging: isProduction ? false : (msg) => logger.info(msg), //use the msg to Sequelize accept logger.info instead of console.log
   }
   
 );
