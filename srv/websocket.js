@@ -34,10 +34,9 @@ wss.on('connection', (ws) => {
       ws.send(JSON.stringify(messageClient));
     } catch (error) {
       logger.error('Error parsing message from client:', error.message);
-      ws.send(JSON.stringify({ error: 'Invalid message format' })); // Envia um erro ao cliente
+      ws.send(JSON.stringify({ error: 'Invalid message format' })); 
     }
   });
 });
 
-// Exporta a instância do servidor WebSocket
 export default wss;
