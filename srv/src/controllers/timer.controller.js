@@ -57,9 +57,7 @@ export async function startTimer(request, reply) {
 
     // Condition to nullify the start function after initialization
     if (active.started === true && timer !== null) {
-      const error = new Error('Timer already in progress.');
-      error.status = 423;
-      throw error;
+      throw new Error('Timer already in progress.');
     }
 
     request.session.idTimer = active.timerid = newTimer.id_time;
@@ -82,15 +80,8 @@ export async function startTimer(request, reply) {
 
       return (formatTime(active.totalTime));
     }, 1000);
-
-    await reply.status(201).send({
-      message: 'Timer started successfully',
-      newTimer: {
-        id_time: active.timerid,
-        id_task: active.task.id_task,
-        timer: formatTime(active.totalTime),
-      },
-    });
+  
+    reply.status(201).send();
   } catch (error) {
     logger.error(error);
     return reply.status(500).send({ error: 'Could not start the timer', message: error.message, });
@@ -129,7 +120,7 @@ export function statusTimer(request, reply) {
       );
 
       // Return paused status and formatted total time
-      return reply.status(200).send({
+      reply.status(200).send({
         message: 'Timer paused',
         totalTime: formatTime(active.pausedTime),
       });
@@ -157,15 +148,11 @@ export function statusTimer(request, reply) {
         return (formatTime(active.endTime)); // Shows formatted time in the console
       }, 1000);
 
-      // Return resume status and total time
-      return reply.status(200).send({
-        message: 'Timer resumed',
-        totalTime: formatTime(active.endTime),
-      });
+      reply.status(200).send();
     }
   } catch (error) {
     logger.error('Error in statusTimer:', error); // Log the error with more context
-    return reply.status(500).send({
+    reply.status(500).send({
       error: 'An error occurred while pausing or resuming the timer.',
       message: error.message,
     });
@@ -183,7 +170,7 @@ export async function deleteTimer(request, reply) {
     }
 
     await Timer.destroy({ where: { id_time: active.timerid } });
-    return reply.status(200).send('Timer deleted.');
+    reply.status(200).send('Timer deleted.');
   } catch (error) {
     logger.error(error);
     return reply.status(500).send({ error: 'An error occurred while deleting the timer.' });
@@ -201,12 +188,12 @@ export async function getTime(request, reply) {
     }
 
     if (!active.getId.id_time) {
-      return reply.status(404).send('Timer does not exist');
+      reply.status(404).send('Timer does not exist');
     }
     return active.getId;
   } catch (error) {
     logger.error('Error retrieving total time:', error); // Log the error
-    return reply.status(500).send({ error: 'Could not retrieve the total time' });
+    reply.status(500).send({ error: 'Could not retrieve the total time' });
   }
 }
 formatTime(); // Calling the function to make time variables accessible
