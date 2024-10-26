@@ -14,7 +14,6 @@ const get = new AlarmId;
 
 // Function to get the current date and start counting if it matches the defined one
 function alarmCount(setDay, setTime, message, reply) {
-  logger.info(`dia: ${setDay} tempo: ${setTime}`);
   let service = null;
   const date = new Date();
   const day = date.getDay();
