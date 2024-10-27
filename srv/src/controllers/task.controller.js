@@ -18,7 +18,7 @@ export const handleServerError = (error, reply) => {
 export async function createTask(request, reply) {
   try {
     const validatedData = taskSchema.parse(request.body);
-    const newTask = await Task.create(validatedData);
+    const newTask = await Task.create(validatedData, validatedData.id_user = loginUser.id);
     reply.code(201).send(newTask);
   } catch (error) {
     handleZodError(error, reply);

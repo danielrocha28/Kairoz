@@ -66,8 +66,8 @@ export async function getCards(request, reply) {
 
 export async function deleteCards(request, reply) {
     try {
-        const { id } = request.params; 
-        const deleteCard = await Cards.findById(id); 
+        const { id_cards } = request.params; 
+        const deleteCard = await Cards.findById(id_cards); 
 
         if (!deleteCard) {
             return reply.status(400).send({ message: 'Card not found' });

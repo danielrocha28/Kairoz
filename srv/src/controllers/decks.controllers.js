@@ -3,9 +3,6 @@ import deckSchema from '../validators/decks.schema.js';
 import { z } from 'zod';
 import logger from '../config/logger.js'; 
 
-
-
-
 export async function createDecks(request, reply) {
     try {
         
@@ -44,9 +41,9 @@ export async function allDecks(request, reply) {
   
 export async function deleteDecks(request, reply) {
     try {
-        const { id } = request.params;// Extracting the deck ID from request parameters
+        const { id_decks } = request.params;// Extracting the deck ID from request parameters
         
-        const deleteDecks = await Decks.findByPk(id); 
+        const deleteDecks = await Decks.findByPk(id_decks); 
 
         // If deck is not found, respond with an error message
         if (!deleteDecks) {
