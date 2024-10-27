@@ -47,7 +47,7 @@ export async function createAlarm(request, reply) {
     const dayArray = validatedData.alarm_day.split(',').map(day => day.trim());
     validatedData.alarm_day = dayArray;
     
-    const newAlarm = await Alarm.create(validatedData, validatedData.id_user = loginUser.id_user);
+    const newAlarm = await Alarm.create(validatedData, validatedData.id_user = loginUser.id);
     get.id = newAlarm.id_alarm;
     const statusAlarm = await Alarm.findOne({ where: { executed: true, id_alarm: newAlarm.id_alarm } });
 

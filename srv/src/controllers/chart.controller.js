@@ -33,7 +33,7 @@ export async function pieChart(request, reply) {
       };
 
     await Chart.create({ type: Pie.typeChart, });
-    cron.schedule('* 0 * * *', async () => {
+    cron.schedule('0 0 * * *', async () => {
     // Count tasks with status 'completed'
     const taskCompleted = await Task.count({
       where: { status: 'completed', id_task: task.tasks.id_task }
@@ -78,7 +78,7 @@ export async function chartWeek(request, reply) {
       sab: null,
     };
     
-    await cron.schedule('* 0 * * *', async () => {
+    await cron.schedule('40-59 23 * * *', async () => {
       weekly.tasks = await getTasks(request, reply); // Fetch all tasks
       weekly.timer = await getTime(request, reply); // Fetch total time
 
