@@ -1,6 +1,6 @@
 import { startTimer, statusTimer, deleteTimer, paused, formatTime, getTime } from '../controllers/timer.controller.js';
 
-function timerRouter(fastify, opts) {
+const timerRouter = (fastify, options, done) => {
   fastify.post('/timer/start', async (request, reply) => {
     try {
       await startTimer(request, reply);
@@ -61,5 +61,8 @@ fastify.get('/timer/:id_time', async (request, reply) => {
           details: error.message });
       }
     });
-  }
+
+    done();
+  };
+  
 export default timerRouter;

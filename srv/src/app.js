@@ -3,14 +3,15 @@ import fastifyCors from '@fastify/cors';
 import fastifyCookie from '@fastify/cookie'; 
 import fastifySession from '@fastify/session';
 import dotenv from 'dotenv';
+import { passportSetup } from './config/passport.js';
 import homeRouter from './routes/home.routes.js';
 import userRoutes from './routes/user.routes.js';
 import timerRoutes from './routes/timer.routes.js';
 import taskRoutes from './routes/task.routes.js';
 import flashcardRoutes from './routes/flashcard.routes.js';
-import { passportSetup } from './config/passport.js';
 import chartRoutes from './routes/chart.routes.js';
 import alarmRoutes from './routes/alarm.routes.js';
+import photoAlbumRouters from './routes/album-photo.routes.js';
 
 dotenv.config();
 
@@ -41,9 +42,8 @@ fastify.register(taskRoutes);
 fastify.register(flashcardRoutes);
 fastify.register(chartRoutes);
 fastify.register(alarmRoutes);
-
+fastify.register(photoAlbumRouters);
 
 passportSetup(fastify);
-
 
 export default fastify;
