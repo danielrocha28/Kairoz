@@ -1,0 +1,1 @@
+ C:\\projects\\gabriel\\kairoz\\kairoz.app\\.dart_tool\\flutter_build\\cd5992f87ab565d470e5a22d0aae0a7d\\native_assets.yaml: 
