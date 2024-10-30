@@ -1,6 +1,10 @@
-import decks from '../model/decks.model.js';
+import Decks from '../model/decks.model.js';
 import deckSchema from '../validators/decks.schema.js';
 import { z } from 'zod';
+import logger from '../config/logger.js'; 
+
+
+
 
 export async function createDecks(request, reply) {
     try {
@@ -8,7 +12,7 @@ export async function createDecks(request, reply) {
         const validatedData = deckSchema.parse(request.body);
         const { name, description } = validatedData;
 
-        const newDecks = await decks.create({ name, description });
+        const newDecks = await Decks.create({ name, description });
         reply.status(201).send(newDecks); 
 
     } catch (error) {
@@ -19,7 +23,7 @@ export async function createDecks(request, reply) {
             });
         } else {
             
-            console.error('Error creating decks', error);
+            logger.error('Error creating decks', error);
             reply.status(500).send({
                 error: 'Error creating decks',
                 message: error.message
@@ -30,18 +34,19 @@ export async function createDecks(request, reply) {
 
 export async function allDecks(request, reply) {
     try {
-        const decksList = await decks.findAll(); 
-        reply.status(200).send(decksList); 
+      const decksList = await Decks.findAll(); 
+      reply.status(200).send(decksList); 
     } catch (error) {
-        reply.status(500).send({ error: 'Error loading decks' }); 
+      logger.error('Error loading decks:', error); // Loga a mensagem de erro
+      reply.status(500).send({ error: 'Error loading decks' }); 
     }
-};
-
+  };
+  
 export async function deleteDecks(request, reply) {
     try {
         const { id } = request.params;// Extracting the deck ID from request parameters
         
-        const deleteDecks = await decks.findByPk(id); 
+        const deleteDecks = await Decks.findByPk(id); 
 
         // If deck is not found, respond with an error message
         if (!deleteDecks) {
@@ -52,7 +57,7 @@ export async function deleteDecks(request, reply) {
         }
 
     } catch (error) {
-        console.error(error); 
+        logger.error(error); 
         reply.status(500).send({
             message: 'Error deleting the deck' 
         });

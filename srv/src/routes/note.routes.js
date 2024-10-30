@@ -16,7 +16,8 @@ const noteRoutes = (fastify, options, done) => {
         try {
           await getNote(request, reply);
         } catch (error) {
-          reply.status(500).send({ error: 'Error processing the request' });
+          logger.error(error);
+            reply.status(500).send({ error: 'Error processing request', details: error.message });
         }
       });
 
@@ -25,7 +26,8 @@ const noteRoutes = (fastify, options, done) => {
         try {
           await allNote(request, reply);
         } catch (error) {
-          reply.status(500).send({ error: 'Error processing the request' });
+          logger.error(error);
+          reply.status(500).send({ error: 'Error processing request', details: error.message });
         }
       });
 
@@ -33,7 +35,8 @@ const noteRoutes = (fastify, options, done) => {
         try {
           await updateNote(request, reply);
         } catch (error) {
-          reply.status(500).send({ error: 'Error processing the request' });
+          logger.error(error);
+          reply.status(500).send({ error: 'Error processing request', details: error.message });
         }
       });
 
@@ -41,7 +44,8 @@ const noteRoutes = (fastify, options, done) => {
         try {
           await deleteNote(request, reply);
         } catch (error) {
-          reply.status(500).send({ error: 'Error processing the request' });
+          logger.error(error);
+          reply.status(500).send({ error: 'Error processing request', details: error.message });
         }
       });
 

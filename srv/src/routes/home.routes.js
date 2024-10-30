@@ -1,5 +1,5 @@
-export default async function homeRouter(fastify, options) {
-  fastify.get('/', async (request, reply) => {
+export default function homeRouter(fastify, options) {
+  fastify.get('/', (request, reply) => {
     return 'Bem vindo ao app Kairoz';
   });
 }
