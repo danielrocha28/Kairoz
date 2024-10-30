@@ -1,4 +1,5 @@
 import {createNote, getNote, allNote, updateNote, deleteNote} from '../controllers/note.controller.js';
+import logger from '../config/logger.js';
 
 const noteRoutes = (fastify, options, done) => {
 
@@ -7,7 +8,8 @@ const noteRoutes = (fastify, options, done) => {
         try {
           await createNote(request, reply);
         } catch (error) {
-          reply.status(500).send({ error: 'Error processing the request' });
+          logger.error(error);
+            reply.status(500).send({ error: 'Error processing request', details: error.message });
         }
       })
     
