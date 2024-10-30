@@ -1,5 +1,5 @@
 import Note from '../model/note.model.js';
-import noteSchema from '../validators/note.schema.js';
+import {noteSchema} from '../validators/note.schema.js';
 import { z } from 'zod';
 import logger from '../config/logger.js';
 
