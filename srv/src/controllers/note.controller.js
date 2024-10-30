@@ -1,6 +1,7 @@
 import Note from '../model/note.model.js';
 import noteSchema from '../validators/note.schema.js';
 import { z } from 'zod';
+import logger from '../config/logger.js';
 
 export async function createNote(request, reply) {
     try {
@@ -21,7 +22,7 @@ export async function createNote(request, reply) {
                 details: error.errors,
             });
         } else {
-            console.error(error);
+            logger.error(error);
             return reply.status(500).send({ error: 'Error creating note', message: error.message });
         }
     }
@@ -38,7 +39,7 @@ export async function getNote(request, reply) {
 
         reply.status(200).send(note);
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         reply.status(500).send({ error: 'Error loading the note' });
     }
 }
@@ -48,7 +49,7 @@ export async function allNote(request, reply) {
         const notes = await Note.findAll();
         reply.status(200).send(notes);
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         reply.status(500).send({ error: 'Error loading notes' });
     }
 }
@@ -67,7 +68,7 @@ export async function updateNote(request, reply) {
         const updatedNote = await Note.findByPk(id_note);
         reply.status(200).send({ message: 'Updated successfully', updatedNote });
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         reply.status(500).send({ message: 'Error updating' });
     }
 }
@@ -84,7 +85,7 @@ export async function deleteNote(request, reply) {
             return reply.status(200).send({ message: 'Note deleted successfully' });
         }
     } catch (error) {
-        console.error(error);
+        logger.error(error);
         reply.status(500).send({ message: 'Error deleting the note' });
     }
 }
