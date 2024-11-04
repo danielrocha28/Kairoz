@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 class PieChartContainer extends StatelessWidget {
+  const PieChartContainer({super.key});
+
   MenuButton(String value) {
     switch (value) {
       case 'Adicionar à Tela Inicial':
@@ -27,8 +29,8 @@ class PieChartContainer extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
             child: PieChartSample(),
           ),
           Positioned(
@@ -38,21 +40,21 @@ class PieChartContainer extends StatelessWidget {
               onSelected: (value) => MenuButton(value),
               itemBuilder: (BuildContext context) {
                 return [
-                  PopupMenuItem<String>(
+                  const PopupMenuItem<String>(
                     value: 'Adicionar à Tela Inicial',
                     child: Text('Adicionar à Tela Inicial'),
                   ),
-                  PopupMenuItem<String>(
+                  const PopupMenuItem<String>(
                     value: 'Salvar',
                     child: Text('Salvar'),
                   ),
-                  PopupMenuItem<String>(
+                  const PopupMenuItem<String>(
                     value: 'Deletar',
                     child: Text('Deletar'),
                   ),
                 ];
               },
-              icon: Icon(Icons.menu),
+              icon: const Icon(Icons.menu),
             ),
           ),
         ],
@@ -62,6 +64,8 @@ class PieChartContainer extends StatelessWidget {
 }
 
 class PieChartSample extends StatelessWidget {
+  const PieChartSample({super.key});
+
   @override
   Widget build(BuildContext context) {
     return PieChart(
