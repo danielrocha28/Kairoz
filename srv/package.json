@@ -36,6 +36,7 @@
     "pg-hstore": "^2.3.4",
     "pino": "^9.5.0",
     "pino-pretty": "^11.3.0",
+    "puppeteer": "^23.6.1",
     "rimraf": "^6.0.1",
     "sequelize": "^6.37.3",
     "util": "^0.12.5",
