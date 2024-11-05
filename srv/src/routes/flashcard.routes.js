@@ -31,7 +31,7 @@ const flashcardRoutes = (fastify, options, done) => {
     }
   });
 
-  fastify.delete('/cards/:id', async (request, reply) => {
+  fastify.delete('/cards/:id_cards', async (request, reply) => {
     try {
       await deleteCards(request, reply);
     } catch (error) {
@@ -50,7 +50,7 @@ const flashcardRoutes = (fastify, options, done) => {
     }
   });
 
-  fastify.get('/decks/:id', async (request, reply) => {
+  fastify.get('/decks/:id_decks', async (request, reply) => {
     try {
       await allDecks(request, reply);
     } catch (error) {
@@ -59,7 +59,7 @@ const flashcardRoutes = (fastify, options, done) => {
     }
   });
 
-  fastify.delete('/decks/:id', async (request, reply) => {
+  fastify.delete('/decks/:id_decks', async (request, reply) => {
     try {
       await deleteDecks(request, reply);
     } catch (error) {

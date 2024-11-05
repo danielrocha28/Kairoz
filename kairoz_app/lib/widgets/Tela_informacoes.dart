@@ -15,9 +15,9 @@ class _TelaInformacoesState extends State<TelaInformacoes> {
   void initState() {
     super.initState();
     _controller = YoutubePlayerController(
-      initialVideoId: 'oZgaqzpx90Y',
+      initialVideoId: 'oZgaqzpx90Y', // ID do vídeo
       flags: const YoutubePlayerFlags(
-        autoPlay: true,
+        autoPlay: false,
         mute: false,
       ),
     );
