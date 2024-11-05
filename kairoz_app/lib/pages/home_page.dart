@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:kairoz/models/task_model.dart';
+import 'package:kairoz/widgets/drawer.dart';
 import 'package:kairoz/widgets/appbar.dart';
+import 'profile_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,17 +15,45 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<TaskModel> tasks = [];
 
-  // Adiciona uma nova tarefa à lista
   void addTask(String description) {
     setState(() {
       tasks.add(TaskModel(description: description));
     });
   }
 
+  void goToHomePage() {
+    Navigator.pushNamed(context, '/home');
+  }
+
+  void goToProfilePage() {
+    Navigator.pop(context);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ProfilePage(),
+      ),
+    );
+  }
+
+  void signOut() {
+    Navigator.pushNamedAndRemoveUntil(
+        context, '/login', ModalRoute.withName('/'));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MyAppBar(title: "Kairoz"),
+      appBar: const MyAppBar(
+        title: "Kairoz",
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+      drawer: MyDrawer(
+        foregroundColor: Colors.white,
+        onHomeTap: goToHomePage,
+        onProfileTap: goToProfilePage,
+        onSignOut: signOut,
+      ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
         child: ListView(
@@ -82,7 +112,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Remove uma tarefa da lista
   void removeTask(TaskModel task) {
     setState(() {
       tasks.remove(task);
@@ -106,7 +135,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Alterna o estado de conclusão de uma tarefa
   void toggleTaskCompletion(TaskModel task) {
     setState(() {
       task.isCompleted = !task.isCompleted;

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class Tela_informacoes extends StatefulWidget {
-  const Tela_informacoes({super.key});
+class TelaInformacoes extends StatefulWidget {
+  const TelaInformacoes({super.key});
 
   @override
-  _Tela_informacoesState createState() => _Tela_informacoesState();
+  _TelaInformacoesState createState() => _TelaInformacoesState();
 }
 
-class _Tela_informacoesState extends State<Tela_informacoes> {
+class _TelaInformacoesState extends State<TelaInformacoes> {
   late YoutubePlayerController _controller;
 
   @override

@@ -25,11 +25,11 @@ class KairozInput extends StatelessWidget {
       autofocus: true,
       obscureText: obscureText,
       keyboardType: TextInputType.text,
-      style: TextStyle(color: Colors.black),
+      style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         labelText: title,
         hintText: hintText,
-        hintStyle: TextStyle(fontSize: 14),
+        hintStyle: const TextStyle(fontSize: 14),
       ),
     );
   }
