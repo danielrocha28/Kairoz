@@ -31,26 +31,21 @@ class MyDrawer extends StatelessWidget {
                   size: 64,
                 ),
               ),
-              //home list tile
               MyListTile(
                 icon: Icons.home,
                 text: 'H O M E',
                 onTap: onHomeTap,
               ),
-
-              //profile list tile
               MyListTile(
                 icon: Icons.person,
-                text: 'P R O F I L E',
+                text: 'P E R F I L',
                 onTap: onProfileTap,
               ),
-
-              //logout list tile
               Padding(
                 padding: const EdgeInsets.only(bottom: 25.0),
                 child: MyListTile(
                   icon: Icons.logout,
-                  text: 'L O G O U T',
+                  text: 'S A I R',
                   onTap: onSignOut,
                 ),
               ),
