@@ -25,7 +25,15 @@ class TimerStartedService {
       );
 
       if (response.statusCode == 201) {
-        return response.body;
+        try{
+          final getResponse = await http.get(Uri.parse('$baseUrl/timer/start'),)
+
+          if (getResponse.statusCode == 200){
+            return response.body;
+          } else {
+            return 'Erro ao buscar o timer: ${getResponse.statusCode}';
+          }
+        }
       } else {
         return 'Erro ao iniciar o timer: ${response.statusCode}';
       }
@@ -43,7 +51,15 @@ class TimerStartedService {
       );
 
       if (response.statusCode == 200) {
-        return response.body;
+        try {
+          final getResponse = await http.get(Uri.parse('$baseUrl/timer/resume'),)
+
+          if (getResponse == 200){
+            return getResponse.body
+          } else {
+            return'Erro ao buscar o timer: ${getResponse.statusCode}';
+          }
+        }
       } else {
         return 'Erro ao retomar o timer: ${response.statusCode}';
       }
@@ -56,11 +72,17 @@ class TimerStartedService {
     final baseUrl = dotenv.env['BASE_URL'];
 
     try {
-      final response = await http.put(
-        Uri.parse('$baseUrl/timer/pause'),
-      );
+      final response = await http.put(Uri.parse('$baseUrl/timer/pause'),);
       if (response.statusCode == 200) {
-        return response.body;
+        try {
+          final getResponse = await http.get(Uri.parse('$baseUrl/timer/pause'),);
+
+          if (getResponse.statusCode == 200){
+            return getResponse.body;
+          } else {
+              return'Erro ao buscar o timer: ${getResponse.statusCode}';
+          }
+        }  
       } else {
         return 'Erro ao pausar o timer: ${response.statusCode}';
       }
@@ -69,7 +91,7 @@ class TimerStartedService {
     }
   }
 
-  Future<String> execute() async {
+  Future<String> delete() async {
     final baseUrl = dotenv.env['BASE_URL'];
 
     try {
