@@ -175,8 +175,16 @@ CREATE TABLE IF NOT EXISTS study (
     FOREIGN KEY (id_user) REFERENCES "user"(id_user)
 );
 
-CREATE TYPE alarm_day_enum AS 
-ENUM ('dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab','none');
+CREATE TYPE alarm_day_enum AS ENUM (
+  '0',  -- Domingo
+  '1',  -- Segunda-feira
+  '2',  -- Terça-feira
+  '3',  -- Quarta-feira
+  '4',  -- Quinta-feira
+  '5',  -- Sexta-feira
+  '6',  -- Sábado
+  'none'
+);
 
 CREATE TABLE IF NOT EXISTS alarm (
   id_alarm SERIAL PRIMARY KEY,

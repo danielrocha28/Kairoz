@@ -15,15 +15,12 @@ const get = new AlarmId;
 // Function to get the current date and start counting if it matches the defined one
 function alarmCount(setDay, setTime, message, reply) {
   let service = null;
-  const date = new Date();
-  const day = date.getDay();
-  const options = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
-
-  if (options[day] === setDay ) {
-    const Hours = setTime.substring(0, 2);
-    const Minute = setTime.substring(3, 5);
+  const Hours = setTime.substring(0, 2);
+  const Minute = setTime.substring(3, 5);
+  if (service !== null) service.stop(); 
      // Using cron to make requests every minute in real time 
-    service = cron.schedule(`${Minute} ${Hours} * * *`, (date) => {
+    service = cron.schedule(`${Minute} ${Hours} ${setDay} * *`, () => {
+      const date = new Date();
       const hours = String(date.getHours()).padStart(2, '0'); 
       const minutes = String(date.getMinutes()).padStart(2, '0');
       const seconds = String(date.getSeconds()).padStart(2, '0');
@@ -37,7 +34,6 @@ function alarmCount(setDay, setTime, message, reply) {
         }
       });
     service.start();
-  } else if (service !== null) service.stop(); 
 }
 
 export async function createAlarm(request, reply) {
@@ -110,7 +106,7 @@ export async function updateAlarm(request, reply) {
 
 export async function getAlarmsAll(request, reply){
   try {
-    const alarm = await Alarm.findAll({ where: { id_user: loginUser.id }});
+    const alarm = await Alarm.findAll();
 
     if (!alarm){
       reply.status(404).send('Alarms not found');
