@@ -8,7 +8,6 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _LoginPageState createState() => _LoginPageState();
 }
 
@@ -16,6 +15,8 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  bool _obscurePassword = true;
 
   _login(BuildContext context) async {
     final loginService = LoginService(
@@ -43,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
     } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-      return 'Por favor, insira um email válido';
+      return 'Email inválido';
     }
     return null;
   }
@@ -51,6 +52,9 @@ class _LoginPageState extends State<LoginPage> {
   validatePasswordField(String? value) {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
+    }
+    if (value.length < 6) {
+      return 'Senha inválida';
     }
     return null;
   }
@@ -68,7 +72,11 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const KairozLogo(),
+                  const Positioned(
+                    top: 20,
+                    left: 20,
+                    child: KairozLogo(),
+                  ),
                   const SizedBox(height: 16),
                   KairozOutlineInput(
                     labelText: 'Email',
@@ -77,10 +85,24 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 16),
                   KairozOutlineInput(
-                    labelText: 'Senha',
-                    obscureText: true,
                     controller: _passwordController,
-                    validator: (value) => validatePasswordField(value),
+                    suffixIcon: _passwordController.text.isNotEmpty
+                        ? IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          )
+                        : null,
+                    obscureText: _obscurePassword,
+                    labelText: "Senha",
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(

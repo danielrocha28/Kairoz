@@ -1,10 +1,8 @@
 import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:kairoz/services/register.service.dart';
-import 'package:kairoz/widgets/kairoz_input.dart';
 import 'package:kairoz/widgets/kairoz_logo.dart';
+import 'package:kairoz/widgets/kairoz_outline_input.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -21,7 +19,19 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  createUser(BuildContext context) async {
+  bool _obscurePassword = true;
+  bool _obscureRepeatPassword = true;
+
+  @override
+  void dispose() {
+    _tedName.dispose();
+    _tedEmail.dispose();
+    _tedPassword.dispose();
+    _tedRepeatPassword.dispose();
+    super.dispose();
+  }
+
+  Future<void> createUser(BuildContext context) async {
     final registerService = RegisterService(
       name: _tedName.text,
       email: _tedEmail.text,
@@ -30,29 +40,45 @@ class _RegisterPageState extends State<RegisterPage> {
     final response = await registerService.execute();
 
     if (response.statusCode == 201) {
-      return Navigator.pushNamedAndRemoveUntil(
-          context, '/home', ModalRoute.withName('/'));
+      Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+    } else {
+      Map<String, dynamic> temp = json.decode(response.body);
+      String message = temp['error'];
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
     }
-
-    Map<String, dynamic> temp = json.decode(response.body);
-    String message = temp['error'];
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
   }
 
-  validateField(String? value) {
+  String? emailValidateField(String? value) {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
+    } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+      return 'Por favor, insira um email válido';
     }
     return null;
   }
 
-  validatePassword(String? value, String? compareValue) {
+  String? validateField(String? value) {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
     }
+    if (!RegExp(r'^(?=.*[a-zA-Z])[0-9a-zA-Z]+$').hasMatch(value)) {
+      return 'O nome não pode possuir apenas números';
+    }
+    return null;
+  }
+
+  String? validatePassword(String? value, String? compareValue) {
+    if (value == null || value.isEmpty) {
+      return 'Campo obrigatório';
+    }
+
+    if (value.length < 6) {
+      return 'A senha deve ter pelo menos 6 dígitos';
+    }
+
     if (value != compareValue) {
       return 'As senhas não são correspondentes';
     }
@@ -76,17 +102,14 @@ class _RegisterPageState extends State<RegisterPage> {
   Container containerButtonRegister(BuildContext context) {
     return Container(
       height: 40.0,
-      margin: const EdgeInsets.only(top: 40.0),
+      margin: const EdgeInsets.only(top: 60.0),
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all(
-            const Color.fromARGB(255, 82, 22, 185),
+            const Color.fromARGB(255, 255, 255, 255),
           ),
         ),
-        child: const Text(
-          "Cadastre-se",
-          style: TextStyle(color: Colors.white),
-        ),
+        child: const Text("Cadastre-se"),
         onPressed: () {
           if (_formKey.currentState!.validate()) {
             createUser(context);
@@ -105,11 +128,11 @@ class _RegisterPageState extends State<RegisterPage> {
           Expanded(
             child: TextButton(
               child: const Text(
-                'Ja possui cadastro?',
+                'Já possui cadastro?',
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: Colors.grey,
+                  color: Colors.white,
                   fontSize: 15,
                 ),
               ),
@@ -124,7 +147,7 @@ class _RegisterPageState extends State<RegisterPage> {
               child: const Text(
                 "Entrar",
                 style: TextStyle(
-                  color: Color.fromARGB(255, 82, 22, 185),
+                  color: Color.fromARGB(255, 255, 255, 255),
                   fontSize: 15,
                 ),
               ),
@@ -138,14 +161,14 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  form(BuildContext context) {
+  Widget form(BuildContext context) {
     double heightScreen = MediaQuery.of(context).size.height;
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        height: heightScreen * 0.74,
+        height: heightScreen * 0.83,
         decoration: const BoxDecoration(
-          color: Colors.white,
+          color: Color.fromARGB(255, 82, 22, 185),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(40.0),
             topRight: Radius.circular(40.0),
@@ -163,31 +186,62 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  KairozInput(
-                    title: "Nome",
+                  const SizedBox(height: 16),
+                  KairozOutlineInput(
                     controller: _tedName,
-                    hintText: "Informe seu nome",
+                    labelText: "Nome",
                     validator: (value) => validateField(value),
                   ),
-                  KairozInput(
-                    title: "E-mail",
+                  const SizedBox(height: 16),
+                  KairozOutlineInput(
                     controller: _tedEmail,
-                    hintText: "Informe o email",
-                    validator: (value) => validateField(value),
+                    labelText: "E-mail",
+                    validator: (value) => emailValidateField(value),
                   ),
-                  KairozInput(
-                    title: "Senha",
+                  const SizedBox(height: 16),
+                  KairozOutlineInput(
                     controller: _tedPassword,
-                    obscureText: true,
-                    hintText: "Informe a senha",
+                    suffixIcon: _tedPassword.text.isNotEmpty
+                        ? IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          )
+                        : null,
+                    obscureText: _obscurePassword,
+                    labelText: "Senha",
                     validator: (value) =>
                         validatePassword(value, _tedRepeatPassword.text),
                   ),
-                  KairozInput(
-                    title: "Confirmar senha",
-                    hintText: "Confirme a senha",
+                  const SizedBox(height: 16),
+                  KairozOutlineInput(
                     controller: _tedRepeatPassword,
-                    obscureText: true,
+                    suffixIcon: _tedRepeatPassword.text.isNotEmpty
+                        ? IconButton(
+                            icon: Icon(
+                              _obscureRepeatPassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscureRepeatPassword =
+                                    !_obscureRepeatPassword;
+                              });
+                            },
+                          )
+                        : null,
+                    obscureText: _obscureRepeatPassword,
+                    labelText: "Confirme a senha",
                     validator: (value) =>
                         validatePassword(value, _tedPassword.text),
                   ),

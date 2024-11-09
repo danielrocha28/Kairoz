@@ -2,7 +2,7 @@
 import User from '../model/user.model.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { registerSchema, loginSchema } from '../validators/user.schema.js';
+import { registerSchema, loginSchema, updatedSchema } from '../validators/user.schema.js';
 import dns from 'dns';
 import { promisify } from 'util';
 import logger from '../config/logger.js';
@@ -86,5 +86,46 @@ export async function loginUser(request, reply) {
       logger.error('Error logging in:', error);
       reply.status(500).send({ error: 'Internal server error', message: error.message });
     }
+  }
+}
+
+export async function updateProfile(request, reply){
+  try {
+    const user = loginUser(request,reply);
+    const validatedData = updatedSchema.parse(request.body);
+
+    if (validatedData.email){
+      const validEmail = validateEmailDomain(validatedData.email);
+      if (!validEmail) {
+        return reply.status(400).send({ error: 'Invalid email domain' });
+      }
+    }
+
+    const [updated] = await User.update(validatedData, { where: { id_user: user.id } }); 
+    if (updated) {
+      const updatedUser = await User.findByPk(user.id); 
+      reply.code(200).send(updatedUser);
+    } else {
+      reply.code(404).send({ error: `${user.name}, Unable to update profile` });
+    }
+  } catch (error) {
+    logger.error('error when updating profile:', error);
+    reply.status(500).send({ error: 'Internal server error', message: error.message });
+  }
+}
+
+export async function deleteProfile(request, reply) {
+  try {
+    const user = loginUser(request, reply);
+
+    const deleted = await User.destroy({ where: { id_user: user.id } }); 
+    if (deleted) {
+      reply.code(204).send('I hope to see you again');  
+    } else {
+      reply.code(404).send({ error: `${user.name}, Unable to deleted profile` });
+    }
+  } catch (error) {
+    logger.error('error when deleting profile:', error);
+    reply.status(500).send({ error: 'Internal server error', message: error.message });
   }
 }

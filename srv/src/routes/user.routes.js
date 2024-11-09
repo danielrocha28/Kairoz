@@ -1,4 +1,4 @@
-import { registerUser, loginUser } from '../controllers/user.controller.js';
+import { registerUser, loginUser, updateProfile, deleteProfile } from '../controllers/user.controller.js';
 import fastifyPassport from '@fastify/passport';
 import logger from '../config/logger.js'; 
 
@@ -44,6 +44,42 @@ import logger from '../config/logger.js';
   }, (request, reply) => {
     logger.info('Google authentication callback received');
     reply.redirect('/'); 
+  });
+
+  fastify.get('/profile', (request, reply) => {
+    try {
+      const profile = {
+        id: loginUser.id,
+        name: loginUser.name,
+        email: loginUser.email
+      };
+      if (profile){
+        reply.status(200).send(profile);
+      }
+    } catch (error) {
+      logger.error('data not found:', error); 
+      reply.status(500).send({ error: 'Error processing the request' });
+    }
+  });
+
+  fastify.put('/profile', async (request, reply) => {
+    try {
+      await updateProfile(request, reply);
+      logger.info('profile updated successfully'); 
+    } catch (error) {
+      logger.error('Error when updating user:', error);
+      reply.status(500).send({ error: 'Error processing the request' });
+    }
+  });
+
+  fastify.delete('/profile', async (request, reply) => {
+    try {
+      await deleteProfile(request, reply);
+      logger.info('profile deleted successfully');
+    } catch (error) {
+      logger.error('Error when deleting user:', error);
+      reply.status(500).send({ error: 'Error processing the request' });
+    }
   });
 
   done();
