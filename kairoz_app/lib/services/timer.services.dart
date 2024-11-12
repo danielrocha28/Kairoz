@@ -25,14 +25,18 @@ class TimerStartedService {
       );
 
       if (response.statusCode == 201) {
-        try{
-          final getResponse = await http.get(Uri.parse('$baseUrl/timer/start'),)
+        try {
+          final getResponse = await http.get(
+            Uri.parse('$baseUrl/timer/start'),
+          );
 
-          if (getResponse.statusCode == 200){
+          if (getResponse.statusCode == 200) {
             return response.body;
           } else {
             return 'Erro ao buscar o timer: ${getResponse.statusCode}';
           }
+        } catch (error) {
+          return 'Erro ao buscar o timer: $error';
         }
       } else {
         return 'Erro ao iniciar o timer: ${response.statusCode}';
@@ -52,13 +56,17 @@ class TimerStartedService {
 
       if (response.statusCode == 200) {
         try {
-          final getResponse = await http.get(Uri.parse('$baseUrl/timer/resume'),)
+          final getResponse = await http.get(
+            Uri.parse('$baseUrl/timer/resume'),
+          );
 
-          if (getResponse == 200){
-            return getResponse.body
+          if (getResponse == 200) {
+            return getResponse.body;
           } else {
-            return'Erro ao buscar o timer: ${getResponse.statusCode}';
+            return 'Erro ao buscar o timer: ${getResponse.statusCode}';
           }
+        } catch (error) {
+          return 'Erro ao buscar o timer: $error';
         }
       } else {
         return 'Erro ao retomar o timer: ${response.statusCode}';
@@ -72,17 +80,23 @@ class TimerStartedService {
     final baseUrl = dotenv.env['BASE_URL'];
 
     try {
-      final response = await http.put(Uri.parse('$baseUrl/timer/pause'),);
+      final response = await http.put(
+        Uri.parse('$baseUrl/timer/pause'),
+      );
       if (response.statusCode == 200) {
         try {
-          final getResponse = await http.get(Uri.parse('$baseUrl/timer/pause'),);
+          final getResponse = await http.get(
+            Uri.parse('$baseUrl/timer/pause'),
+          );
 
-          if (getResponse.statusCode == 200){
+          if (getResponse.statusCode == 200) {
             return getResponse.body;
           } else {
-              return'Erro ao buscar o timer: ${getResponse.statusCode}';
+            return 'Erro ao buscar o timer: ${getResponse.statusCode}';
           }
-        }  
+        } catch (error) {
+          return 'Erro ao buscar o timer: $error';
+        }
       } else {
         return 'Erro ao pausar o timer: ${response.statusCode}';
       }
