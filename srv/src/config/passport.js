@@ -8,18 +8,22 @@ import jwt from 'jsonwebtoken';
 dotenv.config();
 
 export const passportSetup = (fastify) => {
-  
-  // Configuration of the Google OAuth strategy
+
+  // Configuração do Logger do Fastify
+  const logger = fastify.log;
+
+  // Configuração da estratégia OAuth do Google
   fastifyPassport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: 'http://localhost:3000/auth/google/callback'
   }, async (token, tokenSecret, profile, done) => {
     try {
-      console.log("Google profile:", profile);
+      // Logando o perfil do Google usando o logger do Fastify
+      logger.info({ profile }, "Google profile");
 
       let user = await User.findOne({ where: { email: profile.emails[0].value } });
-      console.log("User found:", user);
+      logger.info({ user }, "User found");
 
       if (!user) {
         user = await User.create({
@@ -27,10 +31,10 @@ export const passportSetup = (fastify) => {
           name: profile.displayName,
           password: 'google-auth'
         });
-        console.log("Created new user:", user);
+        logger.info({ user }, "Created new user");
       }
 
-      console.log("User ID for serialization:", user.id_user);
+      logger.info({ userId: user.id_user }, "User ID for serialization");
 
       const jwtToken = jwt.sign({ id: user.id_user }, process.env.JWT_SECRET, { expiresIn: '1h' });
       done(null, { id_user: user.id_user, email: user.email, token: jwtToken });
@@ -39,28 +43,28 @@ export const passportSetup = (fastify) => {
     }
   }));
 
-  // Serializer: serializes the user based on `id_user`
+  // Serializer: serializa o usuário com base no id_user
   fastifyPassport.registerUserSerializer(async (user) => {
     const userFromDb = await User.findOne({ where: { email: user.email } });
-    console.log("User found for serialization:", userFromDb);
+    logger.info({ userFromDb }, "User found for serialization");
 
     if (userFromDb) {
-      console.log("Serializing user with id:", userFromDb.id_user);
-      return userFromDb.id_user; // Direct return of the user's ID
+      logger.info({ userId: userFromDb.id_user }, "Serializing user with id");
+      return userFromDb.id_user; // Retorna diretamente o id do usuário
     } else {
       throw new Error('User not found');
     }
   });
 
-  // Deserializer: retrieves the user based on `id_user`
+  // Deserializer: recupera o usuário com base no id_user
   fastifyPassport.registerUserDeserializer(async (id) => {
-    console.log("Deserializing user with id:", id);
+    logger.info({ id }, "Deserializing user with id");
     const user = await User.findOne({ where: { id_user: id } });
-    console.log("Deserialized user:", user);
-    return user; // Direct return of the user
+    logger.info({ user }, "Deserialized user");
+    return user; // Retorna diretamente o usuário
   });
 
-  // Registration of fastifyPassport features
+  // Registro das funcionalidades do fastifyPassport
   fastify.register(fastifyPassport.initialize());
   fastify.register(fastifyPassport.secureSession());
 };
