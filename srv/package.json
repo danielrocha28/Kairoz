@@ -21,7 +21,6 @@
     "bcrypt": "^5.1.1",
     "dns": "^0.1.2",
     "dotenv": "^16.4.5",
-    "eslint": "^9.9.1",
     "fastify": "^5.0.0",
     "fastify-formbody": "^5.3.0",
     "gauge": "^5.0.2",
@@ -42,7 +41,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "eslint": "^9.9.0",
+    "eslint": "^9.14.0",
     "eslint-plugin-import": "^2.31.0",
     "nodemon": "^3.1.4"
   }
