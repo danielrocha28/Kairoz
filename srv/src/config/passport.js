@@ -20,10 +20,10 @@ export const passportSetup = (fastify) => {
   }, async (token, tokenSecret, profile, done) => {
     try {
       // Logando o perfil do Google usando o logger do Fastify
-      logger.info({ profile }, "Google profile");
+      logger.info({ profile }, 'Google profile');
 
       let user = await User.findOne({ where: { email: profile.emails[0].value } });
-      logger.info({ user }, "User found");
+      logger.info({ user }, 'User found');
 
       if (!user) {
         user = await User.create({
@@ -31,10 +31,10 @@ export const passportSetup = (fastify) => {
           name: profile.displayName,
           password: 'google-auth'
         });
-        logger.info({ user }, "Created new user");
+        logger.info({ user }, 'Created new user');
       }
 
-      logger.info({ userId: user.id_user }, "User ID for serialization");
+      logger.info({ userId: user.id_user }, 'User ID for serialization');
 
       const jwtToken = jwt.sign({ id: user.id_user }, process.env.JWT_SECRET, { expiresIn: '1h' });
       done(null, { id_user: user.id_user, email: user.email, token: jwtToken });
@@ -46,10 +46,10 @@ export const passportSetup = (fastify) => {
   // Serializer: serializa o usuário com base no id_user
   fastifyPassport.registerUserSerializer(async (user) => {
     const userFromDb = await User.findOne({ where: { email: user.email } });
-    logger.info({ userFromDb }, "User found for serialization");
+    logger.info({ userFromDb }, 'User found for serialization');
 
     if (userFromDb) {
-      logger.info({ userId: userFromDb.id_user }, "Serializing user with id");
+      logger.info({ userId: userFromDb.id_user }, 'Serializing user with id');
       return userFromDb.id_user; // Retorna diretamente o id do usuário
     } else {
       throw new Error('User not found');
@@ -58,9 +58,9 @@ export const passportSetup = (fastify) => {
 
   // Deserializer: recupera o usuário com base no id_user
   fastifyPassport.registerUserDeserializer(async (id) => {
-    logger.info({ id }, "Deserializing user with id");
+    logger.info({ id }, 'Deserializing user with id');
     const user = await User.findOne({ where: { id_user: id } });
-    logger.info({ user }, "Deserialized user");
+    logger.info({ user }, 'Deserialized user');
     return user; // Retorna diretamente o usuário
   });
 
