@@ -46,6 +46,14 @@ import logger from '../config/logger.js';
     reply.redirect('/'); 
   });
 
+// botton from Google
+fastify.get('/botton', (request, reply) => {
+  const html = `
+    <html><body><button onclick="window.location.href='/auth/google'">Entrar com Google</button></body></html>
+  `;
+  reply.type('text/html').send(html);
+});
+
   fastify.get('/profile', (request, reply) => {
     try {
       const profile = {
