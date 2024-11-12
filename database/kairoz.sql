@@ -133,6 +133,7 @@ CREATE TABLE IF NOT EXISTS tag_note (
 
 CREATE TABLE IF NOT EXISTS flashcard (
     id_flashcard SERIAL PRIMARY KEY,
+    id_cards SERIAL PRIMARY KEY,
     id_note INTEGER NOT NULL,
     question TEXT NOT NULL,
     option1 TEXT NOT NULL,
@@ -146,17 +147,18 @@ CREATE TABLE IF NOT EXISTS flashcard (
 
 CREATE TABLE IF NOT EXISTS study_time (
     id_time SERIAL PRIMARY KEY,
-    id_task INTEGER NOT NULL,
-    start_time TIMESTAMP,
-    end_time TIMESTAMP,
-    total_time INTERVAL,
-    FOREIGN KEY (id_task) REFERENCES tasks(id_task)
+    id_task INT NOT NULL,
+    start_time BIGINT,
+    status_time VARCHAR (10) CHECK (status_time IN ('Paused', 'Resumed')),
+    end_time BIGINT,
+    total_time BIGINT,
+    FOREIGN KEY (id_task) REFERENCES task(id_task)
 );
 
 CREATE TABLE IF NOT EXISTS chart (
     id_chart SERIAL PRIMARY KEY,
-    id_time INTEGER NOT NULL,
-    id_task INTEGER NOT NULL,
+    id_time INTEGER,
+    id_task INTEGER,
     type VARCHAR(50) NOT NULL,
     FOREIGN KEY (id_time) REFERENCES study_time(id_time),
     FOREIGN KEY (id_task) REFERENCES tasks(id_task)
@@ -173,6 +175,19 @@ CREATE TABLE IF NOT EXISTS study (
     FOREIGN KEY (id_user) REFERENCES "user"(id_user)
 );
 
+CREATE TYPE alarm_day_enum AS 
+ENUM ('dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab','none');
+
+CREATE TABLE IF NOT EXISTS alarm (
+  id_alarm SERIAL PRIMARY KEY,
+  alarm_time TIME NOT NULL,
+  alarm_day alarm_day_enum[] DEFAULT ARRAY['none'::alarm_day_enum],
+  message VARCHAR(200),
+  executed BOOLEAN DEFAULT FALSE,
+  id_user INT NOT NULL,
+  FOREIGN KEY (id_user) REFERENCES "user"(id_user)
+);
+
 CREATE OR REPLACE FUNCTION update_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -185,3 +200,13 @@ CREATE TRIGGER trigger_update_updated_at
 BEFORE UPDATE ON tasks
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at();
+
+SELECT
+    id_task,
+    total_time
+    CONCAT(
+        LPAD((total_time / 3600000)::text, 2, '0'), ':',
+        LPAD(((total_time % 3600000) / 60000)::text, 2, '0'), ':',
+        LPAD((((total_time % 3600000) % 60000) / 1000)::text, 2, '0')
+    ) AS total_time
+FROM study_time;

@@ -1,34 +1,51 @@
 import Fastify from 'fastify';
 import fastifyCors from '@fastify/cors';
-import cookie from '@fastify/cookie';
-import session from '@fastify/session'; // Importar o plugin de sessão
-import userRoutes from './routes/user.routes.js';
-import taskRoutes from './routes/task.routes.js';
-import passportSetup from './config/passport.js';
+import fastifyCookie from '@fastify/cookie'; 
+import fastifySession from '@fastify/session';
 import dotenv from 'dotenv';
+import homeRouter from './routes/home.routes.js';
+import userRoutes from './routes/user.routes.js';
+import timerRoutes from './routes/timer.routes.js';
+import taskRoutes from './routes/task.routes.js';
+import flashcardRoutes from './routes/flashcard.routes.js';
+import { passportSetup } from './config/passport.js';
+import chartRoutes from './routes/chart.routes.js';
+import noteRoutes from './routes/note.routes.js';
+import alarmRoutes from './routes/alarm.routes.js';
 
 dotenv.config();
 
-const fastify = Fastify();
 
-fastify.register(fastifyCors, { 
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+const fastify = Fastify({ pluginTimeout: 30000 });
+
+// Enable CORS
+fastify.register(fastifyCors, {
+  origin: process.env.URL_DOMAIN,
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
 });
 
-fastify.register(cookie);
 
-// Registrando o plugin de sessão
-fastify.register(session, {
-  secret: process.env.SESSION_SECRET_KEY, // Altere para uma chave secreta real
-  saveUninitialized: false,
-  cookie: { secure: false } // Altere para true em produção
+// Register the cookie plugin first
+fastify.register(fastifyCookie, {});
+
+// Register the session plugin afterwards
+fastify.register(fastifySession, {
+  secret: process.env.SECRET_SESSION,
+  cookie: { secure: process.env.NODE_ENV === 'production' }, 
 });
+
+// Route registration
+fastify.register(homeRouter);
+fastify.register(userRoutes);
+fastify.register(timerRoutes);
+fastify.register(taskRoutes);
+fastify.register(flashcardRoutes);
+fastify.register(chartRoutes);
+fastify.register(noteRoutes);
+fastify.register(alarmRoutes);
 
 
 passportSetup(fastify);
 
-fastify.register(userRoutes);
-fastify.register(taskRoutes); 
 
 export default fastify;

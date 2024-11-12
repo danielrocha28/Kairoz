@@ -1,66 +1,86 @@
-import { registerUser, loginUser, googleCallback } from '../controllers/user.controller.js';
+import { registerUser, loginUser, updateProfile, deleteProfile } from '../controllers/user.controller.js';
 import fastifyPassport from '@fastify/passport';
-import  passportSetup from '../config/passport.js';  
+import logger from '../config/logger.js'; 
 
+  const userRoutes = (fastify, options, done) => {
+    fastify.get('/status', (request, reply) => {
+      logger.info('Status check requested');
+      return { status: 'Server is up and running' };
+    });
 
-const userRoutes = (fastify, options, done) => {
-
-
-  // Rota de teste
-  fastify.get('/status', async (request, reply) => {
-    return { status: 'Server is up and running' };
-  });
-
-  // Rota para registrar o usuário
   fastify.post('/register', async (request, reply) => {
     try {
-      console.log("Corpo da Requisição:", request.body);
       await registerUser(request, reply);
+      logger.info('User registered successfully'); // Loga sucesso no registro
     } catch (error) {
-      reply.status(500).send({ error: 'Erro ao processar a requisição' });
+      logger.error('Error registering user:', error); // Loga o erro
+      reply.status(500).send({ error: 'Error processing the request' });
     }
   });
 
-  // Rota para login
+ 
   fastify.post('/login', async (request, reply) => {
     try {
       await loginUser(request, reply);
+      logger.info('User logged in successfully'); // Loga sucesso no login
     } catch (error) {
-      reply.status(500).send({ error: 'Erro ao processar a requisição' });
+      logger.error('Error logging in user:', error); // Loga o erro
+      reply.status(500).send({ error: 'Error processing the request' });
     }
   });
 
-
   fastify.get('/auth/google', {
-    preValidation: fastifyPassport.authenticate('google', { scope: ['profile', 'email'] }) // middleware para autenticação com Google
-  }, async (request, reply) => {
-    // Aqui você pode adicionar uma resposta ou lógica adicional, se necessário.
+    preValidation: fastifyPassport.authenticate('google', {
+      scope: ['profile', 'email']
+    })
+  }, (request, reply) => {
+    logger.info('Google authentication requested');
+   
+    reply.send({ message: 'Redirecting to Google for authentication...' });
   });
-  
 
-  fastify.get('/auth/google/callback', async (request, reply) => {
-      try {
-        await googleCallback(request, reply);
-      } catch (error) {
-        reply.status(500).send({ error: 'Erro ao processar a requisição' });
+  fastify.get('/auth/google/callback', {
+    preValidation: fastifyPassport.authenticate('google', { failureRedirect: '/' })
+  }, (request, reply) => {
+    logger.info('Google authentication callback received');
+    reply.redirect('/'); 
+  });
+
+  fastify.get('/profile', (request, reply) => {
+    try {
+      const profile = {
+        id: loginUser.id,
+        name: loginUser.name,
+        email: loginUser.email
+      };
+      if (profile){
+        reply.status(200).send(profile);
       }
-    });
-  
-
-
-    
-
-  fastify.get('/', (request, reply) => {
-    reply
-      .header('Content-Type', 'text/html')
-      .send(`
-        <h1>Login com Google</h1>
-        <a href="/auth/google">
-          <button style="padding: 10px; font-size: 16px;">Login com Google</button>
-        </a>
-      `);
+    } catch (error) {
+      logger.error('data not found:', error); 
+      reply.status(500).send({ error: 'Error processing the request' });
+    }
   });
-  
+
+  fastify.put('/profile', async (request, reply) => {
+    try {
+      await updateProfile(request, reply);
+      logger.info('profile updated successfully'); 
+    } catch (error) {
+      logger.error('Error when updating user:', error);
+      reply.status(500).send({ error: 'Error processing the request' });
+    }
+  });
+
+  fastify.delete('/profile', async (request, reply) => {
+    try {
+      await deleteProfile(request, reply);
+      logger.info('profile deleted successfully');
+    } catch (error) {
+      logger.error('Error when deleting user:', error);
+      reply.status(500).send({ error: 'Error processing the request' });
+    }
+  });
 
   done();
 };

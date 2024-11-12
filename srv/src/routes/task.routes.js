@@ -1,4 +1,6 @@
 import { createTask, getTasks, getTaskById, updateTask, deleteTask } from '../controllers/task.controller.js';
+import logger from '../config/logger.js'; 
+
 
 const taskRoutes = (fastify, options, done) => {
   
@@ -10,7 +12,7 @@ const taskRoutes = (fastify, options, done) => {
       }
       await createTask(request, reply);
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       reply.status(500).send({ error: 'Error processing request', details: error.message });
     }
   });
@@ -19,7 +21,7 @@ const taskRoutes = (fastify, options, done) => {
     try {
       await getTasks(request, reply);
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       reply.status(500).send({ error: 'Error processing request', details: error.message });
     }
   });
@@ -32,7 +34,7 @@ const taskRoutes = (fastify, options, done) => {
       }
       await getTaskById(request, reply);
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       reply.status(500).send({ error: 'Error processing request', details: error.message });
     }
   });
@@ -45,7 +47,7 @@ const taskRoutes = (fastify, options, done) => {
       }
       await updateTask(request, reply);
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       reply.status(500).send({ error: 'Error processing request', details: error.message });
     }
   });
@@ -58,7 +60,7 @@ const taskRoutes = (fastify, options, done) => {
       }
       await deleteTask(request, reply);
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       reply.status(500).send({ error: 'Error processing request', details: error.message });
     }
   });

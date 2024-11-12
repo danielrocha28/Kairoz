@@ -1,9 +1,9 @@
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
+import logger from './logger.js'; 
 
 // Load environment variables from the .env file
 dotenv.config();
-console.log(process.env);
 
 // Validation for required environment variables
 const requiredEnvVars = ['DB_NAME', 'DB_USER', 'DB_PASS', 'DB_HOST', 'DB_PORT', 'DB_SSL'];
@@ -35,8 +35,9 @@ const sequelize = new Sequelize(
         rejectUnauthorized: !isProduction, // Reject unauthorized certificates in production
       } : false,
     },
-    logging: isProduction ? false : console.log, // Log SQL queries only in development
+    logging: isProduction ? false : (msg) => logger.info(msg), //use the msg to Sequelize accept logger.info instead of console.log
   }
+  
 );
 
 export default sequelize;

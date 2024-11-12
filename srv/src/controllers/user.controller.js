@@ -2,20 +2,13 @@
 import User from '../model/user.model.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { registerSchema, loginSchema } from '../validators/user.schema.js';
+import { registerSchema, loginSchema, updatedSchema } from '../validators/user.schema.js';
 import dns from 'dns';
 import { promisify } from 'util';
+import logger from '../config/logger.js';
+import { z } from 'zod';
 
 const resolveMxAsync = promisify(dns.resolveMx);
-
-
-
-// Validation for user registration
-const registerSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email'),
-  password: z.string().min(6, 'Password must be at least 6 characters long'),
-});
 
 async function validateEmailDomain(email) {
   const domain = email.split('@')[1];
@@ -23,11 +16,12 @@ async function validateEmailDomain(email) {
     const mxRecords = await resolveMxAsync(domain);
     return mxRecords && mxRecords.length > 0;
   } catch (error) {
+    logger.error(`Failed to resolve MX records for domain: ${domain}. Error: ${error.message}`);
     return false;
   }
 }
 
-export async function registerUser(request, reply) {
+export async function registerUser(request  , reply) {
   try {
     const validatedData = registerSchema.parse(request.body);
     const { name, email, password } = validatedData;
@@ -57,7 +51,7 @@ export async function registerUser(request, reply) {
     if (error instanceof z.ZodError) {
       reply.status(400).send({ error: 'Validation failed', details: error.errors });
     } else {
-      console.error('Error registering user:', error);
+      logger.error('Error registering user:', error);
       reply.status(500).send({ error: 'Internal server error', message: error.message });
     }
   }
@@ -76,36 +70,62 @@ export async function loginUser(request, reply) {
     } else {
       reply.status(401).send({ error: 'Invalid credentials' });
     }
+
+    if (user) {
+      const userData = {
+        id: user.id_user,
+        name: user.name,
+        email: user.email,
+      };
+      return userData;
+    }
   } catch (error) {
     if (error instanceof z.ZodError) {
       reply.status(400).send({ error: 'Validation failed', details: error.errors });
     } else {
-      console.error('Error logging in:', error);
+      logger.error('Error logging in:', error);
       reply.status(500).send({ error: 'Internal server error', message: error.message });
     }
   }
 }
 
-//esta funçao é procesada apos a autentificaçao com o google, gera um jwt com o id e email
-export function  googleCallback(request,reply) {
+export async function updateProfile(request, reply){
+  try {
+    const user = loginUser(request,reply);
+    const validatedData = updatedSchema.parse(request.body);
 
-  //verifica se o usuario é valido, se é autentico
-  try{ if(!req.user) {
-    return resizeBy.status(401).json({error: 'Usuario invalido'});
+    if (validatedData.email){
+      const validEmail = validateEmailDomain(validatedData.email);
+      if (!validEmail) {
+        return reply.status(400).send({ error: 'Invalid email domain' });
+      }
+    }
+
+    const [updated] = await User.update(validatedData, { where: { id_user: user.id } }); 
+    if (updated) {
+      const updatedUser = await User.findByPk(user.id); 
+      reply.code(200).send(updatedUser);
+    } else {
+      reply.code(404).send({ error: `${user.name}, Unable to update profile` });
+    }
+  } catch (error) {
+    logger.error('error when updating profile:', error);
+    reply.status(500).send({ error: 'Internal server error', message: error.message });
   }
+}
 
-  //gera o jwt
-    const tokenGoogle = jwt.sign({
-      id: request.user.id, 
-      email: request.user.email},
-      JWT_SECRET_KEY,
-      {expiresin:'3h'}
-    );
-    
-    reply.json({tokenGoogle});//devolve o jwt gerado
+export async function deleteProfile(request, reply) {
+  try {
+    const user = loginUser(request, reply);
 
-  }catch (error){
-console.error('Erro ao gerar o jwt do login com google');
+    const deleted = await User.destroy({ where: { id_user: user.id } }); 
+    if (deleted) {
+      reply.code(204).send('I hope to see you again');  
+    } else {
+      reply.code(404).send({ error: `${user.name}, Unable to deleted profile` });
+    }
+  } catch (error) {
+    logger.error('error when deleting profile:', error);
+    reply.status(500).send({ error: 'Internal server error', message: error.message });
   }
-
 }
