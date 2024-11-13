@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:kairoz/services/register.service.dart';
+import 'package:kairoz/services/register_service.dart';
 import 'package:kairoz/widgets/kairoz_logo.dart';
 import 'package:kairoz/widgets/kairoz_outline_input.dart';
 

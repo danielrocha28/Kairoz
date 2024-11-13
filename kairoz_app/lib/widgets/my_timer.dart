@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kairoz/services/timer.services.dart';
+import 'package:kairoz/services/timer_services.dart';
 
 class MyTimer extends StatefulWidget {
   const MyTimer({super.key});
