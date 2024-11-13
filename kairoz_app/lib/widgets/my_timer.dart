@@ -1,0 +1,78 @@
+import 'package:flutter/material.dart';
+import 'package:kairoz/services/timer.services.dart';
+
+class MyTimer extends StatefulWidget {
+  const MyTimer({super.key});
+
+  @override
+  State<MyTimer> createState() => _MyTimerState();
+}
+
+class _MyTimerState extends State<MyTimer> {
+  String hours = '00';
+  String minutes = '00';
+  String seconds = '00';
+  bool isTimerRunning = false;
+
+  final TimerService _timerService = const TimerService(
+    idTask:
+        '123', // Exemplo de idTask, use o valor que for relevante no seu caso
+    title: 'Minha Tarefa', // Exemplo de título
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      const SizedBox(
+        height: 40,
+      ),
+      Text(
+        '$hours:$minutes:$seconds',
+        style: const TextStyle(fontSize: 30),
+      ),
+      const SizedBox(
+        height: 40,
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            onPressed: () async {
+              isTimerRunning = true;
+              String result = await _timerService.start();
+            },
+            child: const Text('Iniciar'),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              isTimerRunning = false;
+              String result = await _timerService.pause();
+            },
+            child: const Text('Pausar'),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          ElevatedButton(
+              onPressed: () async {
+                isTimerRunning = true;
+                String result = await _timerService.resume();
+              },
+              child: const Text('Resumir')),
+          const SizedBox(
+            width: 10,
+          ),
+          ElevatedButton(
+              onPressed: () async {
+                isTimerRunning = false;
+                String result = await _timerService.delete();
+              },
+              child: const Text('Deletar')),
+        ],
+      ),
+    ]);
+  }
+}

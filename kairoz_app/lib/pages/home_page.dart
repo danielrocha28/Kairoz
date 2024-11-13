@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:kairoz/models/task_model.dart';
 import 'package:kairoz/widgets/drawer.dart';
-import 'package:kairoz/widgets/appbar.dart';
+import 'package:kairoz/widgets/my_appbar.dart';
 import 'profile_page.dart';
 
 class HomePage extends StatefulWidget {

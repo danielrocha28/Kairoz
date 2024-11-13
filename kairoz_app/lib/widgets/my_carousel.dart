@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:kairoz/widgets/tela_informacoes.dart';
+import 'package:kairoz/widgets/Tela_informacoes.dart';
 
 class MyCarousel extends StatelessWidget {
   const MyCarousel({super.key});

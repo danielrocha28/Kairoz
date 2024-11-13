@@ -2,11 +2,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class TimerStartedService {
+class TimerService {
   final String idTask; // Alterei para idTask
   final String title;
 
-  const TimerStartedService({
+  const TimerService({
     required this.idTask, // Alterei para idTask
     required this.title,
   });
