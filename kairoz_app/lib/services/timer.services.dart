@@ -3,41 +3,28 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class TimerService {
-  final String idTask; // Alterei para idTask
+  final String idTask;
   final String title;
+  String? baseUrl = dotenv.env['BASE_URL'];
 
-  const TimerService({
-    required this.idTask, // Alterei para idTask
+  TimerService({
+    required this.idTask,
     required this.title,
   });
 
   Future<String> start() async {
-    final baseUrl = dotenv.env['BASE_URL'];
-
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/timer/start'),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
-          "id_task": idTask, // Alterei para idtask
+          "id_task": idTask,
           "title": title,
         }),
       );
 
       if (response.statusCode == 201) {
-        try {
-          final getResponse = await http.get(
-            Uri.parse('$baseUrl/timer/start'),
-          );
-
-          if (getResponse.statusCode == 200) {
-            return response.body;
-          } else {
-            return 'Erro ao buscar o timer: ${getResponse.statusCode}';
-          }
-        } catch (error) {
-          return 'Erro ao buscar o timer: $error';
-        }
+        return response.body;
       } else {
         return 'Erro ao iniciar o timer: ${response.statusCode}';
       }
@@ -47,27 +34,13 @@ class TimerService {
   }
 
   Future<String> resume() async {
-    final baseUrl = dotenv.env['BASE_URL'];
-
     try {
       final response = await http.put(
         Uri.parse('$baseUrl/timer/resume'),
       );
 
       if (response.statusCode == 200) {
-        try {
-          final getResponse = await http.get(
-            Uri.parse('$baseUrl/timer/resume'),
-          );
-
-          if (getResponse == 200) {
-            return getResponse.body;
-          } else {
-            return 'Erro ao buscar o timer: ${getResponse.statusCode}';
-          }
-        } catch (error) {
-          return 'Erro ao buscar o timer: $error';
-        }
+        return response.body;
       } else {
         return 'Erro ao retomar o timer: ${response.statusCode}';
       }
@@ -77,26 +50,12 @@ class TimerService {
   }
 
   Future<String> pause() async {
-    final baseUrl = dotenv.env['BASE_URL'];
-
     try {
       final response = await http.put(
         Uri.parse('$baseUrl/timer/pause'),
       );
       if (response.statusCode == 200) {
-        try {
-          final getResponse = await http.get(
-            Uri.parse('$baseUrl/timer/pause'),
-          );
-
-          if (getResponse.statusCode == 200) {
-            return getResponse.body;
-          } else {
-            return 'Erro ao buscar o timer: ${getResponse.statusCode}';
-          }
-        } catch (error) {
-          return 'Erro ao buscar o timer: $error';
-        }
+        return response.body;
       } else {
         return 'Erro ao pausar o timer: ${response.statusCode}';
       }
@@ -106,8 +65,6 @@ class TimerService {
   }
 
   Future<String> delete() async {
-    final baseUrl = dotenv.env['BASE_URL'];
-
     try {
       final response = await http.delete(
         Uri.parse('$baseUrl/timer/delete'),

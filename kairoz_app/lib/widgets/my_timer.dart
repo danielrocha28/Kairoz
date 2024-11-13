@@ -14,7 +14,7 @@ class _MyTimerState extends State<MyTimer> {
   String seconds = '00';
   bool isTimerRunning = false;
 
-  final TimerService _timerService = const TimerService(
+  final TimerService _timerService = TimerService(
     idTask:
         '123', // Exemplo de idTask, use o valor que for relevante no seu caso
     title: 'Minha Tarefa', // Exemplo de título

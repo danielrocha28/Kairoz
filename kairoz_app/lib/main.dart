@@ -3,7 +3,7 @@ import 'package:kairoz/pages/home_page.dart';
 import 'package:kairoz/pages/login_page.dart';
 import 'package:kairoz/pages/profile_page.dart';
 import 'package:kairoz/pages/register_page.dart';
-
+import 'package:kairoz/pages/timer_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterPage(),
         '/home': (context) => const HomePage(),
         '/profile': (context) => const ProfilePage(),
+        '/timer': (context) => const TimerPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
