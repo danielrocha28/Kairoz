@@ -2,49 +2,40 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-  Future<http.Response> ChartPie() async {
-    final baseUrl = dotenv.env['BASE_URL'];
+Future<void> chartPie() async {
+  final baseUrl = dotenv.env['BASE_URL'];
 
-    try {
-      return await http.get(
-        Uri.parse('$baseUrl/chart-pie'),);
+  try {
+    final response = await http.get(Uri.parse('$baseUrl/chart-pie'));
 
-        if (response.statusCode == 200) {
-        // Retorna o conteúdo do backend
-        return response.body
-      } else {
-        // Em caso de erro, retorna a mensagem de erro com o código de status
-        return 'Erro: ${response.statusCode}';
-      }
-        
-    } catch (_) {
-      return http.Response(
-        '{"error": "Ocorreu um erro ao entrar. Tente novamente!"}',
-        400,
-      );
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception(
+          'Erro ao carregar o gráfico de pizza: ${response.statusCode}');
     }
+  } catch (e) {
+    throw Exception(
+        'Ocorreu um erro ao tentar carregar o gráfico de pizza. Tente novamente!');
   }
+}
 
-   Future<http.Response> ChartWeek() async {
-    final baseUrl = dotenv.env['BASE_URL'];
-    
-    try {
-      return await http.get(
-        Uri.parse('$baseUrl/chart-week'),);
+Future<void> chartWeek() async {
+  final baseUrl = dotenv.env['BASE_URL'];
 
-        if (response.statusCode == 200) {
-        // Retorna o conteúdo do backend
-        return response.body
-      } else {
-        // Em caso de erro, retorna a mensagem de erro com o código de status
-        return 'Erro: ${response.statusCode}';
-      }
-        
-    } catch (_) {
-      return http.Response(
-        '{"error": "Ocorreu um erro ao entrar. Tente novamente!"}',
-        400,
-      );
+  try {
+    final response = await http.get(Uri.parse('$baseUrl/chart-week'));
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception(
+          'Erro ao carregar o gráfico semanal: ${response.statusCode}');
     }
+  } catch (e) {
+    throw Exception(
+        'Ocorreu um erro ao tentar carregar o gráfico semanal. Tente novamente!');
   }
-
+}
