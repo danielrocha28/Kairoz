@@ -103,6 +103,7 @@ class LoginPageState extends State<LoginPage> {
                         : null,
                     obscureText: _obscurePassword,
                     labelText: "Senha",
+                    validator: (value) => validatePasswordField(value),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
