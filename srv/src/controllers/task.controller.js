@@ -3,7 +3,7 @@ import taskSchema from '../validators/task.schema.js';
 import { z } from 'zod'; 
 import { loginUser } from './user.controller.js';
 
-const handleZodError = (error, reply) => {
+export function handleZodError(error, reply){
   if (error instanceof z.ZodError) {
     reply.code(400).send({ errors: error.errors });
   } else {
