@@ -1,0 +1,44 @@
+[33m2f4d639[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mlogin-google[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/feat/chart[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{0}: reset: moving to HEAD
+[33m2f4d639[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mlogin-google[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/feat/chart[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{1}: reset: moving to origin/main
+[33m2bb8727[m[33m ([m[1;32mlogin-google2[m[33m)[m HEAD@{2}: checkout: moving from login-google2 to login-google
+[33m2bb8727[m[33m ([m[1;32mlogin-google2[m[33m)[m HEAD@{3}: checkout: moving from login-google to login-google2
+[33m2bb8727[m[33m ([m[1;32mlogin-google2[m[33m)[m HEAD@{4}: checkout: moving from main to login-google
+[33m2f4d639[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mlogin-google[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/feat/chart[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{5}: reset: moving to HEAD
+[33m2f4d639[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mlogin-google[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/feat/chart[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m HEAD@{6}: reset: moving to origin/main
+[33md0b2b5c[m HEAD@{7}: checkout: moving from login-google to main
+[33m2bb8727[m[33m ([m[1;32mlogin-google2[m[33m)[m HEAD@{8}: commit: fazendo a configuraçao da api com o google
+[33md0b2b5c[m HEAD@{9}: reset: moving to d0b2b5c8354b70043986bea8c46180871084bf41
+[33md0b2b5c[m HEAD@{10}: rebase (abort): returning to refs/heads/login-google
+[33md0b2b5c[m HEAD@{11}: rebase (abort): returning to refs/heads/login-google
+[33md0b2b5c[m HEAD@{12}: checkout: moving from main to login-google
+[33md0b2b5c[m HEAD@{13}: commit: criando as cartas do flashcard
+[33m54b1f31[m[33m ([m[1;32mlist[m[33m)[m HEAD@{14}: merge origin: Merge made by the 'ort' strategy.
+[33mc4cf2e3[m HEAD@{15}: commit: login com o google
+[33md1c91f0[m HEAD@{16}: merge origin: updating HEAD
+[33md1c91f0[m HEAD@{17}: pull: updating HEAD
+[33md1c91f0[m HEAD@{18}: pull https://github.com/danielrocha28/Kairoz.git: updating HEAD
+[33md1c91f0[m HEAD@{19}: pull origin main: updating HEAD
+[33md1c91f0[m HEAD@{20}: checkout: moving from feature/cartas-flashcard to main
+[33m3f7347f[m[33m ([m[1;32mfeature/cartas-flashcard[m[33m)[m HEAD@{21}: checkout: moving from main to feature/cartas-flashcard
+[33md1c91f0[m HEAD@{22}: checkout: moving from feature/cartas-flashcard to main
+[33m3f7347f[m[33m ([m[1;32mfeature/cartas-flashcard[m[33m)[m HEAD@{23}: commit: criando login com o google
+[33m62feb0b[m HEAD@{24}: checkout: moving from main to feature/cartas-flashcard
+[33md1c91f0[m HEAD@{25}: checkout: moving from feature/cartas-flashcard to main
+[33m62feb0b[m HEAD@{26}: commit: fazendo login com o google
+[33md1c91f0[m HEAD@{27}: checkout: moving from main to feature/cartas-flashcard
+[33md1c91f0[m HEAD@{28}: merge feature/cartas-flashcard: Fast-forward
+[33m4c1243d[m HEAD@{29}: checkout: moving from feature/cartas-flashcard to main
+[33md1c91f0[m HEAD@{30}: merge main: Merge made by the 'ort' strategy.
+[33m34b51d6[m[33m ([m[1;31morigin/feature/cartas-flashcard[m[33m)[m HEAD@{31}: checkout: moving from main to feature/cartas-flashcard
+[33m4c1243d[m HEAD@{32}: pull: Fast-forward
+[33mbd069d2[m HEAD@{33}: checkout: moving from feature/cartas-flashcard to main
+[33m34b51d6[m[33m ([m[1;31morigin/feature/cartas-flashcard[m[33m)[m HEAD@{34}: reset: moving to HEAD
+[33m34b51d6[m[33m ([m[1;31morigin/feature/cartas-flashcard[m[33m)[m HEAD@{35}: commit: criando as cartas do flashcard
+[33mce35d82[m HEAD@{36}: commit (merge): criando as castas do flashcard
+[33me2aec51[m[33m ([m[1;31morigin/cards[m[33m)[m HEAD@{37}: Branch: renamed refs/heads/cards to refs/heads/feature/cartas-flashcard
+[33me2aec51[m[33m ([m[1;31morigin/cards[m[33m)[m HEAD@{39}: commit: cartas do flashcard
+[33m5afdb3b[m[33m ([m[1;31morigin/anotar[m[33m)[m HEAD@{40}: checkout: moving from anotar to cards
+[33m5afdb3b[m[33m ([m[1;31morigin/anotar[m[33m)[m HEAD@{41}: checkout: moving from anotar to anotar
+[33m5afdb3b[m[33m ([m[1;31morigin/anotar[m[33m)[m HEAD@{42}: commit: criando o bloco de notas
+[33mbd069d2[m HEAD@{43}: checkout: moving from main to anotar
+[33mbd069d2[m HEAD@{44}: clone: from https://github.com/danielrocha28/Kairoz.git

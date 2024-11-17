@@ -12,6 +12,23 @@ function timerRouter(fastify, opts) {
     }
   });
 
+  fastify.get('/timer/start', (request, reply) => {
+    try {
+      const timer = {
+        hours: startTimer.hours,
+        minutes: startTimer.minutes,
+        seconds: startTimer.seconds,
+      };
+      if (timer) 
+        reply.status(200).send(timer);
+    } catch (error) {
+      reply.status(500).send({
+        error: 'Error processing the request',
+        details: error.message,
+      });
+    }
+  });
+
   fastify.put('/timer/pause', async (request, reply) => {
     try {
       paused(true);
@@ -24,6 +41,28 @@ function timerRouter(fastify, opts) {
     }
   });
 
+  
+  fastify.get('/timer/pause', (request, reply) => {
+    try {
+      const check = paused(true);
+      if (check){
+      const timer = {
+        hours: statusTimer.hours,
+        minutes: statusTimer.minutes,
+        seconds: statusTimer.seconds,
+      };
+        if (timer) 
+          reply.status(200).send(timer);
+      }
+    } catch (error) {
+      reply.status(500).send({
+        error: 'Error processing the request',
+        details: error.message,
+      });
+
+    }
+  });
+
   fastify.put('/timer/resume', async (request, reply) => {
     try {
       paused(false);
@@ -33,6 +72,26 @@ function timerRouter(fastify, opts) {
         error: 'Error processing the request',
         details: error.message,
       });
+    }
+  });
+
+  fastify.get('/timer/resume', (request, reply) => {
+    try {
+      const check = paused(false);
+      if (check){
+        const timer = {
+          hours: statusTimer.hours,
+          minutes: statusTimer.minutes,
+          seconds: statusTimer.seconds,
+        };
+        if (timer)
+          reply.status(200).send(timer);
+      }
+    } catch (error) {
+       reply.status(500).send({
+        error: 'Error processing the request',
+        details: error.message,
+    });
     }
   });
 

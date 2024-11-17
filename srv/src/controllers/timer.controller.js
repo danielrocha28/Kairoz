@@ -29,11 +29,12 @@ export function formatTime(milliseconds) {
   const hours = String(Math.floor(milliseconds / 3600000)).padStart(2, '0');
   const minutes = String(Math.floor((milliseconds % 3600000) / 60000)).padStart(2, '0');
   const seconds = String(Math.floor((milliseconds % 60000) / 1000)).padStart(2, '0');
-  return `${hours}:${minutes}:${seconds}`;
+  return { hours, minutes, seconds };
 }
 
 export function paused(isPaused) {
   active.pause = isPaused;
+  return isPaused;
 }
 
 export async function startTimer(request, reply) {
@@ -69,6 +70,7 @@ export async function startTimer(request, reply) {
     active.interval = setInterval(() => {
       const elapsedTime = Date.now() - start;
       active.totalTime = active.startTime + elapsedTime;
+      const { hours, minutes, seconds } = formatTime(active.totalTime);
 
       // Sending a message to the WebSocket server via JSON
       active.ws.send(JSON.stringify({
@@ -78,7 +80,7 @@ export async function startTimer(request, reply) {
         day: active.day[active.date],
       }));
 
-      return (formatTime(active.totalTime));
+      return (hours, minutes, seconds);
     }, 1000);
   
     reply.status(201).send();
@@ -108,6 +110,7 @@ export function statusTimer(request, reply) {
       active.pausedTime = active.totalTime + active.endTime;
       active.totalTime = 0;
       active.endTime = 0;
+      const { hours, minutes, seconds } = formatTime(active.pausedTime);
 
       // Message for the WebSocket
       active.ws.send(
@@ -120,10 +123,7 @@ export function statusTimer(request, reply) {
       );
 
       // Return paused status and formatted total time
-      reply.status(200).send({
-        message: 'Timer paused',
-        totalTime: formatTime(active.pausedTime),
-      });
+      reply.status(200).send(hours, minutes, seconds);
     } else { // resume time
       active.pause = false;
 
@@ -133,6 +133,7 @@ export function statusTimer(request, reply) {
       active.interval = setInterval(() => {
         const elapsedTime = Date.now() - start; // Update elapsed time
         active.endTime = active.pausedTime + elapsedTime;
+        const { hours, minutes, seconds } = formatTime(active.endTime);
 
         // Message for the WebSocket
         active.ws.send(
@@ -145,7 +146,7 @@ export function statusTimer(request, reply) {
         );
 
         // Show the formatted time in the console
-        return (formatTime(active.endTime)); // Shows formatted time in the console
+        return (hours, minutes, seconds); // Shows formatted time in the console
       }, 1000);
 
       reply.status(200).send();
