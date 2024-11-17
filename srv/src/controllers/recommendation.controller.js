@@ -5,13 +5,24 @@ import puppeteer from 'puppeteer';
 import logger from '../config/logger.js';
 
 async function searchAndExtract(query) {
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({ headless: true }); // false se for preciso ver o processo no console
     const page = await browser.newPage();
 
     // Navegar para a página de resultados do Google
     await page.goto(`https://www.google.com/search?q=${encodeURIComponent(query)}`, {
-        waitUntil: 'domcontentloaded',
+        waitUntil: 'domcontentloaded',});
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36');
+
+    await page.setRequestInterception(true);
+    page.on('request', (request) => {
+        if (['image', 'stylesheet', 'font', 'media'].includes(request.resourceType())) {
+            request.abort();
+        } else {
+            request.continue();
+        }
     });
+    await page.mouse.move(Math.random() * 800, Math.random() * 600);
+    await page.click('input[name=q]', { delay: Math.random() * 100 });
 
     // Aguardar os resultados carregarem
     await page.waitForSelector('h3');
@@ -20,7 +31,7 @@ async function searchAndExtract(query) {
     const results = await page.evaluate(() => {
         const items = [];
         const resultNodes = document.querySelectorAll('.tF2Cxc'); // Classe de contêiner dos resultados de pesquisa
-        
+
         resultNodes.forEach((result) => {
             const titleElement = result.querySelector('h3');
             const linkElement = result.querySelector('a');
@@ -29,30 +40,18 @@ async function searchAndExtract(query) {
 
             if (titleElement && linkElement) {
                 items.push({
-                    title: titleElement.innerText,
-                    link: linkElement.href,
-                    summary: descriptionElement ? descriptionElement.innerText : 'N/A',
-                    image: imageElement ? imageElement.src : 'N/A',
+                    title: titleElement.innerText, // titulo da pagina
+                    link: linkElement.href, // link 
+                    summary: descriptionElement ? descriptionElement.innerText : 'N/A', // sumario
+                    image: imageElement ? imageElement.src : 'N/A', // imagem principal
                 });
             }
         });
 
         return items;
     });
-
+    await page.waitForTimeout(3000);
     await browser.close();
-    searchAndExtract(query).then(results => {
-    console.log('Resultados encontrados:');
-    results.forEach((result, index) => {
-        console.log(`\nResultado ${index + 1}:`);
-        console.log(`Título: ${result.title}`);
-        console.log(`Link: ${result.link}`);
-        console.log(`Sumário: ${result.summary}`);
-        console.log(`Imagem: ${result.image}`);
-    });
-}).catch(error => {
-    console.error('Erro ao buscar e extrair:', error);
-});
     return results;
 }
 
@@ -60,7 +59,7 @@ async function recommending(title, type, image, summary, link){
     const response = await Recommendation.create({ title: title, type: type, 
         image: image, summary: summary, link: link, id_user: user.id});
     if (response){
-        return response;
+        return { response: response };
     }
 }
 
@@ -72,7 +71,6 @@ export async function newRecommendation(request, reply) {
         }
 
         let site;
-
         switch (selectedAnswer) {
             case 'Saúde e bem estar':
             site = await searchAndExtract('Saúde e bem estar');

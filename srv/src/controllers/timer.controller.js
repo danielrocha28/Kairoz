@@ -66,7 +66,7 @@ export async function startTimer(request, reply) {
 
     const start = Date.now();
 
-    active.interval = setInterval( () => {
+    active.interval = setInterval(() => {
       const elapsedTime = Date.now() - start;
       active.totalTime = active.startTime + elapsedTime;
 
