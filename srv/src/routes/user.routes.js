@@ -1,12 +1,14 @@
 import { registerUser, loginUser, updateProfile, deleteProfile } from '../controllers/user.controller.js';
 import fastifyPassport from '@fastify/passport';
 import logger from '../config/logger.js'; 
+import User from '../model/user.model.js';
 
-  const userRoutes = (fastify, options, done) => {
-    fastify.get('/status', (request, reply) => {
-      logger.info('Status check requested');
-      return { status: 'Server is up and running' };
-    });
+
+const userRoutes = (fastify, options, done) => {
+  fastify.get('/status', (request, reply) => {
+    logger.info('Status check requested');
+    return { status: 'Server is up and running' };
+  });
 
   fastify.post('/register', async (request, reply) => {
     try {
@@ -35,7 +37,6 @@ import logger from '../config/logger.js';
     })
   }, (request, reply) => {
     logger.info('Google authentication requested');
-   
     reply.send({ message: 'Redirecting to Google for authentication...' });
   });
 
@@ -79,6 +80,39 @@ import logger from '../config/logger.js';
     } catch (error) {
       logger.error('Error when deleting user:', error);
       reply.status(500).send({ error: 'Error processing the request' });
+    }
+  });
+
+   fastify.put('/blocked-apps', {
+    preHandler: async (request, reply) => {
+      const apps = await User.findOne({ where: { id_user: loginUser.id },
+        attributes: ['blocked_apps'] });
+      request.customData = { blocked_apps: apps.blocked_apps };
+    },
+
+    handler: async (request, reply) => {
+      const userAgent = request.headers['user-agent'];
+      const { blocked_apps } = request.customData;
+
+      const apps = request.body;
+      if (!apps || typeof apps !== 'string'){
+        reply.status(400).send('invalid json type');
+      } 
+      let blocked = apps.split(',').map(app => app.trim());
+      let set = new Set(blocked_apps);
+
+      blocked.forEach(item => {
+        set.add(item);
+      });
+
+      blocked = Array.from(set);
+
+      const isBlocked = blocked.some(app => userAgent.includes(app));
+      await User.update({ blocked_apps: blocked, where: { id_user: loginUser.id }});
+
+      if (isBlocked) {
+        reply.status(403).send({ error: 'app not allowed.' });
+      }
     }
   });
 

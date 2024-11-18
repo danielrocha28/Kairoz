@@ -24,6 +24,10 @@ const User = sequelize.define('User', {
     allowNull: false,
     field: 'password',
   },
+  blocked_apps:{
+    type: DataTypes.ARRAY(DataTypes.TEXT),
+    field: 'blocked_apps',
+  }
 }, {
   tableName: 'user',
   timestamps: false,
