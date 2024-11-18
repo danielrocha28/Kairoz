@@ -10,6 +10,7 @@ class TimerService {
   TimerService({
     required this.idTask,
     required this.title,
+    required this.baseUrl,
   });
 
   Future<String> start() async {

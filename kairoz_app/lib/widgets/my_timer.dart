@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kairoz/services/timer_services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MyTimer extends StatefulWidget {
   const MyTimer({super.key});
@@ -15,9 +16,9 @@ class _MyTimerState extends State<MyTimer> {
   bool isTimerRunning = false;
 
   final TimerService _timerService = TimerService(
-    idTask:
-        '123', // Exemplo de idTask, use o valor que for relevante no seu caso
-    title: 'Minha Tarefa', // Exemplo de título
+    idTask: '123',
+    title: 'Minha Tarefa',
+    baseUrl: dotenv.load(fileName: ".env").toString(),
   );
 
   @override
