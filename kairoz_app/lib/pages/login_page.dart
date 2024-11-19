@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:kairoz/services/login.service.dart';
-import 'package:kairoz/widgets/kairoz_logo.dart';
 import 'package:kairoz/widgets/kairoz_outline_input.dart';
 
 class LoginPage extends StatefulWidget {
@@ -72,10 +71,24 @@ class LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Positioned(
-                    top: 20,
-                    left: 20,
-                    child: KairozLogo(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/logo.png',
+                        height: 50,
+                        width: 50,
+                      ),
+                      const SizedBox(width: 2),
+                      const Text(
+                        'Kairoz',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 45,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   KairozOutlineInput(
@@ -103,6 +116,7 @@ class LoginPageState extends State<LoginPage> {
                         : null,
                     obscureText: _obscurePassword,
                     labelText: "Senha",
+                    validator: (value) => validatePasswordField(value),
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(

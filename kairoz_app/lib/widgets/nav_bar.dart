@@ -33,7 +33,7 @@ class CustomBottomNavBar extends StatelessWidget {
               text: 'Estudos',
             ),
             GButton(
-              icon: Icons.person,
+              icon: Icons.favorite_border,
               text: 'Saúde',
             ),
             GButton(
@@ -41,7 +41,7 @@ class CustomBottomNavBar extends StatelessWidget {
               text: 'Trabalho',
             ),
             GButton(
-              icon: Icons.favorite_border,
+              icon: Icons.person,
               text: 'Lazer',
             ),
           ],
