@@ -46,20 +46,6 @@ import logger from '../config/logger.js';
     reply.redirect('/'); 
   });
 
-  /*
-// botton from Google
-fastify.get('/botton', (request, reply) => {
-  const html = `
-    <html><body>
-      <button onclick="window.location.href='/auth/google'" style="background-color: #4285F4; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); transition: background-color 0.3s;">
-        Entrar com Google
-      </button>
-    </body></html>
-  `;
-  reply.type('text/html').send(html);
-});
-  */
-
 
   fastify.get('/profile', (request, reply) => {
     try {
