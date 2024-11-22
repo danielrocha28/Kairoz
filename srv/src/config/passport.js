@@ -19,7 +19,6 @@ export const passportSetup = (fastify) => {
     callbackURL: 'http://localhost:3000/auth/google/callback'
   }, async (token, tokenSecret, profile, done) => {
     try {
-      // Logando o perfil do Google usando o logger do Fastify
       logger.info({ profile }, 'Google profile');
 
       let user = await User.findOne({ where: { email: profile.emails[0].value } });
@@ -43,28 +42,25 @@ export const passportSetup = (fastify) => {
     }
   }));
 
-  // Serializer: serializa o usuário com base no id_user
   fastifyPassport.registerUserSerializer(async (user) => {
     const userFromDb = await User.findOne({ where: { email: user.email } });
     logger.info({ userFromDb }, 'User found for serialization');
 
     if (userFromDb) {
       logger.info({ userId: userFromDb.id_user }, 'Serializing user with id');
-      return userFromDb.id_user; // Retorna diretamente o id do usuário
+      return userFromDb.id_user; 
     } else {
       throw new Error('User not found');
     }
   });
 
-  // Deserializer: recupera o usuário com base no id_user
   fastifyPassport.registerUserDeserializer(async (id) => {
     logger.info({ id }, 'Deserializing user with id');
     const user = await User.findOne({ where: { id_user: id } });
     logger.info({ user }, 'Deserialized user');
-    return user; // Retorna diretamente o usuário
+    return user; 
   });
 
-  // Registro das funcionalidades do fastifyPassport
   fastify.register(fastifyPassport.initialize());
   fastify.register(fastifyPassport.secureSession());
 };
