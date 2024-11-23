@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:kairoz/widgets/drawer.dart';
-import 'package:kairoz/widgets/appbar.dart';
 import 'profile_page.dart';
 import 'package:kairoz/widgets/nav_bar.dart';
 import 'package:kairoz/pages/estudos_page.dart';
 import 'package:kairoz/pages/saude_page.dart';
 import 'package:kairoz/pages/trabalho_page.dart';
 import 'package:kairoz/pages/lazer_page.dart';
+import 'package:kairoz/widgets/appbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -51,9 +51,26 @@ class _HomePageState extends State<HomePage> {
         selectedIndex: _selectedIndex,
         onTabChange: navigateToPage,
       ),
-      appBar: const MyAppBar(
-        title: "Kairoz",
-        iconTheme: IconThemeData(color: Colors.white),
+      appBar: MyAppBar(
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/logo.png',
+              height: 28,
+              width: 28,
+            ),
+            const SizedBox(width: 5),
+            const Text(
+              "Kairoz",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 26,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       drawer: MyDrawer(
         foregroundColor: Colors.white,
