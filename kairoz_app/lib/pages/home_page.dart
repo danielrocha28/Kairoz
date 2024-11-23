@@ -7,6 +7,7 @@ import 'package:kairoz/pages/saude_page.dart';
 import 'package:kairoz/pages/trabalho_page.dart';
 import 'package:kairoz/pages/lazer_page.dart';
 import 'package:kairoz/widgets/appbar.dart';
+import 'package:kairoz/pages/dashboard_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,7 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 4;
 
   void goToHomePage() {
     Navigator.pushNamed(context, '/home');
@@ -84,7 +85,8 @@ class _HomePageState extends State<HomePage> {
           EstudosPage(),
           SaudePage(),
           TrabalhoPage(),
-          LazerPage()
+          LazerPage(),
+          DashboardPage()
         ],
       ),
     );
