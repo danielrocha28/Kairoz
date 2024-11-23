@@ -74,6 +74,13 @@ class _RegisterPageState extends State<RegisterPage> {
       return 'Campo obrigatório';
     }
 
+    RegExp regExp = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+    final isValidPassword = regExp.hasMatch(value);
+
+    if (!isValidPassword) {
+      return 'A senha é muito fraca, use: (ex: "@, %, #" )';
+    }
+
     if (value.length < 6) {
       return 'A senha deve ter pelo menos 6 dígitos';
     }
