@@ -18,7 +18,7 @@ class CustomBottomNavBar extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
         child: GNav(
-          selectedIndex: selectedIndex, // Define o índice selecionado
+          selectedIndex: selectedIndex,
           color: const Color.fromARGB(255, 82, 22, 185),
           activeColor: const Color.fromARGB(255, 82, 22, 185),
           gap: 8,
@@ -33,7 +33,7 @@ class CustomBottomNavBar extends StatelessWidget {
               text: 'Estudos',
             ),
             GButton(
-              icon: Icons.person,
+              icon: Icons.favorite_border,
               text: 'Saúde',
             ),
             GButton(
@@ -41,7 +41,7 @@ class CustomBottomNavBar extends StatelessWidget {
               text: 'Trabalho',
             ),
             GButton(
-              icon: Icons.favorite_border,
+              icon: Icons.sports_esports_rounded,
               text: 'Lazer',
             ),
           ],
