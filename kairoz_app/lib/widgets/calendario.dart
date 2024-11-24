@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class CalendarWidget extends StatelessWidget {
   const CalendarWidget({super.key});
@@ -69,17 +68,4 @@ class Meeting {
   final DateTime to;
   final Color background;
   final bool isAllDay;
-}
-
-SpeedDialChild criaBotao(
-    Function() aoClicar, IconData icon, String label, Color cor) {
-  return SpeedDialChild(
-    onTap: aoClicar,
-    child: Icon(icon),
-    backgroundColor: const Color.fromARGB(255, 151, 63, 192),
-    foregroundColor: cor,
-    label: label,
-    labelStyle: TextStyle(color: Colors.white),
-    labelBackgroundColor: const Color.fromARGB(255, 151, 63, 192),
-  );
 }
