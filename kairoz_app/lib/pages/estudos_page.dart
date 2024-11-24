@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kairoz/widgets/agenda.dart';
+import 'package:kairoz/widgets/week_display.dart';
+import 'package:kairoz/widgets/treino.dart';
 
 class EstudosPage extends StatefulWidget {
   const EstudosPage({super.key});
@@ -11,13 +12,17 @@ class EstudosPage extends StatefulWidget {
 class _EstudosPageState extends State<EstudosPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Página de Estudos'),
-      ),
-      body: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: CalendarWidget(),
+    return Container(
+      padding: const EdgeInsets.all(20),
+      child: const Column(
+        children: [
+          SizedBox(height: 10),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: WeekDisplay(),
+          ),
+          CustomWidget(),
+        ],
       ),
     );
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-/// A reusable widget that displays a calendar.
 class CalendarWidget extends StatelessWidget {
   const CalendarWidget({super.key});
 
@@ -13,7 +12,6 @@ class CalendarWidget extends StatelessWidget {
     );
   }
 
-  /// Returns a list of sample data for calendar appointments.
   List<Meeting> _getDataSource() {
     final List<Meeting> meetings = <Meeting>[];
     final DateTime today = DateTime.now();
@@ -26,7 +24,6 @@ class CalendarWidget extends StatelessWidget {
   }
 }
 
-/// A custom class to provide meeting data to the calendar.
 class MeetingDataSource extends CalendarDataSource {
   MeetingDataSource(List<Meeting> source) {
     appointments = source;

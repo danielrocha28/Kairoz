@@ -31,4 +31,5 @@ flutter:
   assets:
     - assets/logo.png
     - assets/logo2.png
+    - assets/fundo1.jpg
     - .env
