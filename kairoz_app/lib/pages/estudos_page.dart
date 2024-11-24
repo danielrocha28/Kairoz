@@ -4,14 +4,21 @@ class EstudosPage extends StatefulWidget {
   const EstudosPage({super.key});
 
   @override
-  State<EstudosPage> createState() => _MyWidgetState();
+  State<EstudosPage> createState() => _EstudosPageState();
 }
 
-class _MyWidgetState extends State<EstudosPage> {
+class _EstudosPageState extends State<EstudosPage> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Bem-vindo à página de Estudos!'),
+    return Container(
+      child: ElevatedButton(
+        onPressed: () => {
+          Navigator.pushNamed(context, '/agenda'),
+        },
+        child: const Text(
+          'Agenda',
+        ),
+      ),
     );
   }
 }
