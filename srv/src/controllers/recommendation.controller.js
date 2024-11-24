@@ -2,7 +2,11 @@ import Recommendation from '../model/recommendations.model';
 import Answer from '../model/answer.model.js';
 import { loginUser as user } from '../controllers/user.controller.js';
 import puppeteer from 'puppeteer';
+import pup from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import logger from '../config/logger.js';
+
+pup.use(StealthPlugin());
 
 async function searchAndExtract(query) {
     const browser = await puppeteer.launch({ headless: true }); // false se for preciso ver o processo no console
@@ -15,7 +19,7 @@ async function searchAndExtract(query) {
 
     await page.setRequestInterception(true);
     page.on('request', (request) => {
-        if (['image', 'stylesheet', 'font', 'media'].includes(request.resourceType())) {
+        if (['image', 'stylesheet', 'font', 'media', 'script'].includes(request.resourceType())) {
             request.abort();
         } else {
             request.continue();
@@ -67,7 +71,7 @@ export async function newRecommendation(request, reply) {
     try {
         const [selectedAnswer] = await Answer.findAll({ where: { id_user: user.id }});
         if (!selectedAnswer){
-            throw new Error('Answer not found');
+            reply.status(404).send('Answer not found');
         }
 
         let site;
