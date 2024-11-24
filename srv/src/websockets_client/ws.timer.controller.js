@@ -8,7 +8,6 @@ dotenv.config();
 
 const websocketClient = new WebSocket(process.env.WEBSOCKET_URL);
 
-
 websocketClient.on('open', () => {
   logger.info('WebSocket connection opened.');
 });
@@ -74,4 +73,4 @@ websocketClient.on('message', async (message) => {
   }
 });
 
-export default websocketClient;
+export default websocketClient; 

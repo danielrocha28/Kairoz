@@ -19,24 +19,10 @@ const Recommendation = sequelize.define('recommendations', {
             key: 'id_user'
         },
     },
-    title:{
-        type: DataTypes.STRING(255),
-        allowNull: false,
-        field: 'title',
-    },
     type:{ // recommendation type
         type: DataTypes.STRING(50),
         allowNull: false,
         field: 'type',
-    },
-    image:{
-        type: DataTypes.TEXT,
-        field: 'image',
-    },
-    summary:{
-        type: DataTypes.TEXT,
-        allowNull: false,
-        field: 'summary',
     },
     created_at:{
         type: DataTypes.DATE,

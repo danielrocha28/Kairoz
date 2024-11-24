@@ -1,5 +1,5 @@
-import { newRecommendation } from '../controllers/recommendation.controller';
-import logger from '../config/logger';
+import { newRecommendation } from '../controllers/recommendation.controller.js';
+import logger from '../config/logger.js';
 
 const recommendationRoutes = (fastify, options, done) => {
 
@@ -15,12 +15,9 @@ const recommendationRoutes = (fastify, options, done) => {
     fastify.get('/recommendation', (request, reply) => {
         try {
             const response = {
-                title: newRecommendation.response.title,
-                summary: newRecommendation.response.summary,
-                image: newRecommendation.response.image,
-                link: newRecommendation.response.link,
+                type: newRecommendation.type,
+                link: newRecommendation.link,
             };
-
             reply.status(200).send(response);
         } catch (error) {
             logger.error(error);
