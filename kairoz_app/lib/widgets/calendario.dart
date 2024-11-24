@@ -60,7 +60,6 @@ class MeetingDataSource extends CalendarDataSource {
   }
 }
 
-/// A model class that represents a meeting or appointment.
 class Meeting {
   Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
 
