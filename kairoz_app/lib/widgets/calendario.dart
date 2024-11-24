@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-/// A reusable widget that displays a calendar.
 class CalendarWidget extends StatelessWidget {
   const CalendarWidget({super.key});
 
@@ -13,7 +13,6 @@ class CalendarWidget extends StatelessWidget {
     );
   }
 
-  /// Returns a list of sample data for calendar appointments.
   List<Meeting> _getDataSource() {
     final List<Meeting> meetings = <Meeting>[];
     final DateTime today = DateTime.now();
@@ -26,7 +25,6 @@ class CalendarWidget extends StatelessWidget {
   }
 }
 
-/// A custom class to provide meeting data to the calendar.
 class MeetingDataSource extends CalendarDataSource {
   MeetingDataSource(List<Meeting> source) {
     appointments = source;
@@ -63,7 +61,6 @@ class MeetingDataSource extends CalendarDataSource {
   }
 }
 
-/// A model class that represents a meeting or appointment.
 class Meeting {
   Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
 
@@ -72,4 +69,17 @@ class Meeting {
   final DateTime to;
   final Color background;
   final bool isAllDay;
+}
+
+SpeedDialChild criaBotao(
+    Function() aoClicar, IconData icon, String label, Color cor) {
+  return SpeedDialChild(
+    onTap: aoClicar,
+    child: Icon(icon),
+    backgroundColor: const Color.fromARGB(255, 151, 63, 192),
+    foregroundColor: cor,
+    label: label,
+    labelStyle: TextStyle(color: Colors.white),
+    labelBackgroundColor: const Color.fromARGB(255, 151, 63, 192),
+  );
 }
