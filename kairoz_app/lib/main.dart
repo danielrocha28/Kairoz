@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'Kairoz',
       debugShowCheckedModeBanner: false,
       initialRoute: '/login',
-      locale: const Locale('pt', 'BR'), // Português do Brasil
+      locale: const Locale('pt', 'BR'),
       routes: {
         '/agenda': (context) => const AgendaPage(),
         '/login': (context) => const LoginPage(),

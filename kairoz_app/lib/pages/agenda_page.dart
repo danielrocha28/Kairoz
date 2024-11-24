@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kairoz/widgets/calendario.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class AgendaPage extends StatefulWidget {
@@ -122,79 +123,4 @@ class _AgendaPageState extends State<AgendaPage> {
           borderRadius: BorderRadius.circular(8),
         ),
       );
-}
-
-class CalendarWidget extends StatelessWidget {
-  const CalendarWidget({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SfCalendar(
-      view: CalendarView.month,
-      dataSource: MeetingDataSource(_getDataSource()),
-    );
-  }
-
-  List<Meeting> _getDataSource() {
-    final List<Meeting> meetings = <Meeting>[];
-    final DateTime today = DateTime.now();
-
-    meetings.add(
-      Meeting(
-        'Reunião Equipe',
-        DateTime(today.year, today.month, today.day, 10),
-        DateTime(today.year, today.month, today.day, 11),
-        Colors.green,
-        false,
-      ),
-    );
-
-    meetings.add(
-      Meeting(
-        'Apresentação',
-        DateTime(today.year, today.month, today.day + 1, 14),
-        DateTime(today.year, today.month, today.day + 1, 15),
-        const Color.fromARGB(255, 72, 51, 190),
-        false,
-      ),
-    );
-
-    return meetings;
-  }
-}
-
-class Meeting {
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
-
-  final String eventName;
-  final DateTime from;
-  final DateTime to;
-  final Color background;
-  final bool isAllDay;
-}
-
-class MeetingDataSource extends CalendarDataSource {
-  MeetingDataSource(List<Meeting> source) {
-    appointments = source;
-  }
-
-  @override
-  DateTime getStartTime(int index) => _getMeetingData(index).from;
-
-  @override
-  DateTime getEndTime(int index) => _getMeetingData(index).to;
-
-  @override
-  String getSubject(int index) => _getMeetingData(index).eventName;
-
-  @override
-  Color getColor(int index) => _getMeetingData(index).background;
-
-  @override
-  bool isAllDay(int index) => _getMeetingData(index).isAllDay;
-
-  Meeting _getMeetingData(int index) {
-    final dynamic meeting = appointments![index];
-    return meeting as Meeting;
-  }
 }
