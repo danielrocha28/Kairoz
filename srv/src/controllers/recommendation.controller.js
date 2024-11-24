@@ -46,7 +46,7 @@ export async function newRecommendation(request, reply) {
 
         const response = await recommending(site.type, site.link);
         if (response) {
-            return reply.status(201).send(response);
+            return { response: response };
         } else {
             return reply.status(500).send({ error: 'Failed to create recommendation' });
         }
