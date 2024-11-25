@@ -119,17 +119,14 @@ class _ProfilePageState extends State<ProfilePage> {
     final newPassword = _newPasswordController.text.trim();
     final confirmNewPassword = _confirmNewPasswordController.text.trim();
 
-    // Validação da senha
     String? validationMessage =
         PasswordService().validatePassword(newPassword, confirmNewPassword);
 
     setState(() {
-      _passwordError = validationMessage; // Atualiza o erro
+      _passwordError = validationMessage;
     });
 
-    if (_passwordError != null) {
-      return; // Se houver erro, não faz a mudança
-    }
+    if (_passwordError != null) {}
 
     PasswordService().changePassword(oldPassword, newPassword).then((success) {
       if (success) {
