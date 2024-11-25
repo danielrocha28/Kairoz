@@ -3,7 +3,7 @@ import 'package:kairoz/widgets/drawer.dart';
 import 'package:kairoz/widgets/my_appbar.dart';
 import 'profile_page.dart';
 import 'package:kairoz/widgets/nav_bar.dart';
-import 'package:kairoz/pages/estudos_page.dart';
+import 'package:kairoz/pages/study_page.dart';
 import 'package:kairoz/pages/saude_page.dart';
 import 'package:kairoz/pages/trabalho_page.dart';
 import 'package:kairoz/pages/lazer_page.dart';

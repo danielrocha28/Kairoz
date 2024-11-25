@@ -3,17 +3,13 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class TimerService {
-  final String idTask;
-  final String title;
-  String? baseUrl = dotenv.env['BASE_URL'];
+  final String baseUrl;
 
   TimerService({
-    required this.idTask,
-    required this.title,
     required this.baseUrl,
   });
 
-  Future<String> start() async {
+  Future<String> startTimer(String idTask, String title) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/timer/start'),
@@ -30,15 +26,13 @@ class TimerService {
         return 'Erro ao iniciar o timer: ${response.statusCode}';
       }
     } catch (error) {
-      return 'Ocorreu um erro ao iniciar o temporizador. Tente novamente!';
+      return 'Erro ao iniciar o temporizador. Tente novamente! Erro: $error';
     }
   }
 
-  Future<String> resume() async {
+  Future<String> resumeTimer() async {
     try {
-      final response = await http.put(
-        Uri.parse('$baseUrl/timer/resume'),
-      );
+      final response = await http.put(Uri.parse('$baseUrl/timer/resume'));
 
       if (response.statusCode == 200) {
         return response.body;
@@ -46,37 +40,35 @@ class TimerService {
         return 'Erro ao retomar o timer: ${response.statusCode}';
       }
     } catch (error) {
-      return 'Ocorreu um erro ao retomar o timer. Tente novamente!';
+      return 'Erro ao retomar o timer. Tente novamente! Erro: $error';
     }
   }
 
-  Future<String> pause() async {
+  Future<String> pauseTimer() async {
     try {
-      final response = await http.put(
-        Uri.parse('$baseUrl/timer/pause'),
-      );
+      final response = await http.put(Uri.parse('$baseUrl/timer/pause'));
+
       if (response.statusCode == 200) {
         return response.body;
       } else {
         return 'Erro ao pausar o timer: ${response.statusCode}';
       }
     } catch (error) {
-      return 'Ocorreu um erro ao pausar o timer. Tente novamente!';
+      return 'Erro ao pausar o timer. Tente novamente! Erro: $error';
     }
   }
 
-  Future<String> delete() async {
+  Future<String> deleteTimer() async {
     try {
-      final response = await http.delete(
-        Uri.parse('$baseUrl/timer/delete'),
-      );
+      final response = await http.delete(Uri.parse('$baseUrl/timer/delete'));
+
       if (response.statusCode == 200) {
         return 'Timer foi deletado com sucesso';
       } else {
         return 'Erro ao deletar o timer: ${response.statusCode}';
       }
     } catch (error) {
-      return 'Ocorreu um erro ao deletar o timer. Tente novamente!';
+      return 'Erro ao deletar o timer. Tente novamente! Erro: $error';
     }
   }
 }
