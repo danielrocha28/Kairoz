@@ -1,4 +1,4 @@
-import { registerUser, loginUser, updateProfile, deleteProfile } from '../controllers/user.controller.js';
+import { registerUser, loginUser, updateProfile, blockingApps, deleteProfile } from '../controllers/user.controller.js';
 import fastifyPassport from '@fastify/passport';
 import logger from '../config/logger.js'; 
 import User from '../model/user.model.js';
@@ -83,38 +83,30 @@ const userRoutes = (fastify, options, done) => {
     }
   });
 
-   fastify.put('/blocked-apps', {
-    preHandler: async (request, reply) => {
-      const apps = await User.findOne({ where: { id_user: loginUser.id },
-        attributes: ['blocked_apps'] });
-      request.customData = { blocked_apps: apps.blocked_apps };
-    },
-
-    handler: async (request, reply) => {
-      const userAgent = request.headers['user-agent'];
-      const { blocked_apps } = request.customData;
-
-      const apps = request.body;
-      if (!apps || typeof apps !== 'string'){
-        reply.status(400).send('invalid json type');
-      } 
-      let blocked = apps.split(',').map(app => app.trim());
-      let set = new Set(blocked_apps);
-
-      blocked.forEach(item => {
-        set.add(item);
+  fastify.put('/blocked-apps', {
+  preHandler: async (request, reply) => {
+    try {
+      const apps = await User.findOne({
+        where: { id_user: loginUser.id },
+        attributes: ['blocked_apps'],
       });
-
-      blocked = Array.from(set);
-
-      const isBlocked = blocked.some(app => userAgent.includes(app));
-      await User.update({ blocked_apps: blocked, where: { id_user: loginUser.id }});
-
-      if (isBlocked) {
-        reply.status(403).send({ error: 'app not allowed.' });
-      }
+      request.customData = { blocked_apps: apps.blocked_apps };
+    } catch (error) {
+      logger.error('Error fetching blocked apps:', error);
+      reply.status(500).send({ error: 'Error processing the request' });
     }
-  });
+  },
+
+  handler: async (request, reply) => {
+    try {
+      await blockingApps(request, reply);
+      reply.status(200).send({ message: 'Apps updated successfully' });
+    } catch (error) {
+      logger.error('Error blocking apps:', error);
+      reply.status(500).send({ error: 'Error processing the request' });
+    }
+  },
+});
 
   done();
 };

@@ -129,3 +129,33 @@ export async function deleteProfile(request, reply) {
     reply.status(500).send({ error: 'Internal server error', message: error.message });
   }
 }
+
+export async function blockingApps(request, reply) {
+  try {
+    const userAgent = request.headers['user-agent'];
+      const { blocked_apps } = request.customData;
+
+      const apps = request.body;
+      if (!apps || typeof apps !== 'string'){
+        reply.status(400).send('invalid json type');
+      } 
+      let blocked = apps.split(',').map(app => app.trim());
+      let set = new Set(blocked_apps);
+
+      blocked.forEach(item => {
+        set.add(item);
+      });
+
+      blocked = Array.from(set);
+
+      const isBlocked = blocked.some(app => userAgent.includes(app));
+      await User.update({ blocked_apps: blocked, where: { id_user: loginUser.id }});
+
+      if (isBlocked) {
+        reply.status(403).send({ error: 'app not allowed.' });
+      }
+  } catch (error) {
+      logger.error('error blocking apps', error);
+      reply.status(500).send({ error: 'Internal server error', message: error.message });
+  }
+}
