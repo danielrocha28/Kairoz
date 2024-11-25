@@ -52,26 +52,9 @@ class _HomePageState extends State<HomePage> {
         selectedIndex: _selectedIndex,
         onTabChange: navigateToPage,
       ),
-      appBar: MyAppBar(
-        title: Row(
-          children: [
-            Image.asset(
-              'assets/logo.png',
-              height: 28,
-              width: 28,
-            ),
-            const SizedBox(width: 5),
-            const Text(
-              "Kairoz",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 26,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-          ],
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
+      appBar: const MyAppBar(
+        title: "Kairoz",
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       drawer: MyDrawer(
         foregroundColor: Colors.white,

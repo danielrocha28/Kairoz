@@ -21,7 +21,6 @@ dependencies:
   google_nav_bar: ^5.0.7
   syncfusion_flutter_calendar: ^27.2.2
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -32,6 +31,5 @@ flutter:
 
   assets:
     - assets/logo.png
-    - assets/logo2.png
     - assets/fundo1.jpg
     - .env

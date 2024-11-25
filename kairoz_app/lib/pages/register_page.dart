@@ -154,37 +154,24 @@ class _RegisterPageState extends State<RegisterPage> {
       height: 40.0,
       margin: const EdgeInsets.only(top: 20.0),
       child: Row(
-        children: <Widget>[
-          Expanded(
-            child: TextButton(
-              child: const Text(
-                'Já possui cadastro?',
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                ),
-              ),
-              onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/login', ModalRoute.withName('/'));
-              },
-            ),
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'Já possui cadastro?',
+            style: TextStyle(color: Colors.white),
           ),
-          Expanded(
-            child: TextButton(
-              child: const Text(
-                "Entrar",
-                style: TextStyle(
-                  color: Color.fromARGB(255, 255, 255, 255),
-                  fontSize: 15,
-                ),
+          const SizedBox(width: 8),
+          TextButton(
+            child: const Text(
+              "Entrar",
+              style: TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+                fontSize: 15,
               ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/home');
-              },
             ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/login');
+            },
           ),
         ],
       ),
