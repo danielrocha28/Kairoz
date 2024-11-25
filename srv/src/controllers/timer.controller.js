@@ -44,7 +44,7 @@ export async function startTimer(request, reply) {
     let task = await Task.findAll({ where: { id_task, title, category: 'study' } });
 
     if (task.length === 0) {
-      return reply.status(404).send('Please create a task to start the timer.');
+      reply.status(404).send('Please create a task to start the timer.');
     }
 
     const newTimer = await Timer.create({
@@ -78,9 +78,13 @@ export async function startTimer(request, reply) {
         id: active.timerid,
         function: active.totalTime,
         day: active.day[active.date],
+        timer:{
+          hours,
+          minutes,
+          seconds,
+        },
       }));
 
-      return { hours: hours, minutes: minutes, seconds: seconds };
     }, 1000);
   } catch (error) {
     logger.error(error);
@@ -140,11 +144,12 @@ export function statusTimer(request, reply) {
             id: active.timerid,
             function: active.endTime,
             day: active.day[active.date],
-          })
-        );
-
-        // Show the formatted time in the console
-        return { hours: hours, minutes: minutes, seconds: seconds }; // Shows formatted time in the console
+            timer: {
+              hours,
+              minutes,
+              seconds,
+            },
+          }));
       }, 1000);
     }
   } catch (error) {

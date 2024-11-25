@@ -1,4 +1,4 @@
-import WebSocket from 'ws'; 
+import { WebSocketServer } from 'ws'; 
 import dotenv from 'dotenv';
 import logger from './src/config/logger.js'; 
 
@@ -6,7 +6,7 @@ dotenv.config();
 
 const port = process.env.WEBSOCKET_PORT || 8080;
 
-const wss = new WebSocket.Server({ port }, () => {
+const wss = new WebSocketServer({ port }, () => {
   logger.info(`WebSocket server listening on port ${port}`);
 });
 
@@ -28,8 +28,6 @@ wss.on('connection', (ws) => {
   ws.on('message', (message) => {
     try {
       const messageClient = JSON.parse(message);
-      logger.info('Received message from client:', messageClient);
-
       // Send the same message to client 
       ws.send(JSON.stringify(messageClient));
     } catch (error) {
