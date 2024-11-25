@@ -11,17 +11,19 @@ class MyTimer extends StatefulWidget {
 }
 
 class _MyTimerState extends State<MyTimer> {
-  String hours = '00';
-  String minutes = '00';
-  String seconds = '00';
+  late String hours;
+  late String minutes;
+  late String seconds;
   bool isTimerRunning = false;
   late TimerService _timerService;
 
   @override
   void initState() {
     super.initState();
-    _timerService = TimerService(
-        baseUrl: dotenv.env['BASE_URL']!); // URL base carregada do .env
+    _timerService = TimerService(baseUrl: dotenv.env['BASE_URL']!);
+    hours = '00';
+    minutes = '00';
+    seconds = '00';
   }
 
   @override
@@ -50,10 +52,9 @@ class _MyTimerState extends State<MyTimer> {
                 setState(() {
                   isTimerRunning = true;
                 });
-                final response =
+                final postResponse =
                     await _timerService.startTimer('1', 'Study for math exam');
-                print('Resposta do startTimer: $response');
-                // Processar resposta conforme necessário
+                print('Resposta do startTimer: $postResponse');
               },
             ),
             IconButton(

@@ -11,6 +11,18 @@ class EstudosPage extends StatefulWidget {
 class _EstudosPageState extends State<EstudosPage> {
   @override
   Widget build(BuildContext context) {
-    return const StudyTopicsPage();
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.all(25),
+        child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const StudyTopicsPage()));
+            },
+            child: const Text('Temporizador')),
+      ),
+    );
   }
 }
