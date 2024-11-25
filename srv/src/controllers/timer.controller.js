@@ -80,10 +80,8 @@ export async function startTimer(request, reply) {
         day: active.day[active.date],
       }));
 
-      return (hours, minutes, seconds);
+      return { hours: hours, minutes: minutes, seconds: seconds };
     }, 1000);
-  
-    reply.status(201).send();
   } catch (error) {
     logger.error(error);
     return reply.status(500).send({ error: 'Could not start the timer', message: error.message, });
@@ -146,10 +144,8 @@ export function statusTimer(request, reply) {
         );
 
         // Show the formatted time in the console
-        return (hours, minutes, seconds); // Shows formatted time in the console
+        return { hours: hours, minutes: minutes, seconds: seconds }; // Shows formatted time in the console
       }, 1000);
-
-      reply.status(200).send();
     }
   } catch (error) {
     logger.error('Error in statusTimer:', error); // Log the error with more context

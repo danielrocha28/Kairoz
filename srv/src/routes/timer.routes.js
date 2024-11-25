@@ -3,7 +3,10 @@ import { startTimer, statusTimer, deleteTimer, paused, formatTime, getTime } fro
 function timerRouter(fastify, opts) {
   fastify.post('/timer/start', async (request, reply) => {
     try {
-      await startTimer(request, reply);
+      const started = await startTimer(request, reply);
+      if (started){
+        reply.status(201).send();
+      }
     } catch (error) {
       reply.status(500).send({
         error: 'Error processing the request',
@@ -66,7 +69,10 @@ function timerRouter(fastify, opts) {
   fastify.put('/timer/resume', async (request, reply) => {
     try {
       paused(false);
-      await statusTimer(request, reply);
+      const resumed = await statusTimer(request, reply);
+      if (resumed) {
+        reply.status(200).send();
+      }
     } catch (error) {
       reply.status(500).send({
         error: 'Error processing the request',
