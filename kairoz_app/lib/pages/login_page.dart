@@ -72,10 +72,24 @@ class LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Positioned(
-                    top: 20,
-                    left: 20,
-                    child: KairozLogo(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/logo.png',
+                        height: 50,
+                        width: 50,
+                      ),
+                      const SizedBox(width: 2),
+                      const Text(
+                        'Kairoz',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 45,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   KairozOutlineInput(

@@ -75,6 +75,13 @@ class _RegisterPageState extends State<RegisterPage> {
       return 'Campo obrigatório';
     }
 
+    RegExp regExp = RegExp(r'[!@#$%^&*(),.?":{}|<>]');
+    final isValidPassword = regExp.hasMatch(value);
+
+    if (!isValidPassword) {
+      return 'A senha é muito fraca, use: (ex: "@, %, #" )';
+    }
+
     if (value.length < 6) {
       return 'A senha deve ter pelo menos 6 dígitos';
     }
@@ -92,7 +99,31 @@ class _RegisterPageState extends State<RegisterPage> {
       backgroundColor: const Color.fromARGB(255, 82, 22, 185),
       body: Stack(
         children: [
-          const KairozLogo(),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 80.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/logo.png',
+                    height: 50,
+                    width: 50,
+                  ),
+                  const SizedBox(width: 2),
+                  const Text(
+                    'Kairoz',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 45,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           form(context),
         ],
       ),
@@ -102,7 +133,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Container containerButtonRegister(BuildContext context) {
     return Container(
       height: 40.0,
-      margin: const EdgeInsets.only(top: 60.0),
+      margin: const EdgeInsets.only(top: 50.0),
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all(
@@ -166,7 +197,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        height: heightScreen * 0.83,
+        height: heightScreen * 0.81,
         decoration: const BoxDecoration(
           color: Color.fromARGB(255, 82, 22, 185),
           borderRadius: BorderRadius.only(
