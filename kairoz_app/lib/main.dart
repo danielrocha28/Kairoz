@@ -4,6 +4,7 @@ import 'package:kairoz/pages/login_page.dart';
 import 'package:kairoz/pages/register_page.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:kairoz/widgets/Flash_cards.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -18,11 +19,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Kairoz',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/login',
+      initialRoute: '/flash',
       routes: {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
         '/home': (context) => const HomePage(),
+        '/flash': (context) => HomesPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(

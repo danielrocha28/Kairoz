@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-class HomePage extends StatefulWidget {
+class HomesPage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomesPage> {
   List<Map<String, String>> textos = [];
 
   void adicionarTexto(Map<String, String> texto) {
@@ -33,35 +33,36 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: Column(
           children: [
-            Text(
+            const Text(
               'Crie os seus Flashcards!',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
                 final novoTexto = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AdicionarTextoPage(),
+                    builder: (context) => const AdicionarTextoPage(),
                   ),
                 );
                 if (novoTexto != null) {
                   adicionarTexto(novoTexto);
                 }
               },
-              child: Text('Criar Flashcards'),
+              child: const Text('Criar Flashcards'),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Expanded(
               child: textos.isEmpty
-                  ? Center(child: Text('Nenhum flashcard criado ainda!'))
+                  ? const Center(child: Text('Nenhum flashcard criado ainda!'))
                   : CarouselSlider.builder(
                       itemCount: textos.length,
                       itemBuilder: (context, index, realIndex) {
                         return Card(
                           elevation: 4,
-                          margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16.0),
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
@@ -69,18 +70,20 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Text(
                                   textos[index]['titulo']!,
-                                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                                SizedBox(height: 8.0),
+                                const SizedBox(height: 8.0),
                                 Text(
                                   textos[index]['texto']!,
-                                  style: TextStyle(fontSize: 16),
+                                  style: const TextStyle(fontSize: 16),
                                 ),
-                                SizedBox(height: 8.0),
+                                const SizedBox(height: 8.0),
                                 Align(
                                   alignment: Alignment.centerRight,
                                   child: PopupMenuButton<String>(
-                                    icon: Icon(Icons.more_vert),
+                                    icon: const Icon(Icons.more_vert),
                                     onSelected: (value) {
                                       if (value == 'editar') {
                                         _editarTexto(context, index);
@@ -89,11 +92,11 @@ class _HomePageState extends State<HomePage> {
                                       }
                                     },
                                     itemBuilder: (context) => [
-                                      PopupMenuItem(
+                                      const PopupMenuItem(
                                         value: 'editar',
                                         child: Text('Editar'),
                                       ),
-                                      PopupMenuItem(
+                                      const PopupMenuItem(
                                         value: 'excluir',
                                         child: Text('Excluir'),
                                       ),
@@ -108,10 +111,10 @@ class _HomePageState extends State<HomePage> {
                       options: CarouselOptions(
                         height: 400,
                         enlargeCenterPage: true,
-                        autoPlay: false, 
+                        autoPlay: false,
                         aspectRatio: 16 / 9,
                         viewportFraction: 0.8,
-                        enableInfiniteScroll: false, 
+                        enableInfiniteScroll: false,
                       ),
                     ),
             ),
@@ -139,13 +142,13 @@ class _HomePageState extends State<HomePage> {
 class AdicionarTextoPage extends StatefulWidget {
   final Map<String, String>? textoAtual;
 
-  AdicionarTextoPage({this.textoAtual});
+  const AdicionarTextoPage({this.textoAtual});
 
   @override
-  _AdicionarTextoPageState createState() => _AdicionarTextoPageState();
+  AdicionarTextoPageState createState() => AdicionarTextoPageState();
 }
 
-class _AdicionarTextoPageState extends State<AdicionarTextoPage> {
+class AdicionarTextoPageState extends State<AdicionarTextoPage> {
   final TextEditingController _tituloController = TextEditingController();
   final TextEditingController _textoController = TextEditingController();
 
@@ -164,13 +167,13 @@ class _AdicionarTextoPageState extends State<AdicionarTextoPage> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            content: Text('Por favor, insira um título e um texto.'),
+            content: const Text('Por favor, insira um título e um texto.'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
@@ -189,7 +192,9 @@ class _AdicionarTextoPageState extends State<AdicionarTextoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.textoAtual != null ? 'Editar Flashcard' : 'Adicionar Flashcard'),
+        title: Text(widget.textoAtual != null
+            ? 'Editar Flashcard'
+            : 'Adicionar Flashcard'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -198,21 +203,21 @@ class _AdicionarTextoPageState extends State<AdicionarTextoPage> {
           children: [
             TextField(
               controller: _tituloController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Título',
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
               controller: _textoController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Texto',
                 border: OutlineInputBorder(),
               ),
               maxLines: 5,
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: _adicionarTexto,
               child: Text(widget.textoAtual != null ? 'Salvar' : 'Adicionar'),
