@@ -1,7 +1,7 @@
 import Task from '../model/task.model.js';
 import taskSchema from '../validators/task.schema.js';
 import { z } from 'zod'; 
-import { loginUser } from './user.controller.js';
+import { loginUser as user } from './user.controller.js';
 
 const handleZodError = (error, reply) => {
   if (error instanceof z.ZodError) {
@@ -27,13 +27,13 @@ export async function createTask(request, reply) {
     }
   } catch (error) {
     handleZodError(error, reply);
+    handleServerError(error, reply);
   }
 }
 
 export async function getTasks(request, reply) {
   try {
-    const userData = loginUser(request,reply);
-    const tasks = await Task.findAll({ where:{ id_user: userData.id }});
+    const tasks = await Task.findAll({ where:{ id_user: user.id }});
     reply.code(200).send(tasks);
   } catch (error) {
     handleServerError(error, reply);
@@ -49,6 +49,7 @@ export async function getTaskById(request, reply) {
       reply.code(404).send({ error: `Task with id_task ${request.params.id_task} not found` });
     }
   } catch (error) {
+    handleZodError(error, reply);
     handleServerError(error, reply);
   }
 }
@@ -65,6 +66,46 @@ export async function updateTask(request, reply) {
     }
   } catch (error) {
     handleZodError(error, reply);
+    handleServerError(error, reply);
+  }
+}
+
+export async function getStudyTopic(request, reply) {
+  try {
+    const studyTopic = await Task.findAll({ tag: 'study topic', 
+      where: { id_user: user.id }});
+      if (!studyTopic){
+        reply.code(404).send('There are no study topics');
+      }
+      reply.code(200).send(studyTopic);
+  } catch (error) {
+    handleZodError(error, reply);
+    handleServerError(error, reply);
+  }
+}
+
+export async function getListId(request, reply) {
+  try {
+    const tasksId = await Task.findAll({
+      attributes: ['id', 'title'], 
+    });
+    reply.code(200).send(tasksId);
+  } catch (error) {
+    handleZodError(error, reply);
+    handleServerError(error, reply);
+  }
+}
+
+export async function IdTopicOrTask(request, reply) {
+  try {
+    const task = await Task.findOne(request.body.title);
+    if (!task){
+      reply.code(404).send('task or topic not found');
+    }
+    reply.code(200).send(task.id);
+  } catch (error) {
+    handleZodError(error, reply);
+    handleServerError(error, reply);
   }
 }
 
@@ -77,6 +118,7 @@ export async function deleteTask(request, reply) {
       reply.code(404).send({ error: `Task with id_task ${request.params.id_task} not found` });
     }
   } catch (error) {
+    handleZodError(error, reply);
     handleServerError(error, reply);
   }
 }
