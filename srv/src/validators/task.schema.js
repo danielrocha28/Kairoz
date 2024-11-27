@@ -11,7 +11,8 @@ const taskSchema = z.object({
   status: z.enum(['pending', 'in-progress', 'completed']).optional(),
   dueDate: z.coerce.date().optional(),
   reminder: z.coerce.date().optional(),
-  notes: z.string().optional()
+  notes: z.string().optional(),
+  id_user: z.number().int().optional()
 }).strict();
 
 export default taskSchema;
