@@ -41,7 +41,7 @@ Essa técnica melhora a retenção de informações e reforça conexões entre c
       'pomodoro': 'assets/estudos.png',
       'feynman': 'assets/feynman.png',
       'pareto': 'assets/pareto.jpg',
-      'intercalado': 'assets/intercalado1.jpg',
+      'intercalado': 'assets/intercalado.jpg',
     };
 
     final descricaoDetalhada =

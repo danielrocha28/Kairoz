@@ -6,6 +6,7 @@ import 'package:kairoz/pages/profile_page.dart';
 import 'package:kairoz/pages/register_page.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:kairoz/pages/splashcreen_page.dart';
 
 void main() async {
   // Carregar o arquivo .env
@@ -21,9 +22,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Kairoz',
       debugShowCheckedModeBanner: false,
-      initialRoute: '/login',
+      initialRoute: '/',
       locale: const Locale('pt', 'BR'),
       routes: {
+        '/': (context) => const SplashScreen(),
         '/agenda': (context) => const AgendaPage(),
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),

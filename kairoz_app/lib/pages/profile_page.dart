@@ -4,6 +4,7 @@ import 'package:kairoz/services/validation.service.dart';
 import 'package:kairoz/widgets/drawer.dart';
 import 'package:kairoz/services/profile.service.dart';
 import 'package:kairoz/services/password.service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -32,6 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+
     _userProfile = ProfileService().fetchUserProfile();
   }
 
