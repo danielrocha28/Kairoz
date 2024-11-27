@@ -89,6 +89,16 @@ export async function loginUser(request, reply) {
   }
 }
 
+export const getUserByID = async (id_user) => {
+    const user = await User.findOne({ where: { id_user } });
+
+    return {
+      id: user.id_user,
+      name: user.name,
+      email: user.email,
+    };
+};
+
 export async function updateProfile(request, reply){
   try {
     const user = loginUser(request,reply);
