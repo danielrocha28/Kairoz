@@ -33,7 +33,7 @@ class KairozDate extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 3),
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
@@ -67,7 +67,7 @@ class WeekDisplay extends StatelessWidget {
     return Row(
       children: daysOfWeek.map((day) {
         return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 9.0),
           child: KairozDate(
             dateName: _getWeekdayName(day),
             dateNumber: day.day.toString().padLeft(2, '0'),

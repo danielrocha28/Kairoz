@@ -37,8 +37,16 @@ Essa técnica melhora a retenção de informações e reforça conexões entre c
 ''',
     };
 
+    final Map<String, String> imagens = {
+      'pomodoro': 'assets/estudos.png',
+      'feynman': 'assets/feynman.png',
+      'pareto': 'assets/pareto.jpg',
+      'intercalado': 'assets/intercalado1.jpg',
+    };
+
     final descricaoDetalhada =
         detalhes[detalhesId] ?? 'Informação não disponível';
+    final imagemDetalhada = imagens[detalhesId] ?? 'assets/estudos.png';
 
     return Scaffold(
       appBar: MyAppBar(
@@ -54,8 +62,8 @@ Essa técnica melhora a retenção de informações e reforça conexões entre c
               Container(
                 height: 200,
                 decoration: BoxDecoration(
-                  image: const DecorationImage(
-                    image: AssetImage('assets/estudos.png'),
+                  image: DecorationImage(
+                    image: AssetImage(imagemDetalhada),
                     fit: BoxFit.cover,
                   ),
                   borderRadius: BorderRadius.circular(16),

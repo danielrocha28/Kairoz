@@ -8,6 +8,7 @@ import 'package:kairoz/pages/register_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
+  // Carregar o arquivo .env
   await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }

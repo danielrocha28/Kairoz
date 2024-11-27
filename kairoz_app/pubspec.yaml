@@ -33,4 +33,7 @@ flutter:
     - assets/logo.png
     - assets/fundo1.jpg
     - assets/estudos.png
+    - assets/feynman.png
+    - assets/pareto.jpg
+    - assets/intercalado.jpg
     - .env

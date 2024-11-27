@@ -59,7 +59,7 @@ class _EstudosPageState extends State<EstudosPage> {
     ];
 
     return Container(
-      padding: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.only(top: 10),
       child: ListView(
         children: [
           const SizedBox(height: 10),
@@ -76,7 +76,8 @@ class _EstudosPageState extends State<EstudosPage> {
                       Navigator.push(
                         context,
                         CupertinoPageRoute(
-                            builder: (context) => const AgendaPage()),
+                          builder: (context) => const AgendaPage(),
+                        ),
                       ),
                     }),
           ),
@@ -169,6 +170,7 @@ class _EstudosPageState extends State<EstudosPage> {
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             color: Color.fromARGB(255, 82, 22, 185),
+                            fontSize: 14,
                           ),
                         ),
                       ),

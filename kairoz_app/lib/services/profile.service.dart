@@ -25,7 +25,6 @@ class UserProfile {
 class ProfileService {
   Future<UserProfile> fetchUserProfile() async {
     final baseUrl = dotenv.env['BASE_URL'];
-
     if (baseUrl == null) {
       throw Exception("BASE_URL não encontrada no arquivo .env");
     }
