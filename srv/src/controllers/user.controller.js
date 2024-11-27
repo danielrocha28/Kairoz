@@ -89,14 +89,18 @@ export async function loginUser(request, reply) {
   }
 }
 
-export const getUserByID = async (id_user) => {
-    const user = await User.findOne({ where: { id_user } });
+export const getUserByID = async (token) => {
+  const decodedUser = jwt.decode(token);
+    
+  const user = await User.findOne({ where: {
+    id_user: decodedUser.id }
+  });
 
-    return {
-      id: user.id_user,
-      name: user.name,
-      email: user.email,
-    };
+  return {
+    id: user.id_user,
+    name: user.name,
+    email: user.email,
+  };
 };
 
 export async function updateProfile(request, reply){
