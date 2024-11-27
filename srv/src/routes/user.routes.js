@@ -46,9 +46,11 @@ import logger from '../config/logger.js';
     reply.redirect('/'); 
   });
 
-  fastify.get('/profile/:id', async (request, reply) => {
+  fastify.get('/profile', async  (request, reply) => {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+
     try {
-      const profile = await getUserByID(request.params.id);
+      const profile = await getUserByID(token);
       reply.status(200).send(profile);
     } catch (error) {
       logger.error('data not found:', error); 
