@@ -1,10 +1,9 @@
-import 'package:kairoz/pages/agenda_page.dart';
-import 'package:kairoz/pages/home_page.dart';
-import 'package:kairoz/pages/login_page.dart';
-import 'package:kairoz/pages/register_page.dart';
-import 'package:kairoz/widgets/banner.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:kairoz/pages/detalhes_page.dart';
+import 'package:kairoz/widgets/banner.dart';
 import 'package:kairoz/widgets/week_display.dart';
+import 'package:kairoz/pages/agenda_page.dart';
 
 class EstudosPage extends StatefulWidget {
   const EstudosPage({super.key});
@@ -19,39 +18,43 @@ class _EstudosPageState extends State<EstudosPage> {
     final List<Map<String, dynamic>> blocos = [
       {
         'texto': 'Método Pomodoro!',
-        'onTap': () {
-          Navigator.push(
-            context,
-            CupertinoPageRoute(builder: (context) => const LoginPage()),
-          );
-        },
+        'corTexto': const Color.fromARGB(255, 82, 22, 185),
+        'descricao': [
+          'Divida o estudo em blocos de 25 minutos.',
+          'Faça uma pausa curta de 5 minutos após cada bloco.',
+          'Após 4 blocos, faça uma pausa mais longa de 15-30 minutos.'
+        ],
+        'detalhesId': 'pomodoro',
       },
       {
         'texto': 'Técnica de Feynman!',
-        'onTap': () {
-          Navigator.push(
-            context,
-            CupertinoPageRoute(builder: (context) => const RegisterPage()),
-          );
-        },
+        'corTexto': const Color.fromARGB(255, 82, 22, 185),
+        'descricao': [
+          'Escolha um tópico e estude-o profundamente.',
+          'Explique o conceito com suas próprias palavras.',
+          'Identifique lacunas no conhecimento e revise.'
+        ],
+        'detalhesId': 'feynman',
       },
       {
-        'texto': 'Tecnica de Pareto ',
-        'onTap': () {
-          Navigator.push(
-            context,
-            CupertinoPageRoute(builder: (context) => const HomePage()),
-          );
-        },
+        'texto': 'Técnica de Pareto',
+        'corTexto': const Color.fromARGB(255, 82, 22, 185),
+        'descricao': [
+          'Identifique os 20% de esforços que geram 80% dos resultados.',
+          'Priorize atividades de maior impacto.',
+          'Elimine tarefas menos relevantes.'
+        ],
+        'detalhesId': 'pareto',
       },
       {
         'texto': 'Estudo Intercalado',
-        'onTap': () {
-          Navigator.push(
-            context,
-            CupertinoPageRoute(builder: (context) => const AgendaPage()),
-          );
-        },
+        'corTexto': const Color.fromARGB(255, 82, 22, 185),
+        'descricao': [
+          'Alterne entre diferentes tópicos ou habilidades.',
+          'Ajuda a reforçar conexões entre conceitos.',
+          'Evita monotonia e melhora a retenção.'
+        ],
+        'detalhesId': 'intercalado',
       },
     ];
 
@@ -67,21 +70,18 @@ class _EstudosPageState extends State<EstudosPage> {
           Padding(
             padding: const EdgeInsets.all(20),
             child: BannerWidget(
-              title: "Agenda",
-              imageUrl: "assets/fundo1.jpg",
-              onTap: () => {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(builder: (context) => const AgendaPage()),
-                ),
-              },
-            ),
+                title: "Agenda",
+                imageUrl: "assets/fundo1.jpg",
+                onTap: () => {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) => const AgendaPage()),
+                      ),
+                    }),
           ),
           const Padding(
-            padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-            ),
+            padding: EdgeInsets.only(left: 20, right: 20),
             child: Text(
               'Técnicas de Estudo',
               textAlign: TextAlign.start,
@@ -100,7 +100,58 @@ class _EstudosPageState extends State<EstudosPage> {
                 (index) {
                   final bloco = blocos[index];
                   return GestureDetector(
-                    onTap: bloco['onTap'],
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return CupertinoAlertDialog(
+                            title: Text(
+                              bloco['texto'],
+                              style: TextStyle(
+                                color: bloco['corTexto'] ?? Colors.black,
+                              ),
+                            ),
+                            content: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ...bloco['descricao']
+                                    .map<Widget>((desc) => Text('• $desc'))
+                                    .toList(),
+                              ],
+                            ),
+                            actions: [
+                              CupertinoDialogAction(
+                                child: const Text(
+                                  'Fechar',
+                                  style: TextStyle(
+                                      color: Color.fromARGB(255, 82, 22, 185)),
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                              CupertinoDialogAction(
+                                child: const Text(
+                                  'Mais Informações',
+                                  style: TextStyle(
+                                      color: Color.fromARGB(255, 82, 22, 185)),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                      builder: (context) => DetalhesPage(
+                                        titulo: bloco['texto'],
+                                        detalhesId: bloco['detalhesId'],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),

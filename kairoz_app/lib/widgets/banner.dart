@@ -13,8 +13,8 @@ class BannerWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: FractionallySizedBox(
-        alignment: Alignment.topLeft,
-        widthFactor: 0.50,
+        alignment: Alignment.center,
+        widthFactor: 0.97,
         child: Container(
           padding: const EdgeInsets.symmetric(
             vertical: 40,
