@@ -36,7 +36,7 @@ class _EstudosPageState extends State<EstudosPage> {
         },
       },
       {
-        'texto': 'Método de Estudo Intercalado',
+        'texto': 'Tecnica de Pareto ',
         'onTap': () {
           Navigator.push(
             context,
@@ -45,7 +45,7 @@ class _EstudosPageState extends State<EstudosPage> {
         },
       },
       {
-        'texto': 'Tecnica de Pareto',
+        'texto': 'Estudo Intercalado',
         'onTap': () {
           Navigator.push(
             context,
@@ -110,7 +110,7 @@ class _EstudosPageState extends State<EstudosPage> {
                         ),
                       ),
                       width: 100,
-                      height: 130,
+                      height: 120,
                       margin: const EdgeInsets.only(right: 10),
                       child: Center(
                         child: Text(

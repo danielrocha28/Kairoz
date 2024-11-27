@@ -13,8 +13,8 @@ class BannerWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: FractionallySizedBox(
-        alignment: Alignment.center,
-        widthFactor: 0.97,
+        alignment: Alignment.topLeft,
+        widthFactor: 0.50,
         child: Container(
           padding: const EdgeInsets.symmetric(
             vertical: 40,
@@ -23,7 +23,7 @@ class BannerWidget extends StatelessWidget {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage(imageUrl),
-              fit: BoxFit.fitWidth,
+              fit: BoxFit.cover,
               opacity: 0.5,
             ),
             color: const Color(0xff958DC5),
