@@ -28,11 +28,6 @@ websocketClient.on('message', async (message) => {
             { start_time: messageWS.function, day_update: messageWS.day },
             { where: { id_time: messageWS.id } }
           );
-          websocketClient.send(JSON.stringify({
-            hours: messageWS.timer.hours,
-            minutes: messageWS.timer.minutes,
-            seconds: messageWS.timer.seconds,
-          }));
         } catch (error) {
           logger.error('Error starting the timer:', error);
         }
@@ -48,11 +43,6 @@ websocketClient.on('message', async (message) => {
               total_time: Sequelize.literal('CASE WHEN (end_time - start_time) < 0 THEN - (end_time - start_time) ELSE (end_time - start_time) END')
             },
             { where: { id_time: messageWS.id } });
-            websocketClient.send(JSON.stringify({
-                hours: messageWS.timer.hours,
-                minutes: messageWS.timer.minutes,
-                seconds: messageWS.timer.seconds,
-              }));
         } catch (error) {
           logger.error('Error pausing the timer:', error);
         }
@@ -67,11 +57,6 @@ websocketClient.on('message', async (message) => {
               start_time: Sequelize.literal(`${messageWS.function} + total_time`)
             },
             { where: { id_time: messageWS.id } });
-            websocketClient.send(JSON.stringify({
-              hours: messageWS.timer.hours,
-              minutes: messageWS.timer.minutes,
-              seconds: messageWS.timer.seconds,
-            }));
         } catch (error) {
           logger.error('Error resuming the timer:', error);
         }

@@ -18,8 +18,13 @@ export const handleServerError = (error, reply) => {
 export async function createTask(request, reply) {
   try {
     const validatedData = taskSchema.parse(request.body);
-    const newTask = await Task.create(validatedData);
-    reply.code(201).send(newTask);
+    if (validatedData.tag === 'task'){
+      const newTask = await Task.create(validatedData);
+      reply.code(201).send(newTask); 
+    } else {
+      const newStudyTopic = await Task.create(validatedData);
+      reply.code(201).send(newStudyTopic);
+    }
   } catch (error) {
     handleZodError(error, reply);
   }

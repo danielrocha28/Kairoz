@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 const taskSchema = z.object({
   title: z.string().min(1, 'Title is required'),
+  tag: z.enum(['task, study topic']),
   description: z.string().optional(),
   parentId: z.number().int().nullable().optional(), 
   repeat: z.enum(['daily', 'weekly', 'monthly', 'yearly', 'none']).optional(),

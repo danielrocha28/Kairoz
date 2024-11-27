@@ -78,12 +78,9 @@ export async function startTimer(request, reply) {
         id: active.timerid,
         function: active.totalTime,
         day: active.day[active.date],
-        timer:{
-          hours,
-          minutes,
-          seconds,
-        },
       }));
+
+      return {hours: hours, minutes: minutes, seconds: seconds};
 
     }, 1000);
   } catch (error) {
@@ -125,7 +122,7 @@ export function statusTimer(request, reply) {
       );
 
       // Return paused status and formatted total time
-      reply.status(200).send(hours, minutes, seconds);
+     return { hours: hours, minutes: minutes, seconds: seconds };
     } else { // resume time
       active.pause = false;
 
@@ -144,12 +141,9 @@ export function statusTimer(request, reply) {
             id: active.timerid,
             function: active.endTime,
             day: active.day[active.date],
-            timer: {
-              hours,
-              minutes,
-              seconds,
-            },
           }));
+
+          return { hours: hours, minutes: minutes, seconds: seconds };
       }, 1000);
     }
   } catch (error) {

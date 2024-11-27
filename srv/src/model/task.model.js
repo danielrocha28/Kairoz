@@ -11,6 +11,12 @@ const Task = sequelize.define(
       primaryKey: true,
       field: 'id_task',
     },
+    tag: {
+      type: DataTypes.ENUM('task', 'study topic'),
+      allowNull: false,
+      defaultValue: 'task',
+      field: 'tag',
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: false,
