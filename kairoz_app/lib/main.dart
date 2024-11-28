@@ -6,7 +6,6 @@ import 'package:kairoz/pages/profile_page.dart';
 import 'package:kairoz/pages/register_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kairoz/pages/estudos_page.dart';
-import 'package:kairoz/pages/study_topics_page.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -30,7 +29,6 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomePage(),
         '/profile': (context) => const ProfilePage(),
         '/study': (context) => const EstudosPage(),
-        '/study-topics': (context) => const StudyTopicsPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
