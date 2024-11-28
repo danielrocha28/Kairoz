@@ -12,14 +12,6 @@ const Chart = sequelize.define('chart',
       allowNull: false,
       field: 'id_chart',
     },
-    id_time: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Timers,
-        key: 'id_time',
-      },
-      field: 'id_time',
-    },
     id_task: {
       type: DataTypes.INTEGER,
       references: {

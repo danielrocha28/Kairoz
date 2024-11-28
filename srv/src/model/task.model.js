@@ -26,6 +26,7 @@ const Task = sequelize.define(
     total_time: {
       type: DataTypes.TIME,
       allowNull: true,
+      defaultValue: '00:00:00',
       field: 'total_time',
     },
     title: {
