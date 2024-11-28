@@ -17,6 +17,17 @@ const Task = sequelize.define(
       defaultValue: 'task',
       field: 'tag',
     },
+    day_update:{
+      type: DataTypes.ENUM('dom','seg','ter','qua','qui','sex','sab'),
+      allowNull: true,
+      defaultValue: 'none',
+      field: 'day_update',
+    },
+    total_time: {
+      type: DataTypes.TIME,
+      allowNull: true,
+      field: 'total_time',
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: false,

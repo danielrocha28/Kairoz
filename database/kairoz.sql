@@ -7,6 +7,13 @@ END $$;
 
 DO $$
 BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'day_update_enum') THEN
+        CREATE TYPE day_update_enum AS ENUM ('dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab');
+    END IF;
+END$$
+
+DO $$
+BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'category_type') THEN
         CREATE TYPE category_type AS ENUM ('study', 'work', 'health', 'leisure');
     END IF;
@@ -95,8 +102,11 @@ CREATE TABLE IF NOT EXISTS filter (
 CREATE TABLE IF NOT EXISTS tasks (
     id_task SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
+    tag VARCHAR(20) CHECK (tag IN('task', 'study topic')),
     description TEXT,
     parentId INTEGER,
+    day_update day_update_enum DEFAULT NULL,
+    total_time TIME DEFAULT NULL,
     repeat repeat_type DEFAULT 'none',
     category category_type NOT NULL,
     priority priority_type DEFAULT 'medium',
