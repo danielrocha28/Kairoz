@@ -2,6 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class GraficoDeBarras extends StatelessWidget {
+  const GraficoDeBarras({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BarChart(
@@ -10,7 +12,7 @@ class GraficoDeBarras extends StatelessWidget {
         maxY: 24,
         barGroups: _getBarGroups(),
         borderData: FlBorderData(show: false),
-        gridData: FlGridData(show: false),
+        gridData: const FlGridData(show: false),
         titlesData: FlTitlesData(
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
@@ -20,7 +22,7 @@ class GraficoDeBarras extends StatelessWidget {
                 if (value % 1 == 0 && value >= 1 && value <= 24) {
                   return Text(
                     '${value.toInt()}h',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
@@ -31,10 +33,10 @@ class GraficoDeBarras extends StatelessWidget {
               },
             ),
           ),
-          topTitles: AxisTitles(
+          topTitles: const AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),
-          rightTitles: AxisTitles(
+          rightTitles: const AxisTitles(
             sideTitles: SideTitles(showTitles: false),
           ),
           bottomTitles: AxisTitles(
@@ -48,21 +50,21 @@ class GraficoDeBarras extends StatelessWidget {
                 );
                 switch (value.toInt()) {
                   case 0:
-                    return Text('Dom', style: style);
+                    return const Text('Dom', style: style);
                   case 1:
-                    return Text('Seg', style: style);
+                    return const Text('Seg', style: style);
                   case 2:
-                    return Text('Ter', style: style);
+                    return const Text('Ter', style: style);
                   case 3:
-                    return Text('Qua', style: style);
+                    return const Text('Qua', style: style);
                   case 4:
-                    return Text('Qui', style: style);
+                    return const Text('Qui', style: style);
                   case 5:
-                    return Text('Sex', style: style);
+                    return const Text('Sex', style: style);
                   case 6:
-                    return Text('Sáb', style: style);
+                    return const Text('Sáb', style: style);
                   default:
-                    return Text('');
+                    return const Text('');
                 }
               },
             ),

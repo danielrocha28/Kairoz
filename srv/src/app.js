@@ -10,6 +10,7 @@ import taskRoutes from './routes/task.routes.js';
 import flashcardRoutes from './routes/flashcard.routes.js';
 import { passportSetup } from './config/passport.js';
 import chartRoutes from './routes/chart.routes.js';
+import noteRoutes from './routes/note.routes.js';
 import alarmRoutes from './routes/alarm.routes.js';
 
 dotenv.config();
@@ -40,6 +41,7 @@ fastify.register(timerRoutes);
 fastify.register(taskRoutes);
 fastify.register(flashcardRoutes);
 fastify.register(chartRoutes);
+fastify.register(noteRoutes);
 fastify.register(alarmRoutes);
 
 

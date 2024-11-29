@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kairoz/pages/agenda_page.dart';
 import 'package:kairoz/pages/home_page.dart';
 import 'package:kairoz/pages/login_page.dart';
+import 'package:kairoz/pages/profile_page.dart';
 import 'package:kairoz/pages/register_page.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -19,10 +21,13 @@ class MyApp extends StatelessWidget {
       title: 'Kairoz',
       debugShowCheckedModeBanner: false,
       initialRoute: '/login',
+      locale: const Locale('pt', 'BR'),
       routes: {
+        '/agenda': (context) => const AgendaPage(),
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
         '/home': (context) => const HomePage(),
+        '/profile': (context) => const ProfilePage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(

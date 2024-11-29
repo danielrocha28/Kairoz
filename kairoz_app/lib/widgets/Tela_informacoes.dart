@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class Tela_informacoes extends StatefulWidget {
+class TelaInformacoes extends StatefulWidget {
+  const TelaInformacoes({super.key});
+
   @override
-  _Tela_informacoesState createState() => _Tela_informacoesState();
+  _TelaInformacoesState createState() => _TelaInformacoesState();
 }
 
-class _Tela_informacoesState extends State<Tela_informacoes> {
+class _TelaInformacoesState extends State<TelaInformacoes> {
   late YoutubePlayerController _controller;
 
   @override
@@ -14,7 +16,7 @@ class _Tela_informacoesState extends State<Tela_informacoes> {
     super.initState();
     _controller = YoutubePlayerController(
       initialVideoId: 'oZgaqzpx90Y', // ID do vídeo
-      flags: YoutubePlayerFlags(
+      flags: const YoutubePlayerFlags(
         autoPlay: false,
         mute: false,
       ),
@@ -39,30 +41,29 @@ class _Tela_informacoesState extends State<Tela_informacoes> {
           },
         ),
       ),
-      // body: Column(
-      //   mainAxisAlignment: MainAxisAlignment.start,
-      //   children: [
-      //     const Padding(
-      //       padding: EdgeInsets.all(16.0),
-      //       child: Text(
-      //         'As informações da recomendações entraram aqui',
-      //         style: TextStyle(fontSize: 20),
-      //       ),
-      //     ),
-      //     Center(
-      //       child: Image.network(
-      //         'https://example.com/imagem.jpg', 
-      //         height: 200,
-      //         fit: BoxFit.cover,
-      //       ),
-      //     ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              'As informações da recomendações entraram aqui',
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          Center(
+            child: Image.network(
+              'https://example.com/imagem.jpg',
+              height: 200,
+              fit: BoxFit.cover,
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: YoutubePlayer(
               controller: _controller,
               showVideoProgressIndicator: true,
-              onReady: () {
-              },
+              onReady: () {},
             ),
           ),
         ],
