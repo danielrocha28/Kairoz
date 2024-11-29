@@ -10,15 +10,6 @@ const Asnwer = sequelize.define('Asnwer', {
         autoIncrement: true,
         field: 'id_answer',
     },
-    /*id_question:{
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        field: 'id_question',
-        references:{
-            model: Question,
-            key: 'id_question',
-        }
-    },*/
     id_user:{
         type: DataTypes.INTEGER,
         allowNull: false,
