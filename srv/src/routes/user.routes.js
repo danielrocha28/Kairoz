@@ -21,8 +21,11 @@ import logger from '../config/logger.js';
  
   fastify.post('/login', async (request, reply) => {
     try {
-      await loginUser(request, reply);
-      logger.info('User logged in successfully'); // Loga sucesso no login
+      const login = await loginUser(request, reply);
+      if (login) {
+        reply.send(login);
+        logger.info('User logged in successfully'); // Loga sucesso no login
+      }
     } catch (error) {
       logger.error('Error logging in user:', error); // Loga o erro
       reply.status(500).send({ error: 'Error processing the request' });
