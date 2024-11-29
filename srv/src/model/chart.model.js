@@ -1,6 +1,5 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../config/database.js';
-import Timers from './timer.model.js';
 import Tasks from './task.model.js';
 
 const Chart = sequelize.define('chart',
@@ -30,10 +29,6 @@ const Chart = sequelize.define('chart',
     timestamps: false, // Assuming you don't want Sequelize to manage `createdAt` and `updatedAt`
   }
 );
-
-// Associations
-Chart.hasMany(Timers, { foreignKey: 'id_time' });
-Timers.belongsTo(Chart, { foreignKey: 'id_time' });
 
 Chart.hasMany(Tasks, { foreignKey: 'id_task' });
 Tasks.belongsTo(Chart, { foreignKey: 'id_task' });

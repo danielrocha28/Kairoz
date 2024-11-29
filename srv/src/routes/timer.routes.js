@@ -17,7 +17,9 @@ const timerRouter = (fastify, options, done) => {
   fastify.get('timer/total', async (request, reply) => {
     try {
       const totalTime = await getTotalTime(request, reply);
-      reply.status(200).send(totalTime);
+      if (totalTime){
+        reply.status(200).send(totalTime);
+      }
     } catch (error) {
       logger.error(error);
       reply.status(500).send({ error: 'Error processing request', details: error.message });
