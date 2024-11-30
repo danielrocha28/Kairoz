@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:kairoz/app_colors/app_colors.dart';
 import 'package:kairoz/widgets/my_appbar.dart';
+import 'package:http/http.dart' as http;
 
 class StudyTopic extends StatelessWidget {
   late String topicName;
@@ -107,8 +108,44 @@ class _MyStopwatch extends State<MyStopwatch> {
     }
   }
 
+  //Função pra adicionar o tempo total do timer a um tópico de estudo
+  void _addTotalTime () {
+      setState(() {
+        _showAddTotalTime;
+        
+      });
+  }
+
   // Função para mostrar o dialog para adicionar tópicos
   void _showAddStudyTopicDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Adicionar Tópico de Estudo'),
+          content: TextField(
+            controller: _controller,
+            decoration: const InputDecoration(hintText: 'Digite o tópico'),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o dialog sem adicionar
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: _addStudyTopic,
+              child: const Text('Adicionar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Função para mostrar o dialog para adicionar tópicos
+  void _showAddTotalTime() {
     showDialog(
       context: context,
       builder: (context) {
@@ -218,11 +255,19 @@ class _MyStopwatch extends State<MyStopwatch> {
                 icon: const Icon(Icons.settings_backup_restore, size: 50),
                 color: kairozDarkPurple,
               ),
+              IconButton(
+                onPressed: _isRunning
+                    ? null
+                    : (_hours != 0 || _minutes != 0 || _seconds != 0
+                        ? _addTotalTime
+                        : null),
+                icon: const Icon(Icons.add_circle_outline, size: 50),
+                color: kairozDarkPurple,
+              ),
             ],
           ),
 
           const SizedBox(height: 10),
-
           Container(
             padding: const EdgeInsets.only(left: 10),
             alignment: Alignment.topLeft,
