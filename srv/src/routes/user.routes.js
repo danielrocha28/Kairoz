@@ -1,4 +1,4 @@
-import { registerUser, loginUser, updateProfile, deleteProfile } from '../controllers/user.controller.js';
+import { registerUser, loginUser, updateProfile, deleteProfile, getUserByID } from '../controllers/user.controller.js';
 import fastifyPassport from '@fastify/passport';
 import logger from '../config/logger.js'; 
 
@@ -46,16 +46,12 @@ import logger from '../config/logger.js';
     reply.redirect('/'); 
   });
 
-  fastify.get('/profile', (request, reply) => {
+  fastify.get('/profile', async  (request, reply) => {
+    const token = (request.headers.authorization?.split(' ') ?? [])[1];
+
     try {
-      const profile = {
-        id: loginUser.id,
-        name: loginUser.name,
-        email: loginUser.email
-      };
-      if (profile){
-        reply.status(200).send(profile);
-      }
+      const profile = await getUserByID(token);
+      reply.status(200).send(profile);
     } catch (error) {
       logger.error('data not found:', error); 
       reply.status(500).send({ error: 'Error processing the request' });
