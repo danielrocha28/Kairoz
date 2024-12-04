@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kairoz/widgets/my_timer.dart';
+import 'package:kairoz/widgets/my_stopwatch.dart';
+import 'package:kairoz/pages/study_topics_page.dart';
 
 class EstudosPage extends StatefulWidget {
   const EstudosPage({super.key});
@@ -16,8 +17,10 @@ class _EstudosPageState extends State<EstudosPage> {
         padding: const EdgeInsets.all(25),
         child: ElevatedButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const MyStopwatch()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const StudyTopicsPage()));
             },
             child: const Text('Temporizador')),
       ),
