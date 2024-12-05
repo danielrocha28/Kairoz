@@ -13,8 +13,7 @@ class StudyTopicsService {
   Future<String> getTopicList() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/timer/study-topic-list'),
-        headers: {"Content-Type": "application/json"},
+        Uri.parse('$baseUrl/study-topic-list'),
       );
 
       if (response.statusCode == 200) {
