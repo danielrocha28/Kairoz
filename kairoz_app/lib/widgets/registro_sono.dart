@@ -1,21 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; 
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Registro de Horário de Sono',
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: SleepTracker(),
-    );
-  }
-}
-
 class SleepTracker extends StatefulWidget {
   @override
   _SleepTrackerState createState() => _SleepTrackerState();
