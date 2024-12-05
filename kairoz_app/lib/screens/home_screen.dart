@@ -3,14 +3,14 @@ import '../models/task.dart';
 import '../widgets/task_list.dart';
 import '../widgets/add_task_modal.dart';
 
-class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
+class _HomeScreenState extends State<HomeScreen> {
   final List<Task> _tasks = [];
 
   void _addTask(Task task) {

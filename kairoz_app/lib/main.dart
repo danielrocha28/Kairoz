@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:kairoz/pages/agenda_page.dart';
+import 'package:kairoz/pages/dashboard_page.dart';
 import 'package:kairoz/pages/home_page.dart';
 import 'package:kairoz/pages/login_page.dart';
 import 'package:kairoz/pages/profile_page.dart';
 import 'package:kairoz/pages/register_page.dart';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kairoz/pages/splashcreen_page.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
-  // Carregar o arquivo .env
   await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterPage(),
         '/home': (context) => const HomePage(),
         '/profile': (context) => const ProfilePage(),
+        '/dashboard': (context) => const DashboardPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -38,6 +39,15 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        // AppLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('pt', 'BR'),
+      ],
     );
   }
 }
