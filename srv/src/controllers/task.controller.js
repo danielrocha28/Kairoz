@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken';
+
 import Task from '../model/task.model.js';
 import { taskSchema, studyTopicSchema } from '../validators/task.schema.js';
 import { z } from 'zod'; 
@@ -43,6 +45,9 @@ export async function createTask(request, reply) {
 }
 
 export async function getTasks(request, reply) {
+  const token = (request.headers.authorization?.split(' ') ?? [])[1];
+  const decodedUser = jwt.decode(token);
+
   try {
     const tasks = await Task.findAll({ where:{ tag: 'task'}});
     reply.code(200).send(tasks);
