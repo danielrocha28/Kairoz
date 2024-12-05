@@ -12,6 +12,7 @@ import { passportSetup } from './config/passport.js';
 import chartRoutes from './routes/chart.routes.js';
 import noteRoutes from './routes/note.routes.js';
 import alarmRoutes from './routes/alarm.routes.js';
+import recommendationRoutes from './routes/recommendation.router.js';
 
 dotenv.config();
 
@@ -43,6 +44,7 @@ fastify.register(flashcardRoutes);
 fastify.register(chartRoutes);
 fastify.register(noteRoutes);
 fastify.register(alarmRoutes);
+fastify.register(recommendationRoutes);
 
 
 passportSetup(fastify);

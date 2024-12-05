@@ -1,4 +1,4 @@
-import WebSocket from 'ws'; 
+import { WebSocketServer } from 'ws'; 
 import dotenv from 'dotenv';
 import logger from './src/config/logger.js'; 
 
@@ -6,7 +6,7 @@ dotenv.config();
 
 const port = process.env.WEBSOCKET_PORT || 8080;
 
-const wss = new WebSocket.Server({ port }, () => {
+const wss = new WebSocketServer({port: port}, () => { 
   logger.info(`WebSocket server listening on port ${port}`);
 });
 
