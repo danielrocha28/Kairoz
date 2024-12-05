@@ -1,20 +1,5 @@
 import 'package:flutter/material.dart';
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Definir Meta de Sono',
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: SleepGoalSetter(),
-    );
-  }
-}
-
 class SleepGoalSetter extends StatefulWidget {
   @override
   _SleepGoalSetterState createState() => _SleepGoalSetterState();
