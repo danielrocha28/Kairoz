@@ -5,7 +5,7 @@ import User from './user.model.js';
 const Task = sequelize.define(
   'Task',
   {
-    id: {
+    id_task: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,

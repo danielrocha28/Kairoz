@@ -1,7 +1,7 @@
 import { createAlarm, usingAlarm, updateAlarm, deleteAlarm, getAlarmsAll } from '../controllers/alarm.controller.js';
 import logger from '../config/logger.js';
 
-function alarmRoutes(fastify, options) {
+const alarmRoutes = (fastify, options, done) => {
 
     fastify.post('/alarms', async (request, reply) => {
         try {
@@ -51,6 +51,8 @@ function alarmRoutes(fastify, options) {
             reply.status(500).send({ error: 'Error processing request', details: error.message });
         }
     });
-}
+
+    done();
+};
 
 export default alarmRoutes;

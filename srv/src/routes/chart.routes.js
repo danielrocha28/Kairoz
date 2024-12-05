@@ -1,8 +1,7 @@
 import { pieChart, chartWeek } from '../controllers/chart.controller.js';
 import logger from '../config/logger.js'; 
 
-
-   function chartRoutes(fastify, options){
+const chartRoutes = (fastify, options, done) => {
     fastify.get('/chart-pie', async (request,reply) => {
         try {
          await pieChart(request,reply);
@@ -21,6 +20,7 @@ import logger from '../config/logger.js';
         }
     });
     
-}
+    done();
+};
 
 export default chartRoutes;
