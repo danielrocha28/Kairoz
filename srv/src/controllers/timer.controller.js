@@ -39,7 +39,7 @@ export function paused(isPaused) {
 
 export async function startTimer(request, reply) {
   try {
-    const { id_task, title,} = request.body;
+    const { id_task, title } = request.body;
 
     let task = await Task.findAll({ where: { id_task, title, category: 'study' } });
 

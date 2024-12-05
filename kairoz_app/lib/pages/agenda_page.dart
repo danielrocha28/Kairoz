@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kairoz/widgets/appbar.dart';
 import 'package:kairoz/widgets/calendario.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class AgendaPage extends StatefulWidget {
   const AgendaPage({super.key});
@@ -13,9 +13,9 @@ class _AgendaPageState extends State<AgendaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Minha Agenda'),
-        centerTitle: true,
+      appBar: const MyAppBar(
+        title: "Agenda",
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: const CalendarWidget(),
       floatingActionButton: FloatingActionButton(
@@ -32,9 +32,9 @@ class _AgendaPageState extends State<AgendaPage> {
   }
 
   void _showCreateEventDialog(BuildContext context) {
-    final TextEditingController _eventNameController = TextEditingController();
-    DateTime _selectedDate = DateTime.now();
-    TimeOfDay _selectedTime = TimeOfDay.now();
+    final TextEditingController eventNameController = TextEditingController();
+    DateTime selectedDate = DateTime.now();
+    TimeOfDay selectedTime = TimeOfDay.now();
 
     showDialog(
       context: context,
@@ -45,7 +45,7 @@ class _AgendaPageState extends State<AgendaPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                controller: _eventNameController,
+                controller: eventNameController,
                 decoration: const InputDecoration(
                   labelText: 'Nome do Evento',
                 ),
@@ -55,13 +55,13 @@ class _AgendaPageState extends State<AgendaPage> {
                 onPressed: () async {
                   final DateTime? pickedDate = await showDatePicker(
                     context: context,
-                    initialDate: _selectedDate,
+                    initialDate: selectedDate,
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2101),
                   );
-                  if (pickedDate != null && pickedDate != _selectedDate) {
+                  if (pickedDate != null && pickedDate != selectedDate) {
                     setState(() {
-                      _selectedDate = pickedDate;
+                      selectedDate = pickedDate;
                     });
                   }
                 },
@@ -73,11 +73,11 @@ class _AgendaPageState extends State<AgendaPage> {
                 onPressed: () async {
                   final TimeOfDay? pickedTime = await showTimePicker(
                     context: context,
-                    initialTime: _selectedTime,
+                    initialTime: selectedTime,
                   );
-                  if (pickedTime != null && pickedTime != _selectedTime) {
+                  if (pickedTime != null && pickedTime != selectedTime) {
                     setState(() {
-                      _selectedTime = pickedTime;
+                      selectedTime = pickedTime;
                     });
                   }
                 },
@@ -95,13 +95,13 @@ class _AgendaPageState extends State<AgendaPage> {
             ),
             TextButton(
               onPressed: () {
-                final eventName = _eventNameController.text;
+                final eventName = eventNameController.text;
                 final eventDateTime = DateTime(
-                  _selectedDate.year,
-                  _selectedDate.month,
-                  _selectedDate.day,
-                  _selectedTime.hour,
-                  _selectedTime.minute,
+                  selectedDate.year,
+                  selectedDate.month,
+                  selectedDate.day,
+                  selectedTime.hour,
+                  selectedTime.minute,
                 );
                 _createEvent(eventName, eventDateTime).then((result) {
                   Navigator.pop(context, result);

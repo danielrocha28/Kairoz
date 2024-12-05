@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:kairoz/services/login.service.dart';
 import 'package:kairoz/widgets/kairoz_outline_input.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -26,6 +27,11 @@ class LoginPageState extends State<LoginPage> {
     final response = await loginService.execute();
 
     if (response.statusCode == 200) {
+      Map<String, dynamic> temp = json.decode(response.body);
+
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', temp['token']);
+
       return Navigator.pushNamedAndRemoveUntil(
           context, '/home', ModalRoute.withName('/'));
     }
