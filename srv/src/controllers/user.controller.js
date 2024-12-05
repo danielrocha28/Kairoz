@@ -66,19 +66,11 @@ export async function loginUser(request, reply) {
 
     if (user && await bcrypt.compare(password, user.password)) {
       const token = jwt.sign({ id: user.id_user }, process.env.JWT_SECRET, { expiresIn: '8h' });
-      reply.send({ token });
+      return ({ token });
     } else {
       reply.status(401).send({ error: 'Invalid credentials' });
     }
 
-    if (user) {
-      const userData = {
-        id: user.id_user,
-        name: user.name,
-        email: user.email,
-      };
-      return userData;
-    }
   } catch (error) {
     if (error instanceof z.ZodError) {
       reply.status(400).send({ error: 'Validation failed', details: error.errors });

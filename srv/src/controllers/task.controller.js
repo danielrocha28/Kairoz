@@ -24,11 +24,11 @@ export async function createTask(request, reply) {
     }
 
     if (validatedData.tag === 'task'){
-      const newTask = await Task.create(validatedData);
+      const newTask = await Task.create(validatedData, { id_user: user.id });
       reply.code(201).send(newTask); 
     } else {
       validatedData = studyTopicSchema.parse(request.body);
-      const newStudyTopic = await Task.create(validatedData);
+      const newStudyTopic = await Task.create(validatedData, { id_user: user.id });
       reply.code(201).send(newStudyTopic);
     }
   } catch (error) {
@@ -39,7 +39,7 @@ export async function createTask(request, reply) {
 
 export async function getTasks(request, reply) {
   try {
-    const tasks = await Task.findAll({ tag: 'task', where:{ id_user: user.id }});
+    const tasks = await Task.findAll({ tag: 'task', where: { id_user: user.id }});
     reply.code(200).send(tasks);
   } catch (error) {
     handleZodError(error, reply);
@@ -94,7 +94,8 @@ export async function getStudyTopic(request, reply) {
 export async function getListId(request, reply) {
   try {
     const tasksId = await Task.findAll({
-      attributes: ['id', 'title', 'total_time'], 
+      attributes: ['id_task', 'title', 'total_time'],
+      raw: true, 
     });
     reply.code(200).send(tasksId);
   } catch (error) {
