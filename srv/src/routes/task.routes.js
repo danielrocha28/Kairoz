@@ -1,6 +1,5 @@
 import { createTask, getTasks, getTaskById, updateTask, deleteTask,
 getListId, getStudyTopic, IdTopicOrTask } from '../controllers/task.controller.js';
-import { loginUser as user, getUserByID } from '../controllers/user.controller.js';
 import logger from '../config/logger.js'; 
 
 
@@ -13,7 +12,6 @@ const taskRoutes = (fastify, options, done) => {
       if (!title || !category) {
         return reply.status(400).send({ error: 'Title and category are required' });
       }
-      await getUserByID(user);
       await createTask(request, reply);
     } catch (error) {
       logger.error(error);

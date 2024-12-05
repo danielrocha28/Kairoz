@@ -1,7 +1,7 @@
 import Task from '../model/task.model.js';
 import { taskSchema, studyTopicSchema } from '../validators/task.schema.js';
 import { z } from 'zod'; 
-import { loginUser as user } from './user.controller.js';
+import { getUserByID } from './user.controller.js';
 
 const handleZodError = (error, reply) => {
   if (error instanceof z.ZodError) {
@@ -16,6 +16,11 @@ export const handleServerError = (error, reply) => {
 };
 
 export async function createTask(request, reply) {
+  const token = (request.headers.authorization?.split(' ') ?? [])[1];
+  const user = await getUserByID(token);
+  if (!user) {
+    reply.code(401).send('token not found or access not permitted');
+  }
   try {
     let validatedData = taskSchema.parse(request.body);
     const existsTask = await Task.findOne({ where: { title: validatedData.title }});
@@ -39,7 +44,7 @@ export async function createTask(request, reply) {
 
 export async function getTasks(request, reply) {
   try {
-    const tasks = await Task.findAll({ tag: 'task', where: { id_user: user.id }});
+    const tasks = await Task.findAll({ where:{ tag: 'task'}});
     reply.code(200).send(tasks);
   } catch (error) {
     handleZodError(error, reply);
@@ -79,8 +84,7 @@ export async function updateTask(request, reply) {
 
 export async function getStudyTopic(request, reply) {
   try {
-    const studyTopic = await Task.findAll({ tag: 'study topic', 
-      where: { id_user: user.id }});
+    const studyTopic = await Task.findAll({ where:{ tag: 'study topic' }});
       if (!studyTopic){
         reply.code(404).send('There are no study topics');
       }
