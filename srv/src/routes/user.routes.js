@@ -47,7 +47,7 @@ import logger from '../config/logger.js';
   });
 
   fastify.get('/profile', async  (request, reply) => {
-    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    const token = (request.headers.authorization?.split(' ') ?? [])[1];
 
     try {
       const profile = await getUserByID(token);
