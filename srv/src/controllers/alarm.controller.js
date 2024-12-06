@@ -3,6 +3,7 @@ import { loginUser } from './user.controller.js';
 import alarmSchema from '../validators/alarm.schema.js';
 import cron from 'node-cron';
 import logger from '../config/logger.js';
+import { getUserByID } from './user.controller.js';
 
 class AlarmId {
   constructor() {
@@ -37,13 +38,15 @@ function alarmCount(setDay, setTime, message, reply) {
 }
 
 export async function createAlarm(request, reply) {
-  try {
+  const token = (request.headers.authorization?.split(' ') ?? [])[1]; 
+  const user = getUserByID(token);
+  try {  
     const validatedData = alarmSchema.parse(request.body);
     // Transforming into an array to send to the database
     const dayArray = validatedData.alarm_day.split(',').map(day => day.trim());
     validatedData.alarm_day = dayArray;
     
-    const newAlarm = await Alarm.create(validatedData, validatedData.id_user = loginUser.id);
+    const newAlarm = await Alarm.create(validatedData, validatedData.id_user = user.id); 
     get.id = newAlarm.id_alarm;
     const statusAlarm = await Alarm.findOne({ where: { executed: true, id_alarm: newAlarm.id_alarm } });
 

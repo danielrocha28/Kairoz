@@ -6,8 +6,12 @@ import 'package:kairoz/pages/login_page.dart';
 import 'package:kairoz/pages/profile_page.dart';
 import 'package:kairoz/pages/register_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+<<<<<<< HEAD
+import 'package:kairoz/pages/estudos_page.dart';
+=======
 import 'package:kairoz/pages/splashcreen_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+>>>>>>> main
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -31,7 +35,11 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterPage(),
         '/home': (context) => const HomePage(),
         '/profile': (context) => const ProfilePage(),
+<<<<<<< HEAD
+        '/study': (context) => const EstudosPage(),
+=======
         '/dashboard': (context) => const DashboardPage(),
+>>>>>>> main
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
