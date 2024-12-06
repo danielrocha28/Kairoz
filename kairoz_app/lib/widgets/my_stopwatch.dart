@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:kairoz/app_colors/app_colors.dart';
-import 'package:kairoz/widgets/my_appbar.dart';
 
 class MyStopwatch extends StatefulWidget {
   const MyStopwatch({super.key});
@@ -78,7 +77,8 @@ class _MyStopwatch extends State<MyStopwatch> {
       'Sábado', //5
       'Domingo' //6
     ];
-    return days[now.weekday - 1];
+    _weekDay = days[now.weekday - 1];
+    return _weekDay;
   }
 
   @override
@@ -159,15 +159,6 @@ class _MyStopwatch extends State<MyStopwatch> {
               icon: const Icon(Icons.settings_backup_restore, size: 50),
               color: kairozDarkPurple,
             ),
-            // IconButton(
-            //   onPressed: _isRunning
-            //       ? null
-            //       : (_hours != 0 || _minutes != 0 || _seconds != 0
-            //           ? _addTotalTime
-            //           : null),
-            //   icon: const Icon(Icons.add_circle_outline, size: 50),
-            //   color: kairozDarkPurple,
-            // ),
           ],
         ),
       ],
