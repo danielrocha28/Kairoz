@@ -1,6 +1,7 @@
 import logger from '../config/logger';
 import { getUserByID } from '../controllers/user.controller';
 import sleepLogSchema from '../validators/sleep.log.schema';
+import SleepTime from '../model/sleep.log.model';
 
 const sleepLogRouters = (fastify, options, done) => {
 
@@ -35,4 +36,4 @@ const sleepLogRouters = (fastify, options, done) => {
     done();
 };
 
-export default sleepLogRouters
+export default sleepLogRouters;

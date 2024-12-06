@@ -16,7 +16,6 @@ import recommendationRoutes from './routes/recommendation.router.js';
 
 dotenv.config();
 
-
 const fastify = Fastify({ pluginTimeout: 30000 });
 
 // Enable CORS
