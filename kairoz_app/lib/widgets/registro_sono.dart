@@ -1,20 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; 
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Registro de Horário de Sono',
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: SleepTracker(),
-    );
-  }
-}
+import 'package:flutter/services.dart';
 
 class SleepTracker extends StatefulWidget {
   @override
@@ -28,6 +14,24 @@ class _SleepTrackerState extends State<SleepTracker> {
   
   List<Map<String, String>> _sleepRecords = [];
 
+   TextInputFormatter _hourFormatter() {
+    return TextInputFormatter.withFunction((oldValue, newValue) {
+      String text = newValue.text;
+
+      if (text.length == 2 && !text.contains(':')) {
+        text = '$text:';
+      }
+
+      if (text.length > 5) {
+        text = text.substring(0, 5); 
+      }
+
+      return TextEditingValue(
+        text: text,
+        selection: TextSelection.collapsed(offset: text.length),
+      );
+    });
+  }
   
   void _saveSleepData() {
     final String sleepTime = _sleepTimeController.text;
