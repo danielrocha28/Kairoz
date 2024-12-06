@@ -47,7 +47,11 @@ const sleepLogRouters = (fastify, options, done) => {
             }
             const validatedData = sleepLogSchema.parse(request.body);
             const sleepUpdated = await SleepTime.update(validatedData, { where: { id_user: user.id }});
-            reply.status(200).send(sleepUpdated);
+            if (sleepUpdated){
+                reply.status(200).send(sleepUpdated);
+            } else {
+                reply.code(404).send({ error: 'Sleep time with not found' });
+            }
         } catch (error) {
             logger.error(error);
             reply.status(500).send({ error: 'Error processing request', details: error.message });
