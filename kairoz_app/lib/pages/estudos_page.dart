@@ -1,14 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'package:kairoz/widgets/my_stopwatch.dart';
-import 'package:kairoz/pages/study_topics_page.dart';
-=======
 import 'package:kairoz/pages/detalhes_page.dart';
 import 'package:kairoz/widgets/banner.dart';
 import 'package:kairoz/widgets/week_display.dart';
 import 'package:kairoz/pages/agenda_page.dart';
->>>>>>> main
 
 class EstudosPage extends StatefulWidget {
   const EstudosPage({super.key});
@@ -20,19 +15,6 @@ class EstudosPage extends StatefulWidget {
 class _EstudosPageState extends State<EstudosPage> {
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(25),
-        child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const StudyTopicsPage()));
-            },
-            child: const Text('Temporizador')),
-=======
     final List<Map<String, dynamic>> blocos = [
       {
         'texto': 'Método Pomodoro!',
@@ -199,7 +181,6 @@ class _EstudosPageState extends State<EstudosPage> {
             ),
           ),
         ],
->>>>>>> main
       ),
     );
   }
