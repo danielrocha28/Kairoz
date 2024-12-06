@@ -1,5 +1,4 @@
 import Alarm from '../model/alarm.model.js';
-import { loginUser } from './user.controller.js';
 import alarmSchema from '../validators/alarm.schema.js';
 import cron from 'node-cron';
 import logger from '../config/logger.js';

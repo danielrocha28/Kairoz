@@ -1,5 +1,5 @@
 import { createTask, getTasks, getTaskById, updateTask, deleteTask,
-getListId, getStudyTopic, IdTopicOrTask } from '../controllers/task.controller.js';
+getList, getStudyTopic, IdTopicOrTask } from '../controllers/task.controller.js';
 import logger from '../config/logger.js'; 
 
 
@@ -83,7 +83,10 @@ const taskRoutes = (fastify, options, done) => {
   //take id and title
   fastify.get('/study-topic-list', async (request, reply) => {
     try {
-      await getListId(request, reply);
+      const taskList = await getList(request, reply);
+      if (taskList) {
+        reply.status(200).send(taskList);
+      }
     } catch (error) {
       logger.error(error);
       reply.status(500).send({ error: 'Error processing request', details: error.message });
