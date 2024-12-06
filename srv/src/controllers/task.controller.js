@@ -1,5 +1,3 @@
-import jwt from 'jsonwebtoken';
-
 import Task from '../model/task.model.js';
 import { taskSchema, studyTopicSchema } from '../validators/task.schema.js';
 import { z } from 'zod'; 
@@ -29,7 +27,7 @@ export async function createTask(request, reply) {
     if (existsTask) {
       throw new Error('Task with this title already existing');
     }
-
+    
     if (validatedData.tag === 'task'){
       const newTask = await Task.create(validatedData, { id_user: user.id });
       reply.code(201).send(newTask); 
@@ -46,10 +44,14 @@ export async function createTask(request, reply) {
 
 export async function getTasks(request, reply) {
   const token = (request.headers.authorization?.split(' ') ?? [])[1];
-  const decodedUser = jwt.decode(token);
-
+  const user = await getUserByID(token);
+  if (!user) {
+    reply.code(401).send('token not found or access not permitted');
+  }
   try {
-    const tasks = await Task.findAll({ where:{ tag: 'task'}});
+    const tasks = await Task.findAll({ 
+      where:{ tag: 'task', id_user: user.id
+      }});
     reply.code(200).send(tasks);
   } catch (error) {
     handleZodError(error, reply);
@@ -88,8 +90,14 @@ export async function updateTask(request, reply) {
 }
 
 export async function getStudyTopic(request, reply) {
+  const token = (request.headers.authorization?.split(' ') ?? [])[1];
+  const user = await getUserByID(token);
+  if (!user) {
+    reply.code(401).send('token not found or access not permitted');
+  }
   try {
-    const studyTopic = await Task.findAll({ where:{ tag: 'study topic' }});
+    const studyTopic = await Task.findAll({ 
+      where:{ tag: 'study topic', id_user: user.id }});
       if (!studyTopic){
         reply.code(404).send('There are no study topics');
       }
