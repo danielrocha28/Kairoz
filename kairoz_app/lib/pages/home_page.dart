@@ -6,7 +6,7 @@ import 'package:kairoz/pages/estudos_page.dart';
 import 'package:kairoz/pages/saude_page.dart';
 import 'package:kairoz/pages/trabalho_page.dart';
 import 'package:kairoz/pages/lazer_page.dart';
-import 'package:kairoz/widgets/my_appbar.dart';
+import 'package:kairoz/widgets/appbar.dart';
 import 'package:kairoz/pages/dashboard_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -54,10 +54,7 @@ class _HomePageState extends State<HomePage> {
       ),
       appBar: const MyAppBar(
         title: "Kairoz",
-<<<<<<< HEAD
-=======
         iconTheme: IconThemeData(color: Colors.white),
->>>>>>> main
       ),
       drawer: MyDrawer(
         foregroundColor: Colors.white,
