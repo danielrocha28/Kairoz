@@ -59,16 +59,6 @@ final List<String> _studyTopics = [];
 final _studyTopicsService = StudyTopicsService();
 
 class _StudyTopicsListState extends State<StudyTopicsList> {
-  void _addStudyTopic() {
-    if (_controller.text.isNotEmpty) {
-      setState(() {
-        _studyTopics.add(_controller.text);
-        _controller.clear(); // Limpa o campo de entrada
-      });
-      Navigator.of(context).pop(); // Fecha o dialog após adicionar o tópico
-    }
-  }
-
   void showAddStudyTopicDialog() {
     showDialog(
       context: context,
@@ -82,7 +72,7 @@ class _StudyTopicsListState extends State<StudyTopicsList> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Fecha o dialog sem adicionar
+                Navigator.of(context).pop(); // Close dialog without adding
               },
               child: const Text('Cancelar'),
             ),
@@ -96,31 +86,14 @@ class _StudyTopicsListState extends State<StudyTopicsList> {
     );
   }
 
-  void _showAddTotalTime() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Adicionar Tópico de Estudo'),
-          content: TextField(
-            controller: _controller,
-            decoration: const InputDecoration(hintText: 'Digite o tópico'),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Fecha o dialog sem adicionar
-              },
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: _addStudyTopic,
-              child: const Text('Adicionar'),
-            ),
-          ],
-        );
-      },
-    );
+    void _addStudyTopic() {
+    if (_controller.text.isNotEmpty) {
+      setState(() {
+        _studyTopics.add(_controller.text);
+        _controller.clear(); // Clean the text field
+      });
+      Navigator.of(context).pop(); // Close dialog after adding topic
+    }
   }
 
   @override

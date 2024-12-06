@@ -7,8 +7,9 @@ class StudyTopicsService {
   String? savedTime;
   String? topicTitle;
   String? topicID;
+  String? weekDay;
 
-  StudyTopicsService({this.savedTime, this.topicTitle, this.topicID});
+  StudyTopicsService({this.savedTime, this.topicTitle, this.topicID, this.weekDay});
 
   Future<String> getTopicList() async {
     try {
