@@ -1,126 +1,32 @@
-import { startTimer, statusTimer, deleteTimer, paused, formatTime, getTime } from '../controllers/timer.controller.js';
+import { saveTotalTime, getTotalTime } from '../controllers/timer.controller.js';
+import logger from '../config/logger.js';
 
 const timerRouter = (fastify, options, done) => {
-  fastify.post('/timer/start', async (request, reply) => {
+
+  // route to stocy the timer 
+  fastify.put('timer/save', async (request, reply) => {
     try {
-      await startTimer(request, reply);
+      await saveTotalTime(request, reply);
     } catch (error) {
-      reply.status(500).send({
-        error: 'Error processing the request',
-        details: error.message,
-      });
+      logger.error(error);
+      reply.status(500).send({ error: 'Error processing request', details: error.message });
     }
   });
 
-  fastify.get('/timer/start', (request, reply) => {
+  // route to take the total of time 
+  fastify.get('timer/total', async (request, reply) => {
     try {
-      const timer = {
-        hours: startTimer.hours,
-        minutes: startTimer.minutes,
-        seconds: startTimer.seconds,
-      };
-      if (timer) 
-        reply.status(200).send(timer);
-    } catch (error) {
-      reply.status(500).send({
-        error: 'Error processing the request',
-        details: error.message,
-      });
-    }
-  });
-
-  fastify.put('/timer/pause', async (request, reply) => {
-    try {
-      paused(true);
-      await statusTimer(request, reply);
-    } catch (error) {
-      reply.status(500).send({
-        error: 'Error processing the request',
-        details: error.message,
-      });
-    }
-  });
-
-  
-  fastify.get('/timer/pause', (request, reply) => {
-    try {
-      const check = paused(true);
-      if (check){
-      const timer = {
-        hours: statusTimer.hours,
-        minutes: statusTimer.minutes,
-        seconds: statusTimer.seconds,
-      };
-        if (timer) 
-          reply.status(200).send(timer);
+      const totalTime = await getTotalTime(request, reply);
+      if (totalTime){
+        reply.status(200).send(totalTime);
       }
     } catch (error) {
-      reply.status(500).send({
-        error: 'Error processing the request',
-        details: error.message,
-      });
-
+      logger.error(error);
+      reply.status(500).send({ error: 'Error processing request', details: error.message });
     }
   });
 
-  fastify.put('/timer/resume', async (request, reply) => {
-    try {
-      paused(false);
-      await statusTimer(request, reply);
-    } catch (error) {
-      reply.status(500).send({
-        error: 'Error processing the request',
-        details: error.message,
-      });
-    }
-  });
+  done();
+};
 
-  fastify.get('/timer/resume', (request, reply) => {
-    try {
-      const check = paused(false);
-      if (check){
-        const timer = {
-          hours: statusTimer.hours,
-          minutes: statusTimer.minutes,
-          seconds: statusTimer.seconds,
-        };
-        if (timer)
-          reply.status(200).send(timer);
-      }
-    } catch (error) {
-       reply.status(500).send({
-        error: 'Error processing the request',
-        details: error.message,
-    });
-    }
-  });
-
-  fastify.delete('/timer/delete', async (request, reply) => {
-    try {
-      await deleteTimer(request, reply);
-    } catch (error) {
-      reply.status(500).send({
-        error: 'Error processing the request',
-        details: error.message,
-      });
-    }
-  });
-
-fastify.get('/timer/:id_time', async (request, reply) => {
-      try {
-        const timerId = parseInt(request.params.id_time, 10);
-        if (isNaN(timerId)) {
-          return reply.status(400).send({ error: 'Invalid timer ID' });
-        }
-        const time = await getTime(request, reply);
-        return formatTime(time.total_time);
-      } catch (error) {
-        reply.status(500).send({
-          error: 'Error processing the request',
-          details: error.message });
-      }
-    });
-
-    done();
-  };
 export default timerRouter;

@@ -1,6 +1,5 @@
 import fastify from './src/app.js';
 import sequelize from './src/config/database.js';
-import wss from './websocket.js';
 import logger from './src/config/logger.js';
 
 const host = '0.0.0.0';
@@ -9,7 +8,6 @@ const port = process.env.PORT || 3000;
 const start = async () => {
   try {
     await testDatabaseConnection();
-    await wss;
     await fastify.listen({ port, host });
     logger.info(`Application running on http://${host}:${port}`); 
   } catch (err) {

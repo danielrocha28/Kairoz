@@ -1,8 +1,8 @@
 import Task from '../model/task.model.js';
 import Chart from '../model/chart.model.js';
-import { getTasks } from './task.controller.js';
+import { getTasks } from '../controllers/task.controller.js';
+import { getTotalTime } from '../controllers/timer.controller.js';
 import { Op } from 'sequelize';
-import { getTime, formatTime } from './timer.controller.js';
 import logger from '../config/logger.js'; 
 import cron from 'node-cron';
 
@@ -10,7 +10,6 @@ class NewChart {
   constructor(type) {
     this.tasks = null;
     this.typeChart = type;
-    this.timer = null;
     this.chart = null;
   }
 }
@@ -80,49 +79,48 @@ export async function chartWeek(request, reply) {
     
     await cron.schedule('40-59 23 * * *', async () => {
       weekly.tasks = await getTasks(request, reply); // Fetch all tasks
-      weekly.timer = await getTime(request, reply); // Fetch total time
 
-      if (!weekly.tasks || !weekly.timer) {
-        return reply.status(404).send('Tasks or Timer not found.');
+      if (!weekly.tasks) {
+        return reply.status(404).send('Tasks not found.');
       }
 
       // Check if the task ID matches the timer ID
-      if (weekly.tasks.id_task === weekly.timer.id_task) {
+      if (weekly.tasks.id_task && weekly.tasks.total_time !== '00:00:00') {
         await Chart.create({
           id_task: weekly.tasks.id_task,
-          id_time: weekly.timer.id_time,
           type: weekly.typeChart,
         });
+        let totalTime = await getTotalTime(request,reply);
 
         // Field responsible for capturing timer updates according to the day
         switch (weekly.timer.day_update) {
           case 'dom':
             weekly.chart.dom = 0;
-            weekly.chart.dom = formatTime(weekly.timer.total_time) - weekly.chart.sab;
+            weekly.chart.dom = totalTime - weekly.chart.sab;
             break;
           case 'seg':
             weekly.chart.seg = 0;
-            weekly.chart.seg = formatTime(weekly.timer.total_time) - weekly.chart.dom;
+            weekly.chart.seg = totalTime - weekly.chart.dom;
             break;
           case 'ter':
             weekly.chart.ter = 0;
-            weekly.chart.ter = formatTime(weekly.timer.total_time) - weekly.chart.seg;
+            weekly.chart.ter = totalTime - weekly.chart.seg;
             break;
           case 'qua':
             weekly.chart.qua = 0;
-            weekly.chart.qua = formatTime(weekly.timer.total_time) - weekly.chart.ter;
+            weekly.chart.qua = totalTime - weekly.chart.ter;
             break;
           case 'qui':
             weekly.chart.qui = 0;
-            weekly.chart.qui = formatTime(weekly.timer.total_time) - weekly.chart.qua;
+            weekly.chart.qui = totalTime - weekly.chart.qua;
             break;
           case 'sex':
             weekly.chart.sex = 0;
-            weekly.chart.sex = formatTime(weekly.timer.total_time) - weekly.chart.qui;
+            weekly.chart.sex = totalTime - weekly.chart.qui;
             break;
           case 'sab':
             weekly.chart.sab = 0;
-            weekly.chart.sab = formatTime(weekly.timer.total_time) - weekly.chart.sex;
+            weekly.chart.sab = totalTime - weekly.chart.sex;
             break;
           default:
             return reply.status(500).send('Could not proceed');
