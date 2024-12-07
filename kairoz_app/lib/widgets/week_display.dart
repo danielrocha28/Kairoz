@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:kairoz/pages/agenda_page.dart';
 
 class KairozDate extends StatelessWidget {
   final String dateNumber;
@@ -14,43 +16,53 @@ class KairozDate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        color: active
-            ? const Color.fromARGB(255, 82, 22, 185)
-            : const Color(0xff958DC5),
-      ),
-      padding: const EdgeInsets.symmetric(
-        vertical: 12,
-        horizontal: 8,
-      ),
-      child: Column(
-        children: [
-          Text(
-            dateName.substring(0, 3),
-            style: const TextStyle(
-              color: Colors.white,
-            ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          CupertinoPageRoute(
+            builder: (context) => const AgendaPage(),
           ),
-          const SizedBox(height: 3),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: Colors.white,
-            ),
-            padding: const EdgeInsets.all(10),
-            child: Text(
-              dateNumber,
-              style: TextStyle(
-                fontSize: 18,
-                color: active
-                    ? const Color.fromARGB(255, 82, 22, 185)
-                    : const Color(0xff958DC5),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: active
+              ? const Color.fromARGB(255, 82, 22, 185)
+              : const Color.fromARGB(255, 130, 118, 198),
+        ),
+        padding: const EdgeInsets.symmetric(
+          vertical: 12,
+          horizontal: 8,
+        ),
+        child: Column(
+          children: [
+            Text(
+              dateName.substring(0, 3),
+              style: const TextStyle(
+                color: Colors.white,
               ),
             ),
-          )
-        ],
+            const SizedBox(height: 3),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                color: Colors.white,
+              ),
+              padding: const EdgeInsets.all(10),
+              child: Text(
+                dateNumber,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: active
+                      ? const Color.fromARGB(255, 82, 22, 185)
+                      : const Color(0xff958DC5),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

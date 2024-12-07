@@ -5,13 +5,12 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.title,
     this.iconTheme,
-    this.titleFontSize = 26.0, // Tamanho da fonte com valor padrão de 26
+    this.titleFontSize = 26.0,
   });
 
   final String title;
   final IconThemeData? iconTheme;
-  final double
-      titleFontSize; // Novo parâmetro para personalizar o tamanho da fonte
+  final double titleFontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Row(
         children: [
           Image.asset(
-            'assets/logo.png',
+            'assets/logo1.png',
             height: 28,
             width: 28,
           ),
@@ -28,8 +27,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             title,
             style: TextStyle(
               color: Colors.white,
-              fontSize:
-                  titleFontSize, // Aplicando o tamanho da fonte personalizado
+              fontSize: titleFontSize,
               fontWeight: FontWeight.normal,
             ),
           ),

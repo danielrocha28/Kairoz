@@ -35,6 +35,17 @@ Elimine ou minimize o tempo gasto com atividades menos produtivas.
 O Estudo Intercalado consiste em alternar entre tópicos ou habilidades diferentes em vez de focar em um único assunto por vez. 
 Essa técnica melhora a retenção de informações e reforça conexões entre conceitos, ajudando a entender o conteúdo de forma mais ampla.
 ''',
+      'saude': '''
+
+Cuidar do corpo e da mente é essencial para uma vida equilibrada. A prática regular de exercícios físicos traz inúmeros benefícios, como a melhora da disposição, o fortalecimento dos músculos e a redução do estresse. Além disso, ao reservar um tempo para se movimentar, você está investindo na sua saúde e bem-estar.
+Uma caminhada ao ar livre, por exemplo, permite apreciar a natureza enquanto você exercita o corpo. Já atividades como alongamentos ou yoga ajudam a melhorar a flexibilidade e promovem relaxamento. Lembre-se de que o importante não é a intensidade, mas sim a constância.
+Comece aos poucos, estabeleça metas realistas e celebre cada pequena conquista. Seu corpo é seu templo, e cada movimento é um passo em direção a uma versão mais saudável e feliz de você mesmo.
+Agora, respire fundo, levante-se e movimente-se. O primeiro passo é sempre o mais importante!
+''',
+      'foco': '''
+Focar nos estudos é crucial para atingir seus objetivos acadêmicos e profissionais. Organizar sua rotina de maneira eficiente pode melhorar seu desempenho, ajudar a otimizar o uso do tempo e evitar a procrastinação. Métodos como o Pomodoro, que alterna entre períodos de estudo e pausas curtas, são excelentes para aumentar a concentração e manter o foco ao longo do tempo. Além disso, a revisão espaçada, que consiste em revisar o conteúdo em intervalos regulares, é uma técnica comprovada para fortalecer a memória de longo prazo.
+Criar um ambiente de estudo livre de distrações, como escolher um local tranquilo e organizar suas ferramentas de estudo, é essencial para garantir que você esteja 100% focado. Ajustar seu planejamento conforme necessário também permite que você lide melhor com imprevistos, tornando seu processo de aprendizado mais flexível e eficaz.
+Com a abordagem certa, é possível transformar a rotina de estudos em uma prática mais produtiva, eficiente e focada, garantindo o alcance dos seus objetivos com mais facilidade e consistência.''',
     };
 
     final Map<String, String> imagens = {
@@ -42,6 +53,7 @@ Essa técnica melhora a retenção de informações e reforça conexões entre c
       'feynman': 'assets/feynman.png',
       'pareto': 'assets/pareto.jpg',
       'intercalado': 'assets/intercalado.jpg',
+      'foco': 'assets/fundo1.jpg',
     };
 
     final descricaoDetalhada =

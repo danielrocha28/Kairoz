@@ -4,12 +4,14 @@ class HabitosWidget extends StatelessWidget {
   final String text;
   final String imageUrl;
   final String title;
+  final Widget destinationPage; // Página de destino
 
   const HabitosWidget({
     super.key,
     required this.text,
     required this.imageUrl,
     required this.title,
+    required this.destinationPage, // Inicializa o parâmetro
   });
 
   @override
@@ -71,14 +73,37 @@ class HabitosWidget extends StatelessWidget {
                     ],
                   ),
                   padding: const EdgeInsets.all(12),
-                  child: Text(
-                    text,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                      fontWeight: FontWeight.normal,
-                    ),
-                    textAlign: TextAlign.left,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        text,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                      const SizedBox(height: 4),
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => destinationPage),
+                          );
+                        },
+                        child: const Text(
+                          'Ler Mais...',
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 10,
+                            fontStyle: FontStyle.italic, // Estilo itálico
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
