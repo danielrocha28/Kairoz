@@ -21,7 +21,7 @@ const fastify = Fastify({ pluginTimeout: 30000 });
 
 // Enable CORS
 fastify.register(fastifyCors, {
-  origin: process.env.URL_DOMAIN,
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 });
 
