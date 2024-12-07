@@ -38,9 +38,11 @@ export async function registerUser(request  , reply) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({ name, email, password: hashedPassword });
+    const token = jwt.sign({ id: user.id_user }, process.env.JWT_SECRET, { expiresIn: '8h' });
 
     reply.status(201).send({
       message: 'User registered successfully',
+      token,
       user: {
         id: user.id_user,
         name: user.name,
