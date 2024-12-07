@@ -52,69 +52,72 @@ class _AddTaskModalState extends State<AddTaskModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-        left: 16,
-        right: 16,
-        top: 16,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-            'Nova Tarefa',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+    return Scaffold(
+      backgroundColor: Colors.grey[100],
+      body: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          left: 16,
+          right: 16,
+          top: 16,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text(
+              'Nova Tarefa',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _titleController,
-            decoration: const InputDecoration(
-              labelText: 'Título',
-              border: OutlineInputBorder(),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _titleController,
+              decoration: const InputDecoration(
+                labelText: 'Título',
+                border: OutlineInputBorder(),
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          OutlinedButton(
-            onPressed: _selectDate,
-            child: Text(
-              _selectedDate == null
-                  ? 'Selecionar Data'
-                  : 'Data: ${DateFormatter.formatDate(_selectedDate!)}',
+            const SizedBox(height: 16),
+            OutlinedButton(
+              onPressed: _selectDate,
+              child: Text(
+                _selectedDate == null
+                    ? 'Selecionar Data'
+                    : 'Data: ${DateFormatter.formatDate(_selectedDate!)}',
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          DropdownButtonFormField<TaskCategory>(
-            value: _selectedCategory,
-            decoration: const InputDecoration(
-              labelText: 'Categoria',
-              border: OutlineInputBorder(),
+            const SizedBox(height: 16),
+            DropdownButtonFormField<TaskCategory>(
+              value: _selectedCategory,
+              decoration: const InputDecoration(
+                labelText: 'Categoria',
+                border: OutlineInputBorder(),
+              ),
+              items: TaskCategory.values.map((category) {
+                return DropdownMenuItem(
+                  value: category,
+                  child: Text(category.name),
+                );
+              }).toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    _selectedCategory = value;
+                  });
+                }
+              },
             ),
-            items: TaskCategory.values.map((category) {
-              return DropdownMenuItem(
-                value: category,
-                child: Text(category.name),
-              );
-            }).toList(),
-            onChanged: (value) {
-              if (value != null) {
-                setState(() {
-                  _selectedCategory = value;
-                });
-              }
-            },
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: _submitTask,
-            child: const Text('Salvar'),
-          ),
-          const SizedBox(height: 16),
-        ],
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _submitTask,
+              child: const Text('Salvar'),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
       ),
     );
   }

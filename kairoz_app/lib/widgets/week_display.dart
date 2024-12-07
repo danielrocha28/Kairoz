@@ -91,8 +91,7 @@ class WeekDisplay extends StatelessWidget {
   }
 
   List<DateTime> _getCurrentWeek(DateTime date) {
-    final sunday = date.subtract(Duration(days: date.weekday % 7));
-    return List.generate(7, (index) => sunday.add(Duration(days: index)));
+    return List.generate(7, (index) => date.add(Duration(days: index)));
   }
 
   String _getWeekdayName(DateTime date) {

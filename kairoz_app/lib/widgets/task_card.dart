@@ -50,25 +50,29 @@ class TaskCard extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 4),
+            Text(
+              DateFormatter.formatDateAndHour(task.dueDate),
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 14,
+              ),
+            ),
             const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  DateFormatter.getDaysRemainingText(task.daysRemaining),
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 16,
-                  ),
-                ),
-                Text(
-                  'Data: ${DateFormatter.formatDate(task.dueDate)}',
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 14,
-                  ),
-                ),
-              ],
+            Text(
+              (task.description == null || task.description!.isEmpty)
+                  ? 'Sem Descrição.'
+                  : task.description!,
+              style: TextStyle(
+                fontSize: 16,
+                fontStyle:
+                    (task.description == null || task.description!.isEmpty)
+                        ? FontStyle.italic
+                        : FontStyle.normal,
+                color: (task.description == null || task.description!.isEmpty)
+                    ? Colors.grey
+                    : Colors.black,
+              ),
             ),
           ],
         ),
