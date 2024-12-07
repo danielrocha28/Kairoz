@@ -18,9 +18,11 @@ export const handleServerError = (error, reply) => {
 export async function createTask(request, reply) {
   const token = (request.headers.authorization?.split(' ') ?? [])[1];
   const user = await getUserByID(token);
+
   if (!user) {
     reply.code(401).send('token not found or access not permitted');
   }
+  
   try {
     let validatedData = taskSchema.parse(request.body);
     const existsTask = await Task.findOne({ where: { title: validatedData.title }});
