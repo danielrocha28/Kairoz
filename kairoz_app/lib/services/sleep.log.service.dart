@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-class RegisterService {
+class SleepLogService {
   final String sleepTime;
   final String wakeUpTime;
   final baseUrl = dotenv.env['BASE_URL'];
 
-  const RegisterService({
+  SleepLogService({
     required this.sleepTime,
     required this.wakeUpTime,
   });
@@ -23,21 +23,23 @@ class RegisterService {
         }),
       );
 
+      if (response.statusCode != 201) {
+        throw Exception(
+          'Ocorreu um erro ao cadastrar registro: ${response.statusCode}',
+        );
+      }
+
       final getResponse = await http.get(
         Uri.parse('$baseUrl/sleep-time'),
       );
-    
-      if (response.statusCode == 201) {
-        
-        if (getResponse.statusCode == 200) {
-            return response.body;
-        } else {
-            return 'Erro ao encontrar o registro de sono ${getResponse.statusCode}'; 
-        }
 
-      } else {
-        return 'Erro ao registrar o sono: ${response.statusCode}';
+      if (getResponse.statusCode != 200) {
+        throw Exception(
+          'Ocorreu um erro ao buscar registro: ${response.statusCode}',
+        );
       }
+
+      return getResponse;
     } catch (_) {
       return http.Response(
         '{"error": "Ocorreu um erro ao Cadastrar-se. Tente novamente!"}',

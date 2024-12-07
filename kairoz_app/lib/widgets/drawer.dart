@@ -25,10 +25,10 @@ class MyDrawer extends StatelessWidget {
           Column(
             children: [
               const DrawerHeader(
-                child: Icon(
-                  Icons.person,
-                  color: Color.fromARGB(255, 76, 37, 143),
-                  size: 64,
+                child: Image(
+                  image: AssetImage('assets/kairozlogo1.png'),
+                  width: 200,
+                  fit: BoxFit.contain,
                 ),
               ),
               MyListTile(

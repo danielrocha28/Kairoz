@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; 
+import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 
 class SleepTracker extends StatefulWidget {
@@ -11,10 +11,9 @@ class _SleepTrackerState extends State<SleepTracker> {
   TextEditingController _sleepTimeController = TextEditingController();
   TextEditingController _wakeUpTimeController = TextEditingController();
 
-  
   List<Map<String, String>> _sleepRecords = [];
 
-   TextInputFormatter _hourFormatter() {
+  TextInputFormatter _hourFormatter() {
     return TextInputFormatter.withFunction((oldValue, newValue) {
       String text = newValue.text;
 
@@ -23,7 +22,7 @@ class _SleepTrackerState extends State<SleepTracker> {
       }
 
       if (text.length > 5) {
-        text = text.substring(0, 5); 
+        text = text.substring(0, 5);
       }
 
       return TextEditingValue(
@@ -32,13 +31,14 @@ class _SleepTrackerState extends State<SleepTracker> {
       );
     });
   }
-  
+
   void _saveSleepData() {
     final String sleepTime = _sleepTimeController.text;
     final String wakeUpTime = _wakeUpTimeController.text;
 
     if (sleepTime.isNotEmpty && wakeUpTime.isNotEmpty) {
-      final String currentDate = DateFormat('dd/MM/yyyy').format(DateTime.now()); 
+      final String currentDate =
+          DateFormat('dd/MM/yyyy').format(DateTime.now());
 
       setState(() {
         _sleepRecords.add({
@@ -52,7 +52,6 @@ class _SleepTrackerState extends State<SleepTracker> {
         SnackBar(content: Text('Horários registrados com sucesso!')),
       );
 
-      
       _sleepTimeController.clear();
       _wakeUpTimeController.clear();
     }
@@ -61,8 +60,7 @@ class _SleepTrackerState extends State<SleepTracker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      ),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -70,7 +68,8 @@ class _SleepTrackerState extends State<SleepTracker> {
           children: [
             Text(
               'Digite a hora que você foi dormir:',
-              style: TextStyle(fontSize: 18, color: const Color.fromARGB(255, 49, 49, 49)),
+              style: TextStyle(
+                  fontSize: 18, color: const Color.fromARGB(255, 49, 49, 49)),
             ),
             SizedBox(height: 10),
             TextField(
@@ -83,14 +82,16 @@ class _SleepTrackerState extends State<SleepTracker> {
                   borderRadius: BorderRadius.circular(15),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 15),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 15),
               ),
               keyboardType: TextInputType.datetime,
             ),
             SizedBox(height: 16),
             Text(
               'Digite a hora que você acordou:',
-              style: TextStyle(fontSize: 18, color: const Color.fromARGB(255, 49, 49, 49)),
+              style: TextStyle(
+                  fontSize: 18, color: const Color.fromARGB(255, 49, 49, 49)),
             ),
             SizedBox(height: 10),
             TextField(
@@ -103,7 +104,8 @@ class _SleepTrackerState extends State<SleepTracker> {
                   borderRadius: BorderRadius.circular(15),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 15),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 12, horizontal: 15),
               ),
               keyboardType: TextInputType.datetime,
             ),
@@ -119,7 +121,9 @@ class _SleepTrackerState extends State<SleepTracker> {
               ),
               child: Text(
                 'Registrar Horários',
-                style: TextStyle(fontSize: 16, color:const Color.fromARGB(255, 248, 248, 248)),
+                style: TextStyle(
+                    fontSize: 16,
+                    color: const Color.fromARGB(255, 248, 248, 248)),
               ),
             ),
             SizedBox(height: 32),
@@ -135,7 +139,8 @@ class _SleepTrackerState extends State<SleepTracker> {
                     ),
                     elevation: 4,
                     child: ListTile(
-                      contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                       title: Text(
                         'Dia: ${record['date']}',
                         style: TextStyle(
@@ -145,7 +150,9 @@ class _SleepTrackerState extends State<SleepTracker> {
                       ),
                       subtitle: Text(
                         'Dormiu: ${record['sleepTime']} - Acordou: ${record['wakeUpTime']}',
-                        style: TextStyle(fontSize: 16, color: const Color.fromARGB(255, 27, 27, 27)),
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: const Color.fromARGB(255, 27, 27, 27)),
                       ),
                     ),
                   );

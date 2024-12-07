@@ -12,15 +12,16 @@ import { passportSetup } from './config/passport.js';
 import chartRoutes from './routes/chart.routes.js';
 import noteRoutes from './routes/note.routes.js';
 import alarmRoutes from './routes/alarm.routes.js';
+import recommendationRoutes from './routes/recommendation.router.js';
+import sleepLogRouters from './routes/sleep.log.routes.js';
 
 dotenv.config();
-
 
 const fastify = Fastify({ pluginTimeout: 30000 });
 
 // Enable CORS
 fastify.register(fastifyCors, {
-  origin: process.env.URL_DOMAIN,
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE']
 });
 
@@ -43,6 +44,8 @@ fastify.register(flashcardRoutes);
 fastify.register(chartRoutes);
 fastify.register(noteRoutes);
 fastify.register(alarmRoutes);
+fastify.register(recommendationRoutes);
+fastify.register(sleepLogRouters);
 
 
 passportSetup(fastify);

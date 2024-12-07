@@ -1,9 +1,11 @@
-import { createTask, getTasks, getTaskById, updateTask, deleteTask } from '../controllers/task.controller.js';
+import { createTask, getTasks, getTaskById, updateTask, deleteTask,
+getList, getStudyTopic, IdTopicOrTask } from '../controllers/task.controller.js';
 import logger from '../config/logger.js'; 
 
 
 const taskRoutes = (fastify, options, done) => {
   
+  //routes to task in general
   fastify.post('/tasks', async (request, reply) => {
     try {
       const { title, category } = request.body; 
@@ -52,6 +54,7 @@ const taskRoutes = (fastify, options, done) => {
     }
   });
 
+
   fastify.delete('/tasks/:id', async (request, reply) => {
     try {
       const taskId = parseInt(request.params.id, 10);
@@ -59,6 +62,41 @@ const taskRoutes = (fastify, options, done) => {
         return reply.status(400).send({ error: 'Invalid task ID' });
       }
       await deleteTask(request, reply);
+    } catch (error) {
+      logger.error(error);
+      reply.status(500).send({ error: 'Error processing request', details: error.message });
+    }
+  });
+
+
+
+  //take all 
+  fastify.get('/study-topic', async (request, reply) => {
+    try {
+      await getStudyTopic(request, reply);
+    } catch (error) {
+      logger.error(error);
+      reply.status(500).send({ error: 'Error processing request', details: error.message });
+    }
+  });
+
+  //take id and title
+  fastify.get('/study-topic-list', async (request, reply) => {
+    try {
+      const taskList = await getList(request, reply);
+      if (taskList) {
+        reply.status(200).send(taskList);
+      }
+    } catch (error) {
+      logger.error(error);
+      reply.status(500).send({ error: 'Error processing request', details: error.message });
+    }
+  });
+
+  //take id according to task
+  fastify.get('/study-topic-id', async (request, reply) => {
+    try {
+      await IdTopicOrTask(request, reply);
     } catch (error) {
       logger.error(error);
       reply.status(500).send({ error: 'Error processing request', details: error.message });

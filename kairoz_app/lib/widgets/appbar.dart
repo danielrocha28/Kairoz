@@ -5,15 +5,34 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.title,
     this.iconTheme,
+    this.titleFontSize = 26.0,
   });
 
-  final Widget title;
+  final String title;
   final IconThemeData? iconTheme;
+  final double titleFontSize;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: title,
+      title: Row(
+        children: [
+          Image.asset(
+            'assets/logo1.png',
+            height: 28,
+            width: 28,
+          ),
+          const SizedBox(width: 5),
+          Text(
+            title,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: titleFontSize,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
       backgroundColor: const Color.fromARGB(255, 82, 22, 185),
       iconTheme: iconTheme,
     );

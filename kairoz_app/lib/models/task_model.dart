@@ -1,4 +1,3 @@
-// Crie uma classe para representar uma tarefa
 class TaskModel {
   late String description;
   late bool isCompleted;
