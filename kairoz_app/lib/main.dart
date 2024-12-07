@@ -7,6 +7,7 @@ import 'package:kairoz/pages/register_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kairoz/pages/splashcreen_page.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:kairoz/widgets/Flash_cards.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterPage(),
         '/home': (context) => const HomePage(),
         '/profile': (context) => const ProfilePage(),
+        '/flash': (context) => HomesPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
