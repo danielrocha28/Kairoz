@@ -4,7 +4,7 @@ import logger from '../config/logger.js';
 const timerRouter = (fastify, options, done) => {
 
   // route to stocy the timer 
-  fastify.put('timer/save', async (request, reply) => {
+  fastify.put('/timer/save', async (request, reply) => {
     try {
       await saveTotalTime(request, reply);
     } catch (error) {
@@ -14,7 +14,7 @@ const timerRouter = (fastify, options, done) => {
   });
 
   // route to take the total of time 
-  fastify.get('timer/total', async (request, reply) => {
+  fastify.get('/timer/total', async (request, reply) => {
     try {
       const totalTime = await getTotalTime(request, reply);
       if (totalTime){

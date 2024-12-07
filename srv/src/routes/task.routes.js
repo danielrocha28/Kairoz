@@ -61,7 +61,7 @@ const taskRoutes = (fastify, options, done) => {
       if (isNaN(taskId)) {
         return reply.status(400).send({ error: 'Invalid task ID' });
       }
-      await deleteTask(request, reply);
+      return await deleteTask(request, reply);
     } catch (error) {
       logger.error(error);
       reply.status(500).send({ error: 'Error processing request', details: error.message });
