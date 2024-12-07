@@ -65,14 +65,6 @@ class LoginPageState extends State<LoginPage> {
   }
 
   @override
-  void initState() {
-    _emailController.text = 'hxh@gmail.com';
-    _passwordController.text = '123456@';
-
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 82, 22, 185),

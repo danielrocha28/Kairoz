@@ -1,8 +1,8 @@
 class TaskResponse {
   int? idTask;
   String? title;
-  Null description;
-  Null parentid;
+  String? description;
+  int? parentid;
   String? repeat;
   String? category;
   String? priority;

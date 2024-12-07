@@ -4,14 +4,14 @@ class HabitosWidget extends StatelessWidget {
   final String text;
   final String imageUrl;
   final String title;
-  final Widget destinationPage; // Página de destino
+  final Widget destinationPage;
 
   const HabitosWidget({
     super.key,
     required this.text,
     required this.imageUrl,
     required this.title,
-    required this.destinationPage, // Inicializa o parâmetro
+    required this.destinationPage,
   });
 
   @override
@@ -99,7 +99,7 @@ class HabitosWidget extends StatelessWidget {
                           style: TextStyle(
                             color: Colors.blue,
                             fontSize: 10,
-                            fontStyle: FontStyle.italic, // Estilo itálico
+                            fontStyle: FontStyle.italic,
                           ),
                         ),
                       ),

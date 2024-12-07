@@ -8,11 +8,17 @@ class TaskCreateService {
   final String title;
   final String category;
   final DateTime date;
+  final String? description;
+  final String? priority;
+  final String? recurrence;
 
   const TaskCreateService({
     required this.title,
     required this.category,
     required this.date,
+    this.description,
+    this.priority,
+    this.recurrence,
   });
 
   Future<http.Response> execute() async {
@@ -37,6 +43,9 @@ class TaskCreateService {
           "title": title,
           "category": category,
           "dueDate": date.toString(),
+          ...description == null ? {} : {"description": description},
+          ...priority == null ? {} : {"priority": priority},
+          ...recurrence == null ? {} : {"repeat": recurrence},
         }),
       );
     } catch (_) {
@@ -44,6 +53,43 @@ class TaskCreateService {
         '{"error": "Ocorreu um erro ao criar tarefa. Tente novamente!"}',
         400,
       );
+    }
+  }
+}
+
+class TaskDeleteService {
+  final String taskId;
+
+  TaskDeleteService({required this.taskId});
+
+  Future<http.Response> deleteTask() async {
+    final baseUrl = dotenv.env['BASE_URL'];
+    final mockedMode = dotenv.env['MOCKED_MODE'];
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+
+    if (mockedMode == 'true') {
+      return http.Response('Tarefa deletada', 200);
+    }
+
+    try {
+      final response = await http.delete(
+        Uri.parse('$baseUrl/tasks/$taskId'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        throw Exception(
+          'Falha ao deletar a tarefa. Código: ${response.statusCode}',
+        );
+      }
+    } catch (error) {
+      throw Exception('Erro ao Deletar tarefas: $error');
     }
   }
 }

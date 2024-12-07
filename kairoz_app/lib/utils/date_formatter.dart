@@ -5,6 +5,10 @@ class DateFormatter {
     return DateFormat('dd/MM/yyyy', 'pt_BR').format(date);
   }
 
+  static String formatDateAndHour(DateTime date) {
+    return DateFormat('HH:mm - dd/MM/yyyy', 'pt_BR').format(date);
+  }
+
   static String getDaysRemainingText(int days) {
     if (days == 0) {
       return 'Vence hoje';

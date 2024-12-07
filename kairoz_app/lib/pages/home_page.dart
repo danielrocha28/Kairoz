@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kairoz/models/task.dart';
+import 'package:kairoz/pages/add_task_page.dart';
 import 'package:kairoz/services/task_create.service.dart';
-import 'package:kairoz/widgets/add_task_modal.dart';
 import 'package:kairoz/widgets/drawer.dart';
+import 'package:shimmer/shimmer.dart';
 import 'profile_page.dart';
 import 'package:kairoz/widgets/nav_bar.dart';
 import 'package:kairoz/pages/estudos_page.dart';
@@ -20,6 +21,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
+  bool _isLoading = true;
+
   final List<Task> _tasks = [];
 
   void goToHomePage() {
@@ -58,11 +61,15 @@ class _HomePageState extends State<HomePage> {
                 category: getType(taskRes.category ?? ''),
                 dueDate: DateTime.parse(
                     taskRes.dueDate ?? DateTime.now().toString()),
+                description: taskRes.description ?? '',
+                recurrence: getRecurrence(taskRes.repeat ?? ''),
+                priority: getPriority(taskRes.priority ?? ''),
               ))
           .toList();
 
       if (mounted) {
         setState(() {
+          _isLoading = false;
           _tasks.clear();
           _tasks.addAll(newTasks);
         });
@@ -83,48 +90,49 @@ class _HomePageState extends State<HomePage> {
       case 'leisure':
         return TaskCategory.leisure;
       default:
-        TaskCategory.study;
+        return TaskCategory.study;
     }
   }
 
-  getFromEnum(TaskCategory value) {
+  getRecurrence(String value) {
     switch (value) {
-      case TaskCategory.study:
-        return 'study';
-      case TaskCategory.health:
-        return 'health';
-      case TaskCategory.work:
-        return 'work';
-      case TaskCategory.leisure:
-        return 'leisure';
+      case 'daily':
+        return TaskRecurrence.daily;
+      case 'weekly':
+        return TaskRecurrence.weekly;
+      case 'monthly':
+        return TaskRecurrence.monthly;
+      case 'yearly':
+        return TaskRecurrence.yearly;
       default:
-        'study';
+        return TaskRecurrence.none;
     }
   }
 
-  void _addTask(Task task) async {
-    final service = TaskCreateService(
-      title: task.title,
-      category: getFromEnum(task.category),
-      date: task.dueDate,
+  getPriority(String value) {
+    switch (value) {
+      case 'low':
+        return TaskPriority.low;
+      case 'medium':
+        return TaskPriority.medium;
+      case 'high':
+        return TaskPriority.high;
+      default:
+        return TaskPriority.low;
+    }
+  }
+
+  void _showAddTaskModal() async {
+    final task = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddTaskScreen()),
     );
 
-    try {
-      await service.execute();
+    if (task != null) {
       setState(() {
         _tasks.add(task);
       });
-    } catch (e) {
-      print('Erro ao adicionar tarefa: $e');
     }
-  }
-
-  void _showAddTaskModal() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (context) => AddTaskModal(onTaskAdded: _addTask),
-    );
   }
 
   filterByType(TaskCategory category) {
@@ -140,7 +148,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: const Color(0xffE4E1F3),
       backgroundColor: Colors.grey[100],
       bottomNavigationBar: CustomBottomNavBar(
         selectedIndex: _selectedIndex,
@@ -160,15 +167,81 @@ class _HomePageState extends State<HomePage> {
         onPressed: _showAddTaskModal,
         child: const Icon(Icons.add),
       ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: <Widget>[
-          EstudosPage(tasks: filterByType(TaskCategory.study)),
-          SaudePage(tasks: filterByType(TaskCategory.health)),
-          TrabalhoPage(tasks: filterByType(TaskCategory.work)),
-          LazerPage(tasks: filterByType(TaskCategory.leisure)),
-        ],
-      ),
+      body: _isLoading
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 10),
+              child: Column(
+                children: [
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: 50.0,
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: double.infinity,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(7, (index) {
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: CircleAvatar(
+                          radius: 30.0,
+                          backgroundColor: Colors.white,
+                        ),
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 100.0,
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: double.infinity,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: 10,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              width: double.infinity,
+                              height: 100.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : IndexedStack(
+              index: _selectedIndex,
+              children: <Widget>[
+                EstudosPage(tasks: filterByType(TaskCategory.study)),
+                SaudePage(tasks: filterByType(TaskCategory.health)),
+                TrabalhoPage(tasks: filterByType(TaskCategory.work)),
+                LazerPage(tasks: filterByType(TaskCategory.leisure)),
+              ],
+            ),
     );
   }
 }
