@@ -18,12 +18,10 @@ class TaskList extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(16),
-      itemCount: tasks.length,
-      itemBuilder: (context, index) {
-        return TaskCard(task: tasks[index]);
-      },
+    return Column(
+      children: tasks.map((task) {
+        return TaskCard(task: task);
+      }).toList(),
     );
   }
 }

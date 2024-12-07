@@ -41,8 +41,12 @@ class Task {
     required this.category,
   });
 
+  DateTime getEndOfDay(DateTime date) {
+    return DateTime(date.year, date.month, date.day, 23, 59, 59, 999);
+  }
+
   int get daysRemaining {
-    final now = DateTime.now();
-    return dueDate.difference(now).inDays;
+    final now = getEndOfDay(DateTime.now());
+    return getEndOfDay(dueDate).difference(now).inDays;
   }
 }

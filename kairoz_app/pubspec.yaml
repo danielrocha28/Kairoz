@@ -35,6 +35,9 @@ flutter:
 
   assets:
     - assets/logo.png
+    - assets/kairozlogo.png
+    - assets/kairozlogo1.png
+    - assets/logo1.png
     - assets/fundo1.jpg
     - assets/estudos.png
     - assets/feynman.png

@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:kairoz/models/task.dart';
+import 'package:kairoz/widgets/task_list.dart';
 
-class TrabalhoPage extends StatefulWidget {
-  const TrabalhoPage({super.key});
+class TrabalhoPage extends StatelessWidget {
+  final List<Task> tasks;
 
-  @override
-  State<TrabalhoPage> createState() => _MyWidgetState();
-}
+  const TrabalhoPage({super.key, required this.tasks});
 
-class _MyWidgetState extends State<TrabalhoPage> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Bem-vindo à página de Trabalho!'),
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 10),
+      children: [
+        const Text(
+          'Tarefas do Trabalho',
+          textAlign: TextAlign.start,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 12),
+        TaskList(tasks: tasks),
+      ],
     );
   }
 }

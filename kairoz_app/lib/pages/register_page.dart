@@ -102,24 +102,10 @@ class _RegisterPageState extends State<RegisterPage> {
             alignment: Alignment.topCenter,
             child: Padding(
               padding: const EdgeInsets.only(top: 80.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/logo.png',
-                    height: 50,
-                    width: 50,
-                  ),
-                  const SizedBox(width: 2),
-                  const Text(
-                    'Kairoz',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 45,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ],
+              child: Image.asset(
+                'assets/kairozlogo.png',
+                height: 90,
+                width: 225,
               ),
             ),
           ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:kairoz/pages/agenda_page.dart';
-import 'package:kairoz/pages/dashboard_page.dart';
 import 'package:kairoz/pages/home_page.dart';
 import 'package:kairoz/pages/login_page.dart';
 import 'package:kairoz/pages/profile_page.dart';
@@ -31,7 +30,6 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterPage(),
         '/home': (context) => const HomePage(),
         '/profile': (context) => const ProfilePage(),
-        '/dashboard': (context) => const DashboardPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
