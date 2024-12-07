@@ -55,7 +55,6 @@ class _HomePageState extends State<HomePage> {
       appBar: const MyAppBar(
         title: "Kairoz",
         iconTheme: IconThemeData(color: Colors.white),
-        iconTheme: IconThemeData(color: Colors.white),
       ),
       drawer: MyDrawer(
         foregroundColor: Colors.white,
