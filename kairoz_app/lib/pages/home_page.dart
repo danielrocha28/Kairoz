@@ -133,82 +133,81 @@ class _HomePageState extends State<HomePage> {
         onPressed: _showAddTaskModal,
         child: const Icon(Icons.add),
       ),
-      body: SaudePage(tasks: filterByType(TaskCategory.health)),
-      // body: _isLoading
-      //     ? Padding(
-      //         padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 10),
-      //         child: Column(
-      //           children: [
-      //             const SizedBox(height: 24),
-      //             SizedBox(
-      //               height: 50.0,
-      //               child: Shimmer.fromColors(
-      //                 baseColor: Colors.grey[300]!,
-      //                 highlightColor: Colors.grey[100]!,
-      //                 child: Container(
-      //                   width: double.infinity,
-      //                   color: Colors.white,
-      //                 ),
-      //               ),
-      //             ),
-      //             const SizedBox(height: 24),
-      //             Row(
-      //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      //               children: List.generate(7, (index) {
-      //                 return Shimmer.fromColors(
-      //                   baseColor: Colors.grey[300]!,
-      //                   highlightColor: Colors.grey[100]!,
-      //                   child: CircleAvatar(
-      //                     radius: 30.0,
-      //                     backgroundColor: Colors.white,
-      //                   ),
-      //                 );
-      //               }),
-      //             ),
-      //             const SizedBox(height: 16),
-      //             SizedBox(
-      //               height: 100.0,
-      //               child: Shimmer.fromColors(
-      //                 baseColor: Colors.grey[300]!,
-      //                 highlightColor: Colors.grey[100]!,
-      //                 child: Container(
-      //                   width: double.infinity,
-      //                   color: Colors.white,
-      //                 ),
-      //               ),
-      //             ),
-      //             const SizedBox(height: 16),
-      //             Expanded(
-      //               child: ListView.builder(
-      //                 itemCount: 10,
-      //                 itemBuilder: (context, index) {
-      //                   return Padding(
-      //                     padding: const EdgeInsets.symmetric(vertical: 8.0),
-      //                     child: Shimmer.fromColors(
-      //                       baseColor: Colors.grey[300]!,
-      //                       highlightColor: Colors.grey[100]!,
-      //                       child: Container(
-      //                         width: double.infinity,
-      //                         height: 100.0,
-      //                         color: Colors.white,
-      //                       ),
-      //                     ),
-      //                   );
-      //                 },
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       )
-      //     : IndexedStack(
-      //         index: _selectedIndex,
-      //         children: <Widget>[
-      //           EstudosPage(tasks: filterByType(TaskCategory.study)),
-      //           SaudePage(tasks: filterByType(TaskCategory.health)),
-      //           TrabalhoPage(tasks: filterByType(TaskCategory.work)),
-      //           LazerPage(tasks: filterByType(TaskCategory.leisure)),
-      //         ],
-      //       ),
+      body: _isLoading
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 10),
+              child: Column(
+                children: [
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    height: 50.0,
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: double.infinity,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(7, (index) {
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: CircleAvatar(
+                          radius: 30.0,
+                          backgroundColor: Colors.white,
+                        ),
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 100.0,
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Container(
+                        width: double.infinity,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: 10,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              width: double.infinity,
+                              height: 100.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : IndexedStack(
+              index: _selectedIndex,
+              children: <Widget>[
+                EstudosPage(tasks: filterByType(TaskCategory.study)),
+                SaudePage(tasks: filterByType(TaskCategory.health)),
+                TrabalhoPage(tasks: filterByType(TaskCategory.work)),
+                LazerPage(tasks: filterByType(TaskCategory.leisure)),
+              ],
+            ),
     );
   }
 }
