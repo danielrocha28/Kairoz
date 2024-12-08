@@ -18,19 +18,11 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Row(
         children: [
           Image.asset(
-            'assets/logo1.png',
-            height: 28,
-            width: 28,
+            'assets/kairozlogo.png',
+            height: 125,
+            width: 125,
           ),
           const SizedBox(width: 5),
-          Text(
-            title,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: titleFontSize,
-              fontWeight: FontWeight.normal,
-            ),
-          ),
         ],
       ),
       backgroundColor: const Color.fromARGB(255, 82, 22, 185),
