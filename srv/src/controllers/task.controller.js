@@ -130,12 +130,13 @@ export async function IdTopicOrTask(request, reply) {
 
 export async function deleteTask(request, reply) {
   try {
-    const deleted = await Task.destroy({ where: { id_task: request.params.id_task } }); 
+    const deleted = await Task.destroy({ where: { id_task: request.params.id } }); 
+
     if (deleted) {
-      reply.code(204).send();  
-    } else {
-      reply.code(404).send({ error: `Task with id_task ${request.params.id_task} not found` });
-    }
+      return reply.code(200).send({ message: `Task with id_task ${request.params.id} deleted` });
+    } 
+    
+    return reply.code(404).send({ error: `Task with id_task ${request.params.id} not found` });    
   } catch (error) {
     handleZodError(error, reply);
     handleServerError(error, reply);
