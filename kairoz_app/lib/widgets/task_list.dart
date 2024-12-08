@@ -14,7 +14,10 @@ class TaskList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (tasks.isEmpty) {
       return const Center(
-        child: Text('Nenhuma tarefa adicionada'),
+        child: Padding(
+          padding: EdgeInsets.only(top: 50, bottom: 40),
+          child: Text('Nenhuma tarefa adicionada'),
+        ),
       );
     }
 
