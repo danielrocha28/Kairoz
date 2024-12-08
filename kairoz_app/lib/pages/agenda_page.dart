@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kairoz/widgets/appbar.dart';
-import 'package:kairoz/widgets/calendario.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class AgendaPage extends StatefulWidget {
   const AgendaPage({super.key});
@@ -10,6 +10,20 @@ class AgendaPage extends StatefulWidget {
 }
 
 class _AgendaPageState extends State<AgendaPage> {
+  late CalendarController _calendarController;
+
+  @override
+  void initState() {
+    super.initState();
+    _calendarController = CalendarController();
+  }
+
+  @override
+  void dispose() {
+    _calendarController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +31,17 @@ class _AgendaPageState extends State<AgendaPage> {
         title: "Agenda",
         iconTheme: IconThemeData(color: Colors.white),
       ),
-      body: const CalendarWidget(),
+      body: Column(
+        children: [
+          Expanded(
+            child: SfCalendar(
+              controller: _calendarController,
+              view: CalendarView.month,
+              monthViewSettings: const MonthViewSettings(showAgenda: true),
+            ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showCreateEventDialog(context);
