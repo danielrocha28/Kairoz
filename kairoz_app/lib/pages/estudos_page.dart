@@ -6,13 +6,34 @@ import 'package:kairoz/widgets/tecnicas_estudo.dart';
 import 'package:kairoz/widgets/week_display.dart';
 import 'package:flutter/cupertino.dart';
 
-class EstudosPage extends StatelessWidget {
+class EstudosPage extends StatefulWidget {
   final List<Task> tasks;
 
-  const EstudosPage({super.key, required this.tasks});
+  EstudosPage({super.key, required this.tasks});
+
+  @override
+  State<EstudosPage> createState() => _EstudosPageState();
+}
+
+class _EstudosPageState extends State<EstudosPage> {
+  DateTime selectedDate = DateTime.now();
+
+  void handleDateSelected(DateTime date) {
+    print('selectedDate $selectedDate');
+
+    setState(() {
+      selectedDate = date;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final filteredTasks = widget.tasks.where((task) {
+      return task.dueDate.year == selectedDate.year &&
+          task.dueDate.month == selectedDate.month &&
+          task.dueDate.day == selectedDate.day;
+    }).toList();
+
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 10),
       children: [
@@ -22,9 +43,12 @@ class EstudosPage extends StatelessWidget {
               color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 24),
-        const SingleChildScrollView(
+        SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: WeekDisplay(),
+          child: WeekDisplay(
+            activeDate: selectedDate,
+            onDateSelected: handleDateSelected,
+          ),
         ),
         const SizedBox(height: 16),
         Container(
@@ -63,7 +87,7 @@ class EstudosPage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        TaskList(tasks: tasks),
+        TaskList(tasks: filteredTasks),
         const SizedBox(height: 16),
         const TecnicasEstudo(),
       ],

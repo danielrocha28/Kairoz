@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:kairoz/models/task.dart';
+import 'package:kairoz/pages/add_task_page.dart';
+import 'package:kairoz/services/task_create.service.dart';
+import 'package:kairoz/utils/category_utils.dart';
+import 'package:kairoz/utils/task_utils.dart';
 import 'package:kairoz/widgets/appbar.dart';
-import 'package:kairoz/widgets/calendario.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class AgendaPage extends StatefulWidget {
   const AgendaPage({super.key});
@@ -10,6 +15,82 @@ class AgendaPage extends StatefulWidget {
 }
 
 class _AgendaPageState extends State<AgendaPage> {
+  late CalendarController _calendarController;
+  List<Appointment> _appointments = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _calendarController = CalendarController();
+    _fetchTasks();
+  }
+
+  void _fetchTasks() async {
+    try {
+      final service = TaskFetchService();
+      final taskData = await service.fetchTasks();
+
+      final newTasks = taskData
+          .map((taskRes) => Task(
+                title: taskRes.title ?? '',
+                category: getType(taskRes.category ?? ''),
+                dueDate: DateTime.parse(taskRes.dueDate ?? ''),
+                description: taskRes.description ?? '',
+                recurrence: getRecurrence(taskRes.repeat ?? ''),
+                priority: getPriority(taskRes.priority ?? ''),
+              ))
+          .toList();
+
+      final appointments = newTasks
+          .map((task) => Appointment(
+                startTime: task.dueDate,
+                endTime: task.dueDate.add(const Duration(hours: 1)),
+                subject: task.title,
+                color: getCategoryColor(task.category),
+                notes: task.description ?? '',
+              ))
+          .toList();
+
+      setState(() {
+        _appointments = appointments;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao buscar tarefas!'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void _showAddTaskModal() async {
+    final task = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => AddTaskScreen()),
+    );
+
+    if (task != null) {
+      final appointments = Appointment(
+        startTime: task.dueDate,
+        endTime: task.dueDate.add(const Duration(hours: 1)),
+        subject: task.title,
+        color: getCategoryColor(task.category),
+        notes: task.description ?? '',
+      );
+
+      setState(() {
+        _appointments.add(appointments);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _calendarController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,16 +98,26 @@ class _AgendaPageState extends State<AgendaPage> {
         title: "Agenda",
         iconTheme: IconThemeData(color: Colors.white),
       ),
-      body: const CalendarWidget(),
+      body: Column(
+        children: [
+          Expanded(
+            child: SfCalendar(
+              controller: _calendarController,
+              view: CalendarView.month,
+              monthViewSettings: const MonthViewSettings(showAgenda: true),
+              dataSource: TaskDataSource(_appointments),
+            ),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showCreateEventDialog(context);
-        },
+        onPressed: _showAddTaskModal,
         child: const Icon(Icons.add),
       ),
     );
   }
 
+  // Método para criar o evento
   Future<String> _createEvent(String eventName, DateTime eventDateTime) {
     return Future.value('Evento Criado: $eventName em $eventDateTime');
   }
@@ -103,9 +194,18 @@ class _AgendaPageState extends State<AgendaPage> {
                   selectedTime.hour,
                   selectedTime.minute,
                 );
-                _createEvent(eventName, eventDateTime).then((result) {
-                  Navigator.pop(context, result);
+
+                setState(() {
+                  _appointments.add(Appointment(
+                    startTime: eventDateTime,
+                    endTime: eventDateTime.add(Duration(hours: 1)),
+                    subject: eventName,
+                    color: Colors.orange,
+                    notes: 'Novo Evento',
+                  ));
                 });
+
+                Navigator.pop(context);
               },
               child: const Text('Salvar Evento'),
             ),
@@ -123,4 +223,10 @@ class _AgendaPageState extends State<AgendaPage> {
           borderRadius: BorderRadius.circular(8),
         ),
       );
+}
+
+class TaskDataSource extends CalendarDataSource {
+  TaskDataSource(List<Appointment> appointments) {
+    this.appointments = appointments;
+  }
 }

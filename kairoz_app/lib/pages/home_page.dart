@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kairoz/models/task.dart';
 import 'package:kairoz/pages/add_task_page.dart';
 import 'package:kairoz/services/task_create.service.dart';
+import 'package:kairoz/utils/task_utils.dart';
 import 'package:kairoz/widgets/drawer.dart';
 import 'package:shimmer/shimmer.dart';
 import 'profile_page.dart';
@@ -75,50 +76,12 @@ class _HomePageState extends State<HomePage> {
         });
       }
     } catch (e) {
-      print('Erro ao buscar tarefas: $e');
-    }
-  }
-
-  getType(String value) {
-    switch (value) {
-      case 'study':
-        return TaskCategory.study;
-      case 'health':
-        return TaskCategory.health;
-      case 'work':
-        return TaskCategory.work;
-      case 'leisure':
-        return TaskCategory.leisure;
-      default:
-        return TaskCategory.study;
-    }
-  }
-
-  getRecurrence(String value) {
-    switch (value) {
-      case 'daily':
-        return TaskRecurrence.daily;
-      case 'weekly':
-        return TaskRecurrence.weekly;
-      case 'monthly':
-        return TaskRecurrence.monthly;
-      case 'yearly':
-        return TaskRecurrence.yearly;
-      default:
-        return TaskRecurrence.none;
-    }
-  }
-
-  getPriority(String value) {
-    switch (value) {
-      case 'low':
-        return TaskPriority.low;
-      case 'medium':
-        return TaskPriority.medium;
-      case 'high':
-        return TaskPriority.high;
-      default:
-        return TaskPriority.low;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao criar tarefas!'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -162,6 +125,9 @@ class _HomePageState extends State<HomePage> {
         onHomeTap: goToHomePage,
         onProfileTap: goToProfilePage,
         onSignOut: signOut,
+        onCalendarTap: () {
+          Navigator.pushNamed(context, '/agenda');
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddTaskModal,

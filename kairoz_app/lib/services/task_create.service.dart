@@ -43,6 +43,7 @@ class TaskCreateService {
           "title": title,
           "category": category,
           "dueDate": date.toString(),
+          "tag": "task",
           ...description == null ? {} : {"description": description},
           ...priority == null ? {} : {"priority": priority},
           ...recurrence == null ? {} : {"repeat": recurrence},

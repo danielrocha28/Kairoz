@@ -123,7 +123,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
       Navigator.pop(context, task);
     } catch (e) {
-      print('Erro ao adicionar tarefa: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao criar tarefa!'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
