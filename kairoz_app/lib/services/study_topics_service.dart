@@ -12,24 +12,50 @@ class StudyTopicsService {
   StudyTopicsService(
       {this.savedTime, this.topicTitle, this.topicID, this.weekDay});
 
-  Future<String> getTopicList() async {
+  Future<List<Map<String, String>>> getTopicList() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/study-topic-list'),
+        Uri.parse('$baseUrl/study-topic'),
       );
 
       if (response.statusCode == 200) {
         print(response.body);
-        return response.body;
-      } else {
-        print(response.body);
         print(response.statusCode);
-        return 'Erro ao puxar a lista de tópicos: ${response.statusCode}';
+        final List<dynamic> data = jsonDecode(response.body);
+        final topics = data.map<Map<String, String>>((topic) {
+          return {
+            'title': topic['title'] ?? '',
+            'totalTime': topic['totalTime'] ?? '00:00:00',
+          };
+        }).toList();
+
+        return topics;
+      } else {
+        print('Erro ao puxar a lista de tópicos: ${response.statusCode}');
+        return [];
       }
     } catch (error) {
-      print(error);
-      print(error);
-      return 'Erro ao puxar a lista de tópicos: $error';
+      print('Erro ao puxar a lista de tópicos: $error');
+      return [];
+    }
+  }
+
+  Future<http.Response> createNewTopic(String topicTitle) async {
+    try {
+      final postResponse = await http.post(
+        Uri.parse('$baseUrl/study-topic-list'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode({"title": topicTitle}),
+      );
+      return postResponse;
+    } catch (error) {
+      return http.Response(
+        '{"$error": "Ocorreu um erro ao criar o tópico de estudo. Tente novamente!"}',
+        400,
+      );
     }
   }
 }

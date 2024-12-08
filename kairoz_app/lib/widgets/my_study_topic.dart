@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:kairoz/app_colors/app_colors.dart';
 import 'package:kairoz/services/study_topics_service.dart';
+import 'package:kairoz/widgets/my_stopwatch.dart';
 
 class StudyTopic extends StatelessWidget {
-  late String topicName;
-  String timerData = "00:00:00"; //valor total do tópico que vai vir do back
+  String topicName;
+  String timerData; //valor total do tópico que vai vir do back
 
   StudyTopic({super.key, required this.topicName, required this.timerData});
 
@@ -12,36 +13,25 @@ class StudyTopic extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Container(
-            padding: const EdgeInsets.fromLTRB(25, 25, 25, 25),
-            decoration: const BoxDecoration(
-                color: kairozDarkPurple,
-                borderRadius: BorderRadius.all(Radius.circular(8))),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  topicName,
-                  style: const TextStyle(color: Colors.white),
-                ),
-                Text(
-                  timerData,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-          const IconButton(
-            onPressed: null,
-            icon: Icon(Icons.add_circle_outline, size: 50),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(25, 25, 25, 25),
+        decoration: const BoxDecoration(
             color: kairozDarkPurple,
-          ),
-        ],
+            borderRadius: BorderRadius.all(Radius.circular(8))),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              topicName,
+              style: const TextStyle(color: Colors.white),
+            ),
+            Text(
+              timerData,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -57,6 +47,7 @@ class StudyTopicsList extends StatefulWidget {
 final TextEditingController _controller = TextEditingController();
 final List<String> _studyTopics = [];
 final _studyTopicsService = StudyTopicsService();
+final _stopwatch = MyStopwatch();
 
 class _StudyTopicsListState extends State<StudyTopicsList> {
   void showAddStudyTopicDialog() {
@@ -88,8 +79,8 @@ class _StudyTopicsListState extends State<StudyTopicsList> {
 
   void _addStudyTopic() {
     if (_controller.text.isNotEmpty) {
+      _studyTopicsService.createNewTopic(_controller.text);
       setState(() {
-        _studyTopics.add(_controller.text);
         _controller.clear(); // Clean the text field
       });
       Navigator.of(context).pop(); // Close dialog after adding topic
@@ -126,16 +117,29 @@ class _StudyTopicsListState extends State<StudyTopicsList> {
 
         // Lista de tópicos de estudo
         Expanded(
-          child: ListView.builder(
-            itemCount: _studyTopics.length,
-            itemBuilder: (context, index) {
-              return StudyTopic(
-                topicName: _studyTopics[index],
-                timerData: '00:00:00',
+            child: FutureBuilder(
+          future: _studyTopicsService.getTopicList(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator(); // Exibe indicador de carregamento
+            } else if (snapshot.hasError) {
+              return Text('Erro: ${snapshot.error}');
+            } else {
+              final topics = snapshot.data as List<Map<String, String>>;
+
+              return ListView.builder(
+                itemCount: topics.length,
+                itemBuilder: (context, index) {
+                  final topic = topics[index];
+                  return StudyTopic(
+                    topicName: topic['title'] ?? 'Sem título',
+                    timerData: topic['totalTime'] ?? '00:00:00',
+                  );
+                },
               );
-            },
-          ),
-        ),
+            }
+          },
+        )),
       ],
     );
   }
