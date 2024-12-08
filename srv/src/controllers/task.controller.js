@@ -51,7 +51,7 @@ export async function getTasks(request, reply) {
     reply.code(401).send('token not found or access not permitted');
   }
   try {
-    const tasks = await Task.findAll({ where:{ tag: 'task'}});
+    const tasks = await Task.findAll({ where:{ id_user: user.id }});
     reply.code(200).send(tasks);
   } catch (error) {
     handleZodError(error, reply);
