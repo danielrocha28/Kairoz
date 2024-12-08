@@ -206,6 +206,7 @@ class _ProfilePageState extends State<ProfilePage> {
         onProfileTap: () => Navigator.pushNamed(context, '/profile'),
         onSignOut: () => Navigator.pushNamedAndRemoveUntil(
             context, '/login', ModalRoute.withName('/')),
+        onCalendarTap: () => Navigator.pushNamed(context, '/agenda'),
       ),
       body: FutureBuilder<UserProfile>(
         future: _userProfile,

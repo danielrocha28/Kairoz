@@ -3,6 +3,7 @@ import 'package:kairoz/widgets/my_list_tile.dart';
 
 class MyDrawer extends StatelessWidget {
   final void Function()? onProfileTap;
+  final void Function()? onCalendarTap;
   final void Function()? onSignOut;
   final void Function()? onHomeTap;
   final Color? foregroundColor;
@@ -10,6 +11,7 @@ class MyDrawer extends StatelessWidget {
   const MyDrawer({
     super.key,
     required this.onProfileTap,
+    required this.onCalendarTap,
     required this.onSignOut,
     required this.onHomeTap,
     this.foregroundColor,
@@ -40,6 +42,11 @@ class MyDrawer extends StatelessWidget {
                 icon: Icons.person,
                 text: 'P E R F I L',
                 onTap: onProfileTap,
+              ),
+              MyListTile(
+                icon: Icons.calendar_month_outlined,
+                text: ' A G E N D A',
+                onTap: onCalendarTap,
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 25.0),

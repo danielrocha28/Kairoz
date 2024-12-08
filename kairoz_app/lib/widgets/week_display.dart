@@ -1,29 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:kairoz/pages/agenda_page.dart';
 
 class KairozDate extends StatelessWidget {
   final String dateNumber;
   final String dateName;
   final bool active;
+  final DateTime date;
+  final Function(DateTime) onDateSelected;
 
   const KairozDate({
     super.key,
     required this.dateNumber,
     required this.dateName,
     required this.active,
+    required this.date,
+    required this.onDateSelected,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => const AgendaPage(),
-          ),
-        );
+        onDateSelected(date);
       },
       child: Container(
         decoration: BoxDecoration(
@@ -69,7 +66,11 @@ class KairozDate extends StatelessWidget {
 }
 
 class WeekDisplay extends StatelessWidget {
-  const WeekDisplay({super.key});
+  final Function(DateTime) onDateSelected;
+  final DateTime activeDate;
+
+  WeekDisplay(
+      {super.key, required this.onDateSelected, required this.activeDate});
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +84,9 @@ class WeekDisplay extends StatelessWidget {
           child: KairozDate(
             dateName: _getWeekdayName(day),
             dateNumber: day.day.toString().padLeft(2, '0'),
-            active: day == today,
+            active: day.day == activeDate.day,
+            onDateSelected: onDateSelected,
+            date: day,
           ),
         );
       }).toList(),
