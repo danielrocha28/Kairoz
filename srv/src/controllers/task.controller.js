@@ -90,8 +90,15 @@ export async function updateTask(request, reply) {
 }
 
 export async function getStudyTopic(request, reply) {
+  const token = (request.headers.authorization?.split(' ') ?? [])[1];
+  const user = await getUserByID(token);
+  if (!user) {
+    reply.code(401).send('token not found or access not permitted');
+  }
   try {
-    const studyTopic = await Task.findAll({ where:{ tag: 'study topic' }});
+    const studyTopic = await Task.findAll({ where:{ tag: 'study topic',
+      id_user: user.id
+     }});
       if (!studyTopic){
         reply.code(404).send('There are no study topics');
       }
@@ -103,8 +110,13 @@ export async function getStudyTopic(request, reply) {
 }
 
 export async function getList(request, reply) {
+  const token = (request.headers.authorization?.split(' ') ?? [])[1];
+  const user = await getUserByID(token);
+  if (!user) {
+    reply.code(401).send('token not found or access not permitted');
+  }
   try {
-    const tasks = await Task.findAll();
+    const tasks = await Task.findAll({ where: { id_user: user.id }});
     if (!tasks) {
       reply.code(404).send('tasks not found');
     }
@@ -116,8 +128,13 @@ export async function getList(request, reply) {
 }
 
 export async function IdTopicOrTask(request, reply) {
+  const token = (request.headers.authorization?.split(' ') ?? [])[1];
+  const user = await getUserByID(token);
+  if (!user) {
+    reply.code(401).send('token not found or access not permitted');
+  }
   try {
-    const task = await Task.findOne(request.body.title);
+    const task = await Task.findOne(request.body.title, { where: { id_user: user.id }});
     if (!task){
       reply.code(404).send('task or topic not found');
     }
