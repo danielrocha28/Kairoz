@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:kairoz/services/register.service.dart';
 import 'package:kairoz/widgets/kairoz_outline_input.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -39,6 +40,10 @@ class _RegisterPageState extends State<RegisterPage> {
     final response = await registerService.execute();
 
     if (response.statusCode == 201) {
+      Map<String, dynamic> temp = json.decode(response.body);
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('token', temp['token']);
+
       Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
     } else {
       Map<String, dynamic> temp = json.decode(response.body);
