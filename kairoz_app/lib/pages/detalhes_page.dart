@@ -46,6 +46,12 @@ Agora, respire fundo, levante-se e movimente-se. O primeiro passo é sempre o ma
 Focar nos estudos é crucial para atingir seus objetivos acadêmicos e profissionais. Organizar sua rotina de maneira eficiente pode melhorar seu desempenho, ajudar a otimizar o uso do tempo e evitar a procrastinação. Métodos como o Pomodoro, que alterna entre períodos de estudo e pausas curtas, são excelentes para aumentar a concentração e manter o foco ao longo do tempo. Além disso, a revisão espaçada, que consiste em revisar o conteúdo em intervalos regulares, é uma técnica comprovada para fortalecer a memória de longo prazo.
 Criar um ambiente de estudo livre de distrações, como escolher um local tranquilo e organizar suas ferramentas de estudo, é essencial para garantir que você esteja 100% focado. Ajustar seu planejamento conforme necessário também permite que você lide melhor com imprevistos, tornando seu processo de aprendizado mais flexível e eficaz.
 Com a abordagem certa, é possível transformar a rotina de estudos em uma prática mais produtiva, eficiente e focada, garantindo o alcance dos seus objetivos com mais facilidade e consistência.''',
+      'Pausa!': '''
+No mundo acelerado de hoje, estamos constantemente ocupados com tarefas, compromissos e prazos. É fácil acreditar que as pausas são uma perda de tempo, mas, na realidade, elas são fundamentais para o nosso bem-estar e produtividade. Pausas não são apenas intervalos para descansar, mas oportunidades valiosas para aprendizado e reflexão. Ao transformar esses momentos em algo mais significativo, podemos melhorar nossa eficiência e promover um equilíbrio mental saudável.
+''',
+      'Bem-estar': '''
+No mundo acelerado de hoje, estamos constantemente ocupados com tarefas, compromissos e prazos. É fácil acreditar que as pausas são uma perda de tempo, mas, na realidade, elas são fundamentais para o nosso bem-estar e produtividade. Pausas não são apenas intervalos para descansar, mas oportunidades valiosas para aprendizado e reflexão. Ao transformar esses momentos em algo mais significativo, podemos melhorar nossa eficiência e promover um equilíbrio mental saudável.
+''',
     };
 
     final Map<String, String> imagens = {

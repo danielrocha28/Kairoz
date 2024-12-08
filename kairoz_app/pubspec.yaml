@@ -44,4 +44,5 @@ flutter:
     - assets/feynman.png
     - assets/pareto.jpg
     - assets/intercalado.jpg
+    - assets/lazer.webp
     - .env
