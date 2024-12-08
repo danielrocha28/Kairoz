@@ -37,11 +37,6 @@ class _EstudosPageState extends State<EstudosPage> {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 10),
       children: [
-        const Text(
-          'Minhas Tarefas',
-          style: TextStyle(
-              color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
-        ),
         const SizedBox(height: 24),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
@@ -84,6 +79,14 @@ class _EstudosPageState extends State<EstudosPage> {
                 fontSize: 14,
               ),
             ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Center(
+          child: const Text(
+            'Tarefas do Dia',
+            style: TextStyle(
+                color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(height: 16),
