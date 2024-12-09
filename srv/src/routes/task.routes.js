@@ -83,10 +83,7 @@ const taskRoutes = (fastify, options, done) => {
   //take id and title
   fastify.get('/study-topic-list', async (request, reply) => {
     try {
-      const taskList = await getList(request, reply);
-      if (taskList) {
-        reply.status(200).send(taskList);
-      }
+      await getList(request, reply);
     } catch (error) {
       logger.error(error);
       reply.status(500).send({ error: 'Error processing request', details: error.message });
