@@ -18,6 +18,11 @@ const Task = sequelize.define(
         notEmpty: true,
       },
     },
+    tag: {
+      type: DataTypes.ENUM('task', 'study topic'),
+      allowNull: false,
+      field: 'tag',
+    },
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
