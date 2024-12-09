@@ -4,13 +4,13 @@ import 'dart:convert';
 
 class StudyTopicsService {
   final String baseUrl = dotenv.env['BASE_URL'] ?? '';
-  String? savedTime;
+  String? timeAdded;
   String? topicTitle;
   String? topicID;
   String? weekDay;
 
   StudyTopicsService(
-      {this.savedTime, this.topicTitle, this.topicID, this.weekDay});
+      {this.timeAdded, this.topicTitle, this.topicID, this.weekDay});
 
   Future<List<Map<String, String>>> getTopicList() async {
     try {
@@ -56,6 +56,27 @@ class StudyTopicsService {
         '{"$error": "Ocorreu um erro ao criar o tópico de estudo. Tente novamente!"}',
         400,
       );
+    }
+  }
+
+  Future<http.Response> addTimeToTopic(
+      String topicTitle, String timeAdded, String weekDay) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/tasks'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode({
+          "title": topicTitle,
+          "timeAdded": timeAdded,
+          "weekDay": weekDay,
+        }),
+      );
+      return response;
+    } catch (e) {
+      throw Exception('Erro ao adicionar tempo ao tópico: $e');
     }
   }
 }

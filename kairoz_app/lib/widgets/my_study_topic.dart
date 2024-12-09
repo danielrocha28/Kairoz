@@ -3,40 +3,6 @@ import 'package:kairoz/app_colors/app_colors.dart';
 import 'package:kairoz/services/study_topics_service.dart';
 import 'package:kairoz/widgets/my_stopwatch.dart';
 
-class StudyTopic extends StatelessWidget {
-  String topicName;
-  String timerData; //valor total do tópico que vai vir do back
-
-  StudyTopic({super.key, required this.topicName, required this.timerData});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 20),
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(25, 25, 25, 25),
-        decoration: const BoxDecoration(
-            color: kairozDarkPurple,
-            borderRadius: BorderRadius.all(Radius.circular(8))),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              topicName,
-              style: const TextStyle(color: Colors.white),
-            ),
-            Text(
-              timerData,
-              style: const TextStyle(color: Colors.white),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class StudyTopicsList extends StatefulWidget {
   const StudyTopicsList({super.key});
 
@@ -44,12 +10,22 @@ class StudyTopicsList extends StatefulWidget {
   State<StudyTopicsList> createState() => _StudyTopicsListState();
 }
 
-final TextEditingController _controller = TextEditingController();
+final TextEditingController _topicTitle = TextEditingController();
 final List<String> _studyTopics = [];
 final _studyTopicsService = StudyTopicsService();
 final _stopwatch = MyStopwatch();
 
 class _StudyTopicsListState extends State<StudyTopicsList> {
+  void _addStudyTopic() {
+    if (_topicTitle.text.isNotEmpty) {
+      _studyTopicsService.createNewTopic(_topicTitle.text);
+      setState(() {
+        _topicTitle.clear(); // Clean the text field
+      });
+      Navigator.of(context).pop(); // Close dialog after adding topic
+    }
+  }
+
   void showAddStudyTopicDialog() {
     showDialog(
       context: context,
@@ -57,7 +33,7 @@ class _StudyTopicsListState extends State<StudyTopicsList> {
         return AlertDialog(
           title: const Text('Adicionar Tópico de Estudo'),
           content: TextField(
-            controller: _controller,
+            controller: _topicTitle,
             decoration: const InputDecoration(hintText: 'Digite o tópico'),
           ),
           actions: [
@@ -75,16 +51,6 @@ class _StudyTopicsListState extends State<StudyTopicsList> {
         );
       },
     );
-  }
-
-  void _addStudyTopic() {
-    if (_controller.text.isNotEmpty) {
-      _studyTopicsService.createNewTopic(_controller.text);
-      setState(() {
-        _controller.clear(); // Clean the text field
-      });
-      Navigator.of(context).pop(); // Close dialog after adding topic
-    }
   }
 
   @override
@@ -141,6 +107,40 @@ class _StudyTopicsListState extends State<StudyTopicsList> {
           },
         )),
       ],
+    );
+  }
+}
+
+class StudyTopic extends StatelessWidget {
+  String topicName;
+  String timerData; //valor total do tópico que vai vir do back
+
+  StudyTopic({super.key, required this.topicName, required this.timerData});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(25, 25, 25, 25),
+        decoration: const BoxDecoration(
+            color: kairozDarkPurple,
+            borderRadius: BorderRadius.all(Radius.circular(8))),
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              topicName,
+              style: const TextStyle(color: Colors.white),
+            ),
+            Text(
+              timerData,
+              style: const TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

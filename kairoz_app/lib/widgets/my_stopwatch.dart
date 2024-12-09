@@ -83,7 +83,9 @@ class _MyStopwatch extends State<MyStopwatch> {
 
   @override
   void dispose() {
-    _timer.cancel(); // Cancela o timer quando o widget for destruído
+    if (_timer.isActive) {
+      _timer.cancel();
+    }
     super.dispose();
   }
 
