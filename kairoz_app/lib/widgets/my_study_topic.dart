@@ -68,10 +68,7 @@ class _StudyTopicsListState extends State<StudyTopicsList> {
                 style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
               ),
               ElevatedButton(
-                onPressed: () async {
-                  final result = await _studyTopicsService.getTopicList();
-                  print(result); // Ou use o resultado como quiser
-                },
+                onPressed: showAddStudyTopicDialog,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: kairozDarkPurple, // Define a cor de fundo
                 ),
@@ -80,14 +77,18 @@ class _StudyTopicsListState extends State<StudyTopicsList> {
             ],
           ),
         ),
-
         // Lista de tópicos de estudo
         Expanded(
             child: FutureBuilder(
           future: _studyTopicsService.getTopicList(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator(); // Exibe indicador de carregamento
+              return Column(mainAxisSize: MainAxisSize.min, children: [
+                SizedBox(
+                  height: 15,
+                ),
+                CircularProgressIndicator()
+              ]); // Exibe indicador de carregamento
             } else if (snapshot.hasError) {
               return Text('Erro: ${snapshot.error}');
             } else {

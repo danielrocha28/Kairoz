@@ -40,22 +40,25 @@ class StudyTopicsService {
     }
   }
 
-  Future<http.Response> createNewTopic(String topicTitle) async {
+  Future<String> createNewTopic(String topicTitle) async {
     try {
       final postResponse = await http.post(
-        Uri.parse('$baseUrl/study-topic-list'),
+        Uri.parse('$baseUrl/tasks'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-        body: jsonEncode({"title": topicTitle}),
+        body: jsonEncode({
+          "title": topicTitle,
+          "tag": "study topic",
+          "category": "study",
+        }),
       );
-      return postResponse;
+      print(postResponse.statusCode);
+      print(postResponse.body);
+      return postResponse.toString();
     } catch (error) {
-      return http.Response(
-        '{"$error": "Ocorreu um erro ao criar o tópico de estudo. Tente novamente!"}',
-        400,
-      );
+      return '{"$error": "Ocorreu um erro ao criar o tópico de estudo. Tente novamente!"}';
     }
   }
 
