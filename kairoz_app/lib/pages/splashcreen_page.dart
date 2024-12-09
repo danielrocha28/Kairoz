@@ -27,21 +27,31 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 82, 22, 185),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/logo.png',
-              height: 200,
-              width: 200,
-            ),
-            const SizedBox(height: 30),
-            const CircularProgressIndicator(
-              color: Colors.white,
-            ),
-          ],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.bottomLeft,
+            end: Alignment.topRight,
+            colors: [
+              Color.fromARGB(255, 94, 43, 183),
+              Color(0xffE4E1F3),
+            ],
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/kairozlogo1.png',
+                width: 250,
+              ),
+              const SizedBox(height: 30),
+              const CircularProgressIndicator(
+                color: Color.fromARGB(255, 82, 22, 185),
+              ),
+            ],
+          ),
         ),
       ),
     );
