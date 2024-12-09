@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const taskSchema = z.object({
   title: z.string().min(1, 'Title is required'),
-  tag: z.enum(['task']),
+  tag: z.enum(['task', 'study topic']),
   total_time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
   'The field must be in the format HH:MM:SS').optional(),
   description: z.string().optional(),
@@ -22,7 +22,8 @@ const studyTopicSchema = z.object({
   tag: z.enum(['study topic']),
   category: z.enum(['study']),
   total_time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
-  'The field must be in the format HH:MM:SS'),
-});
+  'The field must be in the format HH:MM:SS').optional(),
+  id_user: z.number().int().optional()
+}).strict();
 
 export { taskSchema, studyTopicSchema };

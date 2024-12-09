@@ -25,7 +25,7 @@ export async function createTask(request, reply) {
   
   try {
     let validatedData = taskSchema.parse(request.body);
-    const existsTask = await Task.findOne({ where: { title: validatedData.title }});
+    const existsTask = await Task.findOne({ where: { title: validatedData.title, id_user: user.id }});
     if (existsTask) {
       throw new Error('Task with this title already existing');
     }
@@ -51,7 +51,8 @@ export async function getTasks(request, reply) {
     reply.code(401).send('token not found or access not permitted');
   }
   try {
-    const tasks = await Task.findAll({ where:{ id_user: user.id }});
+    const tasks = await Task.findAll({ where: { tag: 'task', 
+      id_user: user.id }});
     reply.code(200).send(tasks);
   } catch (error) {
     handleZodError(error, reply);
@@ -97,8 +98,7 @@ export async function getStudyTopic(request, reply) {
   }
   try {
     const studyTopic = await Task.findAll({ where:{ tag: 'study topic',
-      id_user: user.id
-     }});
+      id_user: user.id }});
       if (!studyTopic){
         reply.code(404).send('There are no study topics');
       }
