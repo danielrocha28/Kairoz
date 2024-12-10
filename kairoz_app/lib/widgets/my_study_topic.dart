@@ -10,15 +10,15 @@ class StudyTopicsList extends StatefulWidget {
   State<StudyTopicsList> createState() => _StudyTopicsListState();
 }
 
-final TextEditingController _topicTitle = TextEditingController();
+final TextEditingController topicTitle = TextEditingController();
 final _studyTopicsService = StudyTopicsService();
 
 class _StudyTopicsListState extends State<StudyTopicsList> {
   void _addStudyTopic() {
-    if (_topicTitle.text.isNotEmpty) {
-      _studyTopicsService.createNewTopic(_topicTitle.text);
+    if (topicTitle.text.isNotEmpty) {
+      _studyTopicsService.createNewTopic(topicTitle.text);
       setState(() {
-        _topicTitle.clear(); // Clean the text field
+        topicTitle.clear(); // Clean the text field
       });
       Navigator.of(context).pop(); // Close dialog after adding topic
     }
@@ -31,7 +31,7 @@ class _StudyTopicsListState extends State<StudyTopicsList> {
         return AlertDialog(
           title: const Text('Adicionar Tópico de Estudo'),
           content: TextField(
-            controller: _topicTitle,
+            controller: topicTitle,
             decoration: const InputDecoration(hintText: 'Digite o tópico'),
           ),
           actions: [

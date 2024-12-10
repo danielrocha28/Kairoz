@@ -1,31 +1,43 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StudyTopicsService {
   final String baseUrl = dotenv.env['BASE_URL'] ?? '';
   String? timeAdded;
   String? topicTitle;
   String? topicID;
-  String? weekDay;
 
-  StudyTopicsService(
-      {this.timeAdded, this.topicTitle, this.topicID, this.weekDay});
+  StudyTopicsService({
+    this.timeAdded,
+    this.topicTitle,
+    this.topicID,
+  });
 
   Future<List<Map<String, String>>> getTopicList() async {
+    final baseUrl = dotenv.env['BASE_URL'];
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/study-topic'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         print(response.body);
         print(response.statusCode);
         final List<dynamic> data = jsonDecode(response.body);
         final topics = data.map<Map<String, String>>((topic) {
           return {
             'title': topic['title'] ?? '',
-            'totalTime': topic['totalTime'] ?? '00:00:00',
+            'total_time': topic['total_time'] ?? '00:00:00',
+            'tag': "study-topic",
           };
         }).toList();
 
@@ -40,44 +52,68 @@ class StudyTopicsService {
     }
   }
 
-  Future<String> createNewTopic(String topicTitle) async {
+  Future<http.Response> createNewTopic(String topicTitle) async {
+    final baseUrl = dotenv.env['BASE_URL'];
+    final mockedMode = dotenv.env['MOCKED_MODE'];
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+
+    if (mockedMode == 'true') {
+      return http.Response('Tópico Criado com Sucesso', 201);
+    }
+
     try {
       final postResponse = await http.post(
         Uri.parse('$baseUrl/tasks'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
         },
-        body: jsonEncode({
-          "title": topicTitle,
-          "tag": "study topic",
-          "category": "study",
-        }),
+        body: jsonEncode(
+            {"title": topicTitle, "category": "study", "tag": "study topic"}),
       );
-      print(postResponse.statusCode);
-      print(postResponse.body);
-      return postResponse.toString();
+      print('Resposta ao criar o tópico $postResponse');
+      return postResponse;
     } catch (error) {
-      return '{"$error": "Ocorreu um erro ao criar o tópico de estudo. Tente novamente!"}';
+      print(http.Response);
+      return http.Response(
+        '{"$error": "Ocorreu um erro ao criar o tópico de estudo. Tente novamente!"}',
+        400,
+      );
     }
   }
 
-  Future<http.Response> addTimeToTopic(
-      String topicTitle, String timeAdded, String weekDay) async {
+  Future<http.Response> addTimeToTopic() async {
+    final baseUrl = dotenv.env['BASE_URL'];
+    final mockedMode = dotenv.env['MOCKED_MODE'];
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? token = prefs.getString('token');
+
+    if (mockedMode == 'true') {
+      return http.Response('Tempo adicionado com sucesso', 201);
+    }
+
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/tasks'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
         },
         body: jsonEncode({
           "title": topicTitle,
           "timeAdded": timeAdded,
-          "weekDay": weekDay,
+          "tag": "study-topic",
         }),
       );
-      return response;
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response;
+      } else {
+        throw Exception(
+            'Erro ao adicionar tempo ao tópico: ${response.statusCode}');
+      }
     } catch (e) {
       throw Exception('Erro ao adicionar tempo ao tópico: $e');
     }
