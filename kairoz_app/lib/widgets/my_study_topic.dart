@@ -12,13 +12,24 @@ class StudyTopicsList extends StatefulWidget {
 
 final TextEditingController topicTitle = TextEditingController();
 final _studyTopicsService = StudyTopicsService();
+late Future<List<Map<String, String>>> _futureTopics;
 
 class _StudyTopicsListState extends State<StudyTopicsList> {
-  void _addStudyTopic() {
+  @override
+  void initState() {
+    super.initState();
+    _futureTopics = _studyTopicsService.getTopicList();
+  }
+
+  void _addStudyTopic() async {
     if (topicTitle.text.isNotEmpty) {
-      _studyTopicsService.createNewTopic(topicTitle.text);
+      await _studyTopicsService.createNewTopic(topicTitle.text);
+
+      await Future.delayed(const Duration(seconds: 1));
+
       setState(() {
         topicTitle.clear(); // Clean the text field
+        _futureTopics = _studyTopicsService.getTopicList();
       });
       Navigator.of(context).pop(); // Close dialog after adding topic
     }
@@ -78,7 +89,7 @@ class _StudyTopicsListState extends State<StudyTopicsList> {
         // Lista de tópicos de estudo
         Expanded(
             child: FutureBuilder(
-          future: _studyTopicsService.getTopicList(),
+          future: _futureTopics,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Column(mainAxisSize: MainAxisSize.min, children: [
@@ -105,6 +116,7 @@ class _StudyTopicsListState extends State<StudyTopicsList> {
             }
           },
         )),
+        SizedBox(height: 15),
       ],
     );
   }
