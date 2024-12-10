@@ -22,7 +22,6 @@ class _MyStopwatch extends State<MyStopwatch> {
     super.initState();
   }
 
-  // Função para iniciar o temporizador
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
@@ -42,7 +41,6 @@ class _MyStopwatch extends State<MyStopwatch> {
     });
   }
 
-  // Função para pausar o temporizador
   void _pauseTimer() {
     _timer.cancel();
     setState(() {
@@ -50,7 +48,6 @@ class _MyStopwatch extends State<MyStopwatch> {
     });
   }
 
-  // Função para resetar o temporizador
   void _resetTimer() {
     _timer.cancel();
     setState(() {
@@ -82,18 +79,10 @@ class _MyStopwatch extends State<MyStopwatch> {
   }
 
   @override
-  void dispose() {
-    if (_timer.isActive) {
-      _timer.cancel();
-    }
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
+      // Shows the stopwatch's time on top
       children: [
-        // Exibe o tempo do cronômetro no topo
         Padding(
           padding: const EdgeInsets.fromLTRB(50, 20, 50, 0),
           child: Container(
@@ -125,7 +114,7 @@ class _MyStopwatch extends State<MyStopwatch> {
 
         const SizedBox(height: 10),
 
-        // Botões para controlar o temporizador
+        // Stopwatch buttons
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

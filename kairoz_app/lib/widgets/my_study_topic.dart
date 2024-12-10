@@ -11,9 +11,7 @@ class StudyTopicsList extends StatefulWidget {
 }
 
 final TextEditingController _topicTitle = TextEditingController();
-final List<String> _studyTopics = [];
 final _studyTopicsService = StudyTopicsService();
-final _stopwatch = MyStopwatch();
 
 class _StudyTopicsListState extends State<StudyTopicsList> {
   void _addStudyTopic() {

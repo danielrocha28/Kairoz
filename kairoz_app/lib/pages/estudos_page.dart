@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kairoz/models/task.dart';
 import 'package:kairoz/pages/detalhes_page.dart';
+import 'package:kairoz/pages/study_topics_page.dart';
 import 'package:kairoz/widgets/task_list.dart';
 import 'package:kairoz/widgets/tecnicas_estudo.dart';
 import 'package:kairoz/widgets/week_display.dart';
@@ -17,6 +18,16 @@ class EstudosPage extends StatefulWidget {
 
 class _EstudosPageState extends State<EstudosPage> {
   DateTime selectedDate = DateTime.now();
+
+  void goToStudyTopicsPage() {
+    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const StudyTopicsPage(),
+      ),
+    );
+  }
 
   void handleDateSelected(DateTime date) {
     print('selectedDate $selectedDate');
@@ -86,6 +97,9 @@ class _EstudosPageState extends State<EstudosPage> {
             ),
           ),
         ),
+        const SizedBox(height: 16),
+        ElevatedButton(
+            onPressed: goToStudyTopicsPage, child: Text('Tópicos de Estudo')),
         const SizedBox(height: 16),
         TaskList(tasks: filteredTasks),
         const SizedBox(height: 16),
