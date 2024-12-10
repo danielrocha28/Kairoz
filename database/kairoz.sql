@@ -95,6 +95,7 @@ CREATE TABLE IF NOT EXISTS filter (
 CREATE TABLE IF NOT EXISTS tasks (
     id_task SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
+    tag VARCHAR(100) NOT NULL CHECK (tag IN ('task', 'study topic')),
     description TEXT,
     parentId INTEGER,
     repeat repeat_type DEFAULT 'none',

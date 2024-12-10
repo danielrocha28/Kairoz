@@ -35,7 +35,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/logo.png
     - assets/kairozlogo.png
     - assets/kairozlogo1.png
     - assets/logo1.png
@@ -44,4 +43,5 @@ flutter:
     - assets/feynman.png
     - assets/pareto.jpg
     - assets/intercalado.jpg
+    - assets/Sono.jpg
     - .env

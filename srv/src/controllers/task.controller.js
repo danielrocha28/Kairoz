@@ -25,7 +25,7 @@ export async function createTask(request, reply) {
   
   try {
     let validatedData = taskSchema.parse(request.body);
-    const existsTask = await Task.findOne({ where: { title: validatedData.title }});
+    const existsTask = await Task.findOne({ where: { title: validatedData.title, id_user: user.id }});
     if (existsTask) {
       throw new Error('Task with this title already existing');
     }
@@ -51,7 +51,8 @@ export async function getTasks(request, reply) {
     reply.code(401).send('token not found or access not permitted');
   }
   try {
-    const tasks = await Task.findAll({ where:{ id_user: user.id }});
+    const tasks = await Task.findAll({ where: { tag: 'task', 
+      id_user: user.id }});
     reply.code(200).send(tasks);
   } catch (error) {
     handleZodError(error, reply);
@@ -97,8 +98,7 @@ export async function getStudyTopic(request, reply) {
   }
   try {
     const studyTopic = await Task.findAll({ where:{ tag: 'study topic',
-      id_user: user.id
-     }});
+      id_user: user.id }});
       if (!studyTopic){
         reply.code(404).send('There are no study topics');
       }
@@ -116,11 +116,26 @@ export async function getList(request, reply) {
     reply.code(401).send('token not found or access not permitted');
   }
   try {
+    const tasks = await Task.findAll({ where: { id_user: user.id } });
+    if (!tasks || tasks.length === 0) {
+      return reply.code(404).send('tasks not found');
+  const token = (request.headers.authorization?.split(' ') ?? [])[1];
+  const user = await getUserByID(token);
+  if (!user) {
+    reply.code(401).send('token not found or access not permitted');
+  }
+  try {
     const tasks = await Task.findAll({ where: { id_user: user.id }});
     if (!tasks) {
       reply.code(404).send('tasks not found');
     }
-    return { id: tasks.id, title: tasks.title, total_time: tasks.total_time };
+    const result = tasks.map(task => ({
+      id: task.id,
+      title: task.title,
+      total_time: task.total_time,
+    }));
+
+    reply.code(200).send(result);
   } catch (error) {
     handleZodError(error, reply);
     handleServerError(error, reply);
@@ -133,7 +148,13 @@ export async function IdTopicOrTask(request, reply) {
   if (!user) {
     reply.code(401).send('token not found or access not permitted');
   }
+  const token = (request.headers.authorization?.split(' ') ?? [])[1];
+  const user = await getUserByID(token);
+  if (!user) {
+    reply.code(401).send('token not found or access not permitted');
+  }
   try {
+    const task = await Task.findOne(request.body.title, { where: { id_user: user.id }});
     const task = await Task.findOne(request.body.title, { where: { id_user: user.id }});
     if (!task){
       reply.code(404).send('task or topic not found');
