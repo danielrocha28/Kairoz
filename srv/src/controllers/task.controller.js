@@ -116,7 +116,7 @@ export async function getList(request, reply) {
     reply.code(401).send('token not found or access not permitted');
   }
   try {
-    const tasks = await Task.findAll({ where: { id_user: user.id } });
+    const tasks = await Task.findAll({ where: { tag: 'study topic', id_user: user.id } });
     if (!tasks || tasks.length === 0) {
       return reply.code(404).send('tasks not found');
     }
