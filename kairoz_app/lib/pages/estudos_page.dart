@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kairoz/models/task.dart';
 import 'package:kairoz/pages/detalhes_page.dart';
-import 'package:kairoz/pages/study_topics_page.dart';
 import 'package:kairoz/widgets/task_list.dart';
 import 'package:kairoz/widgets/tecnicas_estudo.dart';
 import 'package:kairoz/widgets/week_display.dart';
@@ -9,8 +8,9 @@ import 'package:flutter/cupertino.dart';
 
 class EstudosPage extends StatefulWidget {
   final List<Task> tasks;
+  final Function(Task task) onDeleteTask;
 
-  EstudosPage({super.key, required this.tasks});
+  EstudosPage({super.key, required this.tasks, required this.onDeleteTask});
 
   @override
   State<EstudosPage> createState() => _EstudosPageState();
@@ -19,15 +19,15 @@ class EstudosPage extends StatefulWidget {
 class _EstudosPageState extends State<EstudosPage> {
   DateTime selectedDate = DateTime.now();
 
-  void goToStudyTopicsPage() {
-    Navigator.pop(context);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const StudyTopicsPage(),
-      ),
-    );
-  }
+  // void goToStudyTopicsPage() {
+  //   Navigator.pop(context);
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => const StudyTopicsPage(),
+  //     ),
+  //   );
+  // }
 
   void handleDateSelected(DateTime date) {
     print('selectedDate $selectedDate');
@@ -98,10 +98,10 @@ class _EstudosPageState extends State<EstudosPage> {
           ),
         ),
         const SizedBox(height: 16),
-        ElevatedButton(
-            onPressed: goToStudyTopicsPage, child: Text('Tópicos de Estudo')),
+        // ElevatedButton(
+        //     onPressed: goToStudyTopicsPage, child: Text('Tópicos de Estudo')),
         const SizedBox(height: 16),
-        TaskList(tasks: filteredTasks),
+        TaskList(tasks: filteredTasks, onDeleteTask: widget.onDeleteTask),
         const SizedBox(height: 16),
         const TecnicasEstudo(),
       ],

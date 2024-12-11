@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kairoz/app_colors/app_colors.dart';
 import 'package:kairoz/services/study_topics_service.dart';
-import 'package:kairoz/widgets/my_stopwatch.dart';
 
 class StudyTopicsList extends StatefulWidget {
   const StudyTopicsList({super.key});

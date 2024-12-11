@@ -4,8 +4,9 @@ import 'package:kairoz/widgets/task_list.dart';
 
 class LazerPage extends StatelessWidget {
   final List<Task> tasks;
+  final Function(Task task) onDeleteTask;
 
-  const LazerPage({super.key, required this.tasks});
+  const LazerPage({super.key, required this.tasks, required this.onDeleteTask});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class LazerPage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        TaskList(tasks: tasks),
+        TaskList(tasks: tasks, onDeleteTask: onDeleteTask),
       ],
     );
   }

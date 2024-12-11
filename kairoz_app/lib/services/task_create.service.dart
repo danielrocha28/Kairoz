@@ -59,9 +59,9 @@ class TaskCreateService {
 }
 
 class TaskDeleteService {
-  final String taskId;
+  final int id;
 
-  TaskDeleteService({required this.taskId});
+  TaskDeleteService({required this.id});
 
   Future<http.Response> deleteTask() async {
     final baseUrl = dotenv.env['BASE_URL'];
@@ -75,7 +75,7 @@ class TaskDeleteService {
 
     try {
       final response = await http.delete(
-        Uri.parse('$baseUrl/tasks/$taskId'),
+        Uri.parse('$baseUrl/tasks/$id'),
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',

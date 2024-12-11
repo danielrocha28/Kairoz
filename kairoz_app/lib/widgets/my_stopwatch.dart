@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:kairoz/app_colors/app_colors.dart';
+import 'package:kairoz/services/task_create.service.dart';
+import 'package:kairoz/models/task.dart';
 
 class MyStopwatch extends StatefulWidget {
   const MyStopwatch({super.key});
@@ -14,7 +16,7 @@ class _MyStopwatch extends State<MyStopwatch> {
   int _hours = 0;
   late Timer _timer;
   bool _isRunning = false;
-  late String _actualTime;
+
   late String _weekDay;
   late String addTimeToThisTopic;
 
@@ -74,10 +76,30 @@ class _MyStopwatch extends State<MyStopwatch> {
     return _weekDay;
   }
 
-  void registerSavedTime() {
-    final String topicToAddTime;
-    final String savedTime = "$_hours:$_minutes:$_seconds";
-    ;
+  void _deleteTask(Task task) async {
+    final service = TaskDeleteService(
+      id: task.id ?? 0,
+    );
+    print(task.id);
+    try {
+      await service.deleteTask();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Tarefa deletada com sucesso!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.pop(context, task);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao deletar tarefa!'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   @override
@@ -89,7 +111,8 @@ class _MyStopwatch extends State<MyStopwatch> {
           padding: const EdgeInsets.fromLTRB(50, 20, 50, 0),
           child: Container(
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(10)),
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(10)),
             padding: const EdgeInsets.all(20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -97,17 +120,23 @@ class _MyStopwatch extends State<MyStopwatch> {
                 Text(
                   '${_hours.toString().padLeft(2, '0')}:',
                   style: const TextStyle(
-                      fontSize: 50, fontWeight: FontWeight.w700),
+                    fontSize: 50,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 Text(
                   '${_minutes.toString().padLeft(2, '0')}:',
                   style: const TextStyle(
-                      fontSize: 50, fontWeight: FontWeight.w700),
+                    fontSize: 50,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 Text(
                   _seconds.toString().padLeft(2, '0'),
                   style: const TextStyle(
-                      fontSize: 50, fontWeight: FontWeight.w700),
+                    fontSize: 50,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),

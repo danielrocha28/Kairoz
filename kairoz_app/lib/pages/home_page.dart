@@ -58,6 +58,7 @@ class _HomePageState extends State<HomePage> {
 
       final newTasks = taskData
           .map((taskRes) => Task(
+                id: taskRes.idTask,
                 title: taskRes.title ?? '',
                 category: getType(taskRes.category ?? ''),
                 dueDate: DateTime.parse(
@@ -96,6 +97,16 @@ class _HomePageState extends State<HomePage> {
         _tasks.add(task);
       });
     }
+  }
+
+  void _onDeleteTask(Task task) {
+    if (task.id == null) {
+      return;
+    }
+
+    setState(() {
+      _tasks.remove(task);
+    });
   }
 
   filterByType(TaskCategory category) {
@@ -151,18 +162,21 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: List.generate(7, (index) {
-                      return Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: CircleAvatar(
-                          radius: 30.0,
-                          backgroundColor: Colors.white,
-                        ),
-                      );
-                    }),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: List.generate(7, (index) {
+                        return Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: CircleAvatar(
+                            radius: 30.0,
+                            backgroundColor: Colors.white,
+                          ),
+                        );
+                      }),
+                    ),
                   ),
                   const SizedBox(height: 16),
                   SizedBox(
@@ -202,10 +216,18 @@ class _HomePageState extends State<HomePage> {
           : IndexedStack(
               index: _selectedIndex,
               children: <Widget>[
-                EstudosPage(tasks: filterByType(TaskCategory.study)),
-                SaudePage(tasks: filterByType(TaskCategory.health)),
-                TrabalhoPage(tasks: filterByType(TaskCategory.work)),
-                LazerPage(tasks: filterByType(TaskCategory.leisure)),
+                EstudosPage(
+                    tasks: filterByType(TaskCategory.study),
+                    onDeleteTask: _onDeleteTask),
+                SaudePage(
+                    tasks: filterByType(TaskCategory.health),
+                    onDeleteTask: _onDeleteTask),
+                TrabalhoPage(
+                    tasks: filterByType(TaskCategory.work),
+                    onDeleteTask: _onDeleteTask),
+                LazerPage(
+                    tasks: filterByType(TaskCategory.leisure),
+                    onDeleteTask: _onDeleteTask),
               ],
             ),
     );

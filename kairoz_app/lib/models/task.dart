@@ -35,6 +35,7 @@ extension TaskCategoryExtension on TaskCategory {
 }
 
 class Task {
+  final int? id;
   final String title;
   final DateTime dueDate;
   final String? description;
@@ -47,6 +48,7 @@ class Task {
     required this.title,
     required this.dueDate,
     required this.category,
+    this.id,
     this.description,
     this.dueTime,
     this.priority,
@@ -64,6 +66,7 @@ class Task {
 
   Task copyWith({
     String? title,
+    int? id,
     String? description,
     DateTime? dueDate,
     TimeOfDay? dueTime,
@@ -79,6 +82,7 @@ class Task {
       category: category ?? this.category,
       priority: priority ?? this.priority,
       recurrence: recurrence ?? this.recurrence,
+      id: id ?? this.id,
     );
   }
 }

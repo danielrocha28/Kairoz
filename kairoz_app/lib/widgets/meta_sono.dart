@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:kairoz/pages/home_page.dart';
 
 class SleepGoalSetter extends StatefulWidget {
   @override
@@ -126,6 +128,12 @@ class _SleepGoalSetterState extends State<SleepGoalSetter> {
             ),
           ],
           if (_goalSaved) ...[
+            Center(
+              child: Text(
+                'Meta de Sono',
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
             SizedBox(height: 40),
             Text(
               'Você precisa atingir a meta de $_sleepGoal horas de sono!',
@@ -136,7 +144,14 @@ class _SleepGoalSetterState extends State<SleepGoalSetter> {
             ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _resetGoal,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => HomePage(),
+                  ),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color.fromARGB(255, 82, 22, 185),
                 shape: RoundedRectangleBorder(
@@ -145,7 +160,7 @@ class _SleepGoalSetterState extends State<SleepGoalSetter> {
                 padding: EdgeInsets.symmetric(vertical: 16),
               ),
               child: Text(
-                'Redefinir Meta',
+                'Confirmar',
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),

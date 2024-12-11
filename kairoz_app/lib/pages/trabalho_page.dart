@@ -8,8 +8,9 @@ import 'package:flutter/cupertino.dart';
 
 class TrabalhoPage extends StatefulWidget {
   final List<Task> tasks;
+  final Function(Task task) onDeleteTask;
 
-  TrabalhoPage({super.key, required this.tasks});
+  TrabalhoPage({super.key, required this.tasks, required this.onDeleteTask});
 
   @override
   State<TrabalhoPage> createState() => _TrabalhoPageState();
@@ -70,7 +71,7 @@ class _TrabalhoPageState extends State<TrabalhoPage> {
           ),
         ),
         const SizedBox(height: 16),
-        TaskList(tasks: filteredTasks),
+        TaskList(tasks: filteredTasks, onDeleteTask: widget.onDeleteTask),
       ],
     );
   }
