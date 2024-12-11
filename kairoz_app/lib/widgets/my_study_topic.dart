@@ -23,15 +23,39 @@ class _StudyTopicsListState extends State<StudyTopicsList> {
 
   void _addStudyTopic() async {
     if (topicTitle.text.isNotEmpty) {
-      await _studyTopicsService.createNewTopic(topicTitle.text);
+      // Get the actual topics
+      final topics = await _studyTopicsService.getTopicList();
 
+      // Verify if the topic already exists
+      final topicExists = topics.any((topic) =>
+          topic['title']?.toLowerCase() == topicTitle.text.toLowerCase());
+
+      if (topicExists) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Tópico já existe'),
+            content: const Text('Esse tópico já foi adicionado.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+        return;
+      }
+
+      // If it doesn't exists already, creates the topic
+      await _studyTopicsService.createNewTopic(topicTitle.text);
       await Future.delayed(const Duration(seconds: 1));
 
       setState(() {
-        topicTitle.clear(); // Clean the text field
+        topicTitle.clear();
         _futureTopics = _studyTopicsService.getTopicList();
       });
-      Navigator.of(context).pop(); // Close dialog after adding topic
+      Navigator.of(context).pop();
     }
   }
 
@@ -67,22 +91,29 @@ class _StudyTopicsListState extends State<StudyTopicsList> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.only(left: 10),
           alignment: Alignment.topLeft,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Column(
             children: [
-              const Text(
-                'Tópicos de Estudo',
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Tópicos de Estudo',
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
+                  ),
+                  ElevatedButton(
+                    onPressed: _studyTopicsService.addTimeToTopic,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          kairozDarkPurple, // Define a cor de fundo
+                    ),
+                    child: const Icon(Icons.add, color: Colors.white),
+                  ),
+                ],
               ),
-              ElevatedButton(
-                onPressed: showAddStudyTopicDialog,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: kairozDarkPurple, // Define a cor de fundo
-                ),
-                child: const Icon(Icons.add, color: Colors.white),
-              ),
+              SizedBox(
+                height: 20,
+              )
             ],
           ),
         ),
@@ -116,22 +147,22 @@ class _StudyTopicsListState extends State<StudyTopicsList> {
             }
           },
         )),
-        SizedBox(height: 15),
       ],
     );
   }
 }
 
 class StudyTopic extends StatelessWidget {
-  String topicName;
-  String timerData; //valor total do tópico que vai vir do back
+  final String topicName;
+  final String timerData;
+  final _studyTopicsService = StudyTopicsService();
 
   StudyTopic({super.key, required this.topicName, required this.timerData});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.only(bottom: 20),
       child: Container(
         padding: const EdgeInsets.fromLTRB(25, 25, 25, 25),
         decoration: const BoxDecoration(
@@ -141,14 +172,25 @@ class StudyTopic extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              topicName,
-              style: const TextStyle(color: Colors.white),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  topicName,
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                ),
+                Text(
+                  timerData,
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ],
             ),
-            Text(
-              timerData,
-              style: const TextStyle(color: Colors.white),
-            ),
+            IconButton(
+                icon: const Icon(Icons.save, color: Colors.white),
+                onPressed: () {
+                  _studyTopicsService.addTimeToTopic;
+                  print(topicName);
+                }),
           ],
         ),
       ),

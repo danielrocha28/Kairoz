@@ -16,6 +16,7 @@ class _MyStopwatch extends State<MyStopwatch> {
   bool _isRunning = false;
   late String _actualTime;
   late String _weekDay;
+  late String addTimeToThisTopic;
 
   @override
   void initState() {
@@ -58,24 +59,25 @@ class _MyStopwatch extends State<MyStopwatch> {
     });
   }
 
-  String getActualTimer() {
-    _actualTime = "$_hours:$_minutes:$_seconds";
-    return _actualTime;
-  }
-
   String getWeekDay() {
     DateTime now = DateTime.now();
     List<String> days = [
-      'Segunda-feira', //1
-      'Terça-feira', //2
-      'Quarta-feira', //3
-      'Quinta-feira', //4
-      'Sexta-feira', //4
-      'Sábado', //5
-      'Domingo' //6
+      'seg', //1
+      'ter', //2
+      'qua', //3
+      'qui', //4
+      'sex', //4
+      'sab', //5
+      'dom' //6
     ];
     _weekDay = days[now.weekday - 1];
     return _weekDay;
+  }
+
+  void registerSavedTime() {
+    final String topicToAddTime;
+    final String savedTime = "$_hours:$_minutes:$_seconds";
+    ;
   }
 
   @override
@@ -87,7 +89,7 @@ class _MyStopwatch extends State<MyStopwatch> {
           padding: const EdgeInsets.fromLTRB(50, 20, 50, 0),
           child: Container(
             decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(20)),
+                color: Colors.white, borderRadius: BorderRadius.circular(10)),
             padding: const EdgeInsets.all(20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

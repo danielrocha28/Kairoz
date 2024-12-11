@@ -95,17 +95,18 @@ class StudyTopicsService {
     }
 
     try {
-      final response = await http.post(
-        Uri.parse('$baseUrl/tasks'),
+      final response = await http.put(
+        Uri.parse('$baseUrl/timer/save'),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode({
-          "title": topicTitle,
-          "timeAdded": timeAdded,
+          "title": "sees",
+          "totalTime": "00:07:09",
           "tag": "study-topic",
+          "category": "study"
         }),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
