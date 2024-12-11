@@ -68,7 +68,8 @@ class _RegisterPageState extends State<RegisterPage> {
     if (value == null || value.isEmpty) {
       return 'Campo obrigatório';
     }
-    if (!RegExp(r'^(?=.*[a-zA-Z])[0-9a-zA-Z]+$').hasMatch(value)) {
+
+    if (!RegExp(r'^(?!^\d+$)^.+$').hasMatch(value)) {
       return 'O nome não pode possuir apenas números';
     }
     return null;

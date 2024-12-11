@@ -17,10 +17,8 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  bool _isEditingPhone = false;
   bool _isEditingName = false;
   bool _isEditingEmail = false;
-  String _phoneNumber = "";
   String? _passwordError;
 
   final TextEditingController _oldPasswordController = TextEditingController();
@@ -46,10 +44,6 @@ class _ProfilePageState extends State<ProfilePage> {
       return;
     }
 
-    setState(() {
-      _phoneNumber = phoneNumber;
-      _isEditingPhone = false;
-    });
     _showSnackbar('Número de telefone salvo com sucesso!');
   }
 
@@ -271,40 +265,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                 _emailController.text = user.email;
                               });
                             },
-                          ),
-                          const Divider(),
-                          _buildEditableField(
-                            label: 'Telefone',
-                            currentValue: _phoneNumber.isEmpty
-                                ? 'Não definido'
-                                : _phoneNumber,
-                            controller: _phoneController,
-                            isEditing: _isEditingPhone,
-                            saveFunction: _savePhoneNumber,
-                            onEditPressed: () {
-                              setState(() {
-                                _isEditingPhone = true;
-                                _phoneController.text = _phoneNumber;
-                              });
-                            },
-                          ),
-                          const Divider(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Text('Alterar Senha:',
-                                  style: TextStyle(fontSize: 16)),
-                              const SizedBox(width: 10),
-                              IconButton(
-                                icon: const Icon(Icons.chevron_right,
-                                    color: Color.fromARGB(255, 82, 22, 185)),
-                                onPressed: () {
-                                  setState(() {
-                                    _isChangingPassword = !_isChangingPassword;
-                                  });
-                                },
-                              ),
-                            ],
                           ),
                           if (_isChangingPassword)
                             Column(

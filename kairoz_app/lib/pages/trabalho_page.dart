@@ -58,16 +58,10 @@ class _TrabalhoPageState extends State<TrabalhoPage> {
           },
         ),
         const SizedBox(height: 20),
-        Center(
-          child: const Text(
-            'Tarefas de trabalho',
-            textAlign: TextAlign.start,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 24,
-              fontWeight: FontWeight.normal,
-            ),
-          ),
+        const Text(
+          'Minhas Tarefas',
+          style: TextStyle(
+              color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         TaskList(tasks: filteredTasks),
