@@ -37,7 +37,7 @@ class StudyTopicsService {
           return {
             'title': topic['title'] ?? '',
             'total_time': topic['total_time'] ?? '00:00:00',
-            'tag': "study-topic",
+            'tag': 'study-topic',
           };
         }).toList();
 
@@ -103,19 +103,21 @@ class StudyTopicsService {
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode({
-          "title": "sees",
-          "totalTime": "00:07:09",
-          "tag": "study-topic",
-          "category": "study"
+          'title': 'INFERNOOOO',
+          'total_Time': '00:07:09',
+          'day_update': 'seg',
         }),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
+        print(response.statusCode);
         return response;
       } else {
+        print(response.statusCode);
         throw Exception(
             'Erro ao adicionar tempo ao tópico: ${response.statusCode}');
       }
     } catch (e) {
+      print(e);
       throw Exception('Erro ao adicionar tempo ao tópico: $e');
     }
   }
